@@ -1,0 +1,3 @@
+include ':player'
+include ':app'
+rootProject.name = "BBQVideo"

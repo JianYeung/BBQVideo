@@ -1,0 +1,38 @@
+{
+  "buildFiles": [
+    "/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/CMakeLists.txt",
+    "/Users/jian.yeung/Library/Android/sdk/ndk/21.3.6528147/build/cmake/android.toolchain.cmake",
+    "/Users/jian.yeung/Library/Android/sdk/ndk/21.3.6528147/build/cmake/platforms.cmake",
+    "/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/cpp/CMakeLists.txt",
+    "/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/cpp/glm-master/CMakeLists.txt",
+    "/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/cpp/glm-master/glm/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/Users/jian.yeung/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86\" clean"
+  ],
+  "buildTargetsCommand": "/Users/jian.yeung/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja  -C \"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86\" {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "player-lib-Debug-x86": {
+      "artifactName": "player-lib",
+      "buildCommand": "/Users/jian.yeung/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86\" player-lib",
+      "abi": "x86",
+      "output": "/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/libs/x86/libplayer-lib.so",
+      "runtimeFiles": [
+        "/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/nativeLibs/x86/libavcodec.so",
+        "/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/nativeLibs/x86/libavdevice.so",
+        "/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/nativeLibs/x86/libavfilter.so",
+        "/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/nativeLibs/x86/libavformat.so",
+        "/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/nativeLibs/x86/libavutil.so",
+        "/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/nativeLibs/x86/libswresample.so",
+        "/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/nativeLibs/x86/libswscale.so"
+      ]
+    },
+    "glm_shared-Debug-x86": {
+      "artifactName": "glm_shared",
+      "buildCommand": "/Users/jian.yeung/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja -C \"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86\" glm_shared",
+      "abi": "x86",
+      "output": "/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/libs/x86/libglm_shared.so",
+      "runtimeFiles": []
+    }
+  }
+}

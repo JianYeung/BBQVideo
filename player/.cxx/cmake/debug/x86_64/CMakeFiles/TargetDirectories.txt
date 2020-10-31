@@ -1,0 +1,10 @@
+/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86_64/CMakeFiles/rebuild_cache.dir
+/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86_64/CMakeFiles/edit_cache.dir
+/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86_64/src/main/cpp/CMakeFiles/rebuild_cache.dir
+/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86_64/src/main/cpp/CMakeFiles/edit_cache.dir
+/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86_64/src/main/cpp/CMakeFiles/player-lib.dir
+/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86_64/src/main/cpp/glm-master/CMakeFiles/rebuild_cache.dir
+/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86_64/src/main/cpp/glm-master/CMakeFiles/edit_cache.dir
+/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86_64/src/main/cpp/glm-master/glm/CMakeFiles/rebuild_cache.dir
+/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86_64/src/main/cpp/glm-master/glm/CMakeFiles/edit_cache.dir
+/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86_64/src/main/cpp/glm-master/glm/CMakeFiles/glm_shared.dir

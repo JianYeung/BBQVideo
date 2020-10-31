@@ -1,0 +1,433 @@
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"supportedProtocolVersions":[{"isExperimental":true,"major":1,"minor":1}],"type":"hello"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {
+  "type": "handshake",
+  "cookie": "gradle-cmake-cookie",
+  "protocolVersion": {
+    "isExperimental": true,
+    "major": 1,
+    "minor": 1
+  },
+  "sourceDirectory": "/Users/jian.yeung/Documents/Android-Project/BBQVideo/player",
+  "buildDirectory": "/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86_64",
+  "generator": "Ninja"
+}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"gradle-cmake-cookie","inReplyTo":"handshake","type":"reply"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {
+  "type": "configure",
+  "cacheArguments": [
+    "",
+    "-DCMAKE_CXX_FLAGS\u003d-std\u003dc++11 -frtti -fexceptions",
+    "-DCMAKE_FIND_ROOT_PATH\u003d/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/prefab/x86_64/prefab",
+    "-DCMAKE_BUILD_TYPE\u003dDebug",
+    "-DCMAKE_TOOLCHAIN_FILE\u003d/Users/jian.yeung/Library/Android/sdk/ndk/21.3.6528147/build/cmake/android.toolchain.cmake",
+    "-DANDROID_ABI\u003dx86_64",
+    "-DANDROID_NDK\u003d/Users/jian.yeung/Library/Android/sdk/ndk/21.3.6528147",
+    "-DANDROID_PLATFORM\u003dandroid-21",
+    "-DCMAKE_ANDROID_ARCH_ABI\u003dx86_64",
+    "-DCMAKE_ANDROID_NDK\u003d/Users/jian.yeung/Library/Android/sdk/ndk/21.3.6528147",
+    "-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON",
+    "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003d/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/build/intermediates/cmake/debug/obj/x86_64",
+    "-DCMAKE_MAKE_PROGRAM\u003d/Users/jian.yeung/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja",
+    "-DCMAKE_SYSTEM_NAME\u003dAndroid",
+    "-DCMAKE_SYSTEM_VERSION\u003d21"
+  ]
+}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","message":"Check for working C compiler: /Users/jian.yeung/Library/Android/sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang","type":"message"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: Check for working C compiler: /Users/jian.yeung/Library/Android/sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang
+CMAKE SERVER: Check for working C compiler: /Users/jian.yeung/Library/Android/sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","progressCurrent":33,"progressMaximum":1000,"progressMessage":"Configuring","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","message":"Check for working C compiler: /Users/jian.yeung/Library/Android/sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang -- works","type":"message"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: Check for working C compiler: /Users/jian.yeung/Library/Android/sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang -- works
+CMAKE SERVER: Check for working C compiler: /Users/jian.yeung/Library/Android/sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang -- works
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","message":"Detecting C compiler ABI info","type":"message"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: Detecting C compiler ABI info
+CMAKE SERVER: Detecting C compiler ABI info
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","progressCurrent":65,"progressMaximum":1000,"progressMessage":"Configuring","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","message":"Detecting C compiler ABI info - done","type":"message"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: Detecting C compiler ABI info - done
+CMAKE SERVER: Detecting C compiler ABI info - done
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","message":"Detecting C compile features","type":"message"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: Detecting C compile features
+CMAKE SERVER: Detecting C compile features
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","progressCurrent":96,"progressMaximum":1000,"progressMessage":"Configuring","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","progressCurrent":126,"progressMaximum":1000,"progressMessage":"Configuring","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","progressCurrent":155,"progressMaximum":1000,"progressMessage":"Configuring","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","message":"Detecting C compile features - done","type":"message"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: Detecting C compile features - done
+CMAKE SERVER: Detecting C compile features - done
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","message":"Check for working CXX compiler: /Users/jian.yeung/Library/Android/sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++","type":"message"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: Check for working CXX compiler: /Users/jian.yeung/Library/Android/sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++
+CMAKE SERVER: Check for working CXX compiler: /Users/jian.yeung/Library/Android/sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","progressCurrent":184,"progressMaximum":1000,"progressMessage":"Configuring","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","message":"Check for working CXX compiler: /Users/jian.yeung/Library/Android/sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ -- works","type":"message"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: Check for working CXX compiler: /Users/jian.yeung/Library/Android/sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ -- works
+CMAKE SERVER: Check for working CXX compiler: /Users/jian.yeung/Library/Android/sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ -- works
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","message":"Detecting CXX compiler ABI info","type":"message"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: Detecting CXX compiler ABI info
+CMAKE SERVER: Detecting CXX compiler ABI info
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","progressCurrent":211,"progressMaximum":1000,"progressMessage":"Configuring","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","message":"Detecting CXX compiler ABI info - done","type":"message"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: Detecting CXX compiler ABI info - done
+CMAKE SERVER: Detecting CXX compiler ABI info - done
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","message":"Detecting CXX compile features","type":"message"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: Detecting CXX compile features
+CMAKE SERVER: Detecting CXX compile features
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","progressCurrent":237,"progressMaximum":1000,"progressMessage":"Configuring","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","progressCurrent":262,"progressMaximum":1000,"progressMessage":"Configuring","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","progressCurrent":287,"progressMaximum":1000,"progressMessage":"Configuring","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","progressCurrent":311,"progressMaximum":1000,"progressMessage":"Configuring","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","message":"Detecting CXX compile features - done","type":"message"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: Detecting CXX compile features - done
+CMAKE SERVER: Detecting CXX compile features - done
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","progressCurrent":334,"progressMaximum":1000,"progressMessage":"Configuring","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","progressCurrent":356,"progressMaximum":1000,"progressMessage":"Configuring","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","message":"GLM: Version 0.9.9.9","type":"message"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: GLM: Version 0.9.9.9
+CMAKE SERVER: GLM: Version 0.9.9.9
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","progressCurrent":377,"progressMaximum":1000,"progressMessage":"Configuring","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","progressCurrent":924,"progressMaximum":1000,"progressMessage":"Configuring","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","progressCurrent":950,"progressMaximum":1000,"progressMessage":"Configuring","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","progressCurrent":974,"progressMaximum":1000,"progressMessage":"Configuring","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","progressCurrent":1000,"progressMaximum":1000,"progressMessage":"Configuring","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","message":"Configuring done","type":"message"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: Configuring done
+CMAKE SERVER: Configuring done
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"configure","type":"reply"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"type":"compute"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"compute","progressCurrent":250,"progressMaximum":1000,"progressMessage":"Generating","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"compute","progressCurrent":500,"progressMaximum":1000,"progressMessage":"Generating","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"compute","progressCurrent":750,"progressMaximum":1000,"progressMessage":"Generating","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"compute","progressCurrent":1000,"progressMaximum":1000,"progressMessage":"Generating","progressMinimum":0,"type":"progress"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"compute","message":"Generating done","type":"message"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: Generating done
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"cookie":"","inReplyTo":"compute","type":"reply"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"type":"cmakeInputs"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"buildFiles":[{"isCMake":true,"isTemporary":false,"sources":["../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeDetermineSystem.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android-Determine.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeSystem.cmake.in","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeSystemSpecificInitialize.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android-Initialize.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeDetermineCCompiler.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeDetermineCompiler.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android-Determine-C.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android/Determine-Compiler.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeFindBinUtils.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang-FindBinUtils.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeCCompiler.cmake.in","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeDetermineCXXCompiler.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeDetermineCompiler.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android-Determine-CXX.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android/Determine-Compiler.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeFindBinUtils.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang-FindBinUtils.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeCXXCompiler.cmake.in","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeSystemSpecificInformation.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeGenericSystem.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Linux.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/UnixPaths.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeCInformation.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeLanguageInformation.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang-C.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/CMakeCommonCompilerMacros.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/GNU.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/CMakeCommonCompilerMacros.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android-Clang-C.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android-Clang.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeCommonLanguageInclude.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeTestCCompiler.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeTestCompilerCommon.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeDetermineCompilerABI.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeParseImplicitLinkInfo.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeCCompilerABI.c","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeDetermineCompileFeatures.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Internal/FeatureTesting.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang-C-FeatureTests.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang-C-FeatureTests.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang-C-FeatureTests.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeCCompiler.cmake.in","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeCXXInformation.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeLanguageInformation.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang-CXX.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android-Clang-CXX.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android-Clang.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeCommonLanguageInclude.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeTestCXXCompiler.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeTestCompilerCommon.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeDetermineCompilerABI.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeParseImplicitLinkInfo.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeCXXCompilerABI.cpp","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeDetermineCompileFeatures.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Internal/FeatureTesting.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang-CXX-FeatureTests.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang-CXX-TestableFeatures.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang-CXX-FeatureTests.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang-CXX-TestableFeatures.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang-CXX-FeatureTests.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang-CXX-TestableFeatures.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang-CXX-FeatureTests.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang-CXX-TestableFeatures.cmake","../../../../Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeCXXCompiler.cmake.in"]},{"isCMake":false,"isTemporary":false,"sources":["CMakeLists.txt","../../../../Library/Android/sdk/ndk/21.3.6528147/build/cmake/android.toolchain.cmake","../../../../Library/Android/sdk/ndk/21.3.6528147/build/cmake/platforms.cmake","../../../../Library/Android/sdk/ndk/21.3.6528147/build/cmake/android.toolchain.cmake","src/main/cpp/CMakeLists.txt","src/main/cpp/glm-master/CMakeLists.txt","src/main/cpp/glm-master/glm/CMakeLists.txt"]},{"isCMake":false,"isTemporary":true,"sources":[".cxx/cmake/debug/x86_64/CMakeFiles/3.10.2/CMakeSystem.cmake",".cxx/cmake/debug/x86_64/CMakeFiles/3.10.2/CMakeCCompiler.cmake",".cxx/cmake/debug/x86_64/CMakeFiles/3.10.2/CMakeCXXCompiler.cmake",".cxx/cmake/debug/x86_64/CMakeFiles/feature_tests.c",".cxx/cmake/debug/x86_64/CMakeFiles/feature_tests.c",".cxx/cmake/debug/x86_64/CMakeFiles/feature_tests.c",".cxx/cmake/debug/x86_64/CMakeFiles/3.10.2/CMakeCCompiler.cmake",".cxx/cmake/debug/x86_64/CMakeFiles/feature_tests.cxx",".cxx/cmake/debug/x86_64/CMakeFiles/feature_tests.cxx",".cxx/cmake/debug/x86_64/CMakeFiles/feature_tests.cxx",".cxx/cmake/debug/x86_64/CMakeFiles/feature_tests.cxx",".cxx/cmake/debug/x86_64/CMakeFiles/3.10.2/CMakeCXXCompiler.cmake"]}],"cmakeRootDirectory":"/Users/jian.yeung/Library/Android/sdk/cmake/3.10.2.4988404/share/cmake-3.10","cookie":"","inReplyTo":"cmakeInputs","sourceDirectory":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player","type":"reply"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"type":"codemodel"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+
+CMAKE SERVER: 
+
+CMAKE SERVER: [== "CMake Server" ==[
+
+CMAKE SERVER: {"configurations":[{"name":"Debug","projects":[{"buildDirectory":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86_64","name":"BBQVideo","sourceDirectory":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player","targets":[{"artifacts":["/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/libs/x86_64/libplayer-lib.so"],"buildDirectory":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86_64/src/main/cpp","fileGroups":[{"compileFlags":"-g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -std=c++11 -frtti -fexceptions -O0 -fno-limit-debug-info  -fPIC  ","defines":["RENDER_SUPPORTED","player_lib_EXPORTS"],"includePath":[{"path":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/cpp/include"},{"path":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/cpp/jni"},{"path":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/cpp/util"},{"path":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/cpp/render"},{"path":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/cpp/filter"},{"path":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/cpp/decode"},{"path":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/cpp/encode"},{"path":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/cpp/rtmp"},{"path":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/cpp/glm-master/glm/.."}],"isGenerated":false,"language":"CXX","sources":["onLoad.cpp","util/Thread.cpp","render/EglHelper.cpp","render/GLRender.cpp","filter/BaseFilter.cpp","filter/TriangleFilter.cpp","decode/VideoDecoder.cpp","decode/VideoH264Decoder.cpp","decode/VideoHardDecoder.cpp","encode/VideoEncoder.cpp","encode/VideoH264Encoder.cpp","encode/VideoHardEncoder.cpp","rtmp/RtmpManager.cpp"]}],"fullName":"libplayer-lib.so","linkFlags":"-Wl,--exclude-libs,libgcc.a -Wl,--exclude-libs,libgcc_real.a -Wl,--exclude-libs,libatomic.a -static-libstdc++ -Wl,--build-id -Wl,--fatal-warnings -Wl,--no-undefined -Qunused-arguments","linkLibraries":"../../../../../../../src/main/nativeLibs/x86_64/libavcodec.so ../../../../../../../src/main/nativeLibs/x86_64/libavdevice.so ../../../../../../../src/main/nativeLibs/x86_64/libavfilter.so ../../../../../../../src/main/nativeLibs/x86_64/libavformat.so ../../../../../../../src/main/nativeLibs/x86_64/libavutil.so ../../../../../../../src/main/nativeLibs/x86_64/libswresample.so ../../../../../../../src/main/nativeLibs/x86_64/libswscale.so -lmediandk -lGLESv3 -lEGL -landroid -llog -latomic -lm","linkerLanguage":"CXX","name":"player-lib","sourceDirectory":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/cpp","sysroot":"/Users/jian.yeung/Library/Android/sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/darwin-x86_64/sysroot","type":"SHARED_LIBRARY"},{"artifacts":["/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/libs/x86_64/libglm_shared.so"],"buildDirectory":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86_64/src/main/cpp/glm-master/glm","fileGroups":[{"compileFlags":"-g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -std=c++11 -frtti -fexceptions -O0 -fno-limit-debug-info  -fPIC  ","defines":["RENDER_SUPPORTED","glm_shared_EXPORTS"],"includePath":[{"path":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/cpp/glm-master/glm/.."}],"isGenerated":false,"language":"CXX","sources":["detail/glm.cpp"]},{"isGenerated":false,"sources":["../CMakeLists.txt","../copying.txt","../manual.md","../readme.md","../util/glm.natvis","common.hpp","exponential.hpp","ext.hpp","fwd.hpp","geometric.hpp","glm.hpp","integer.hpp","mat2x2.hpp","mat2x3.hpp","mat2x4.hpp","mat3x2.hpp","mat3x3.hpp","mat3x4.hpp","mat4x2.hpp","mat4x3.hpp","mat4x4.hpp","matrix.hpp","packing.hpp","trigonometric.hpp","vec2.hpp","vec3.hpp","vec4.hpp","vector_relational.hpp","detail/func_common.inl","detail/func_common_simd.inl","detail/func_exponential.inl","detail/func_exponential_simd.inl","detail/func_geometric.inl","detail/func_geometric_simd.inl","detail/func_integer.inl","detail/func_integer_simd.inl","detail/func_matrix.inl","detail/func_matrix_simd.inl","detail/func_packing.inl","detail/func_packing_simd.inl","detail/func_trigonometric.inl","detail/func_trigonometric_simd.inl","detail/func_vector_relational.inl","detail/func_vector_relational_simd.inl","detail/type_half.inl","detail/type_mat2x2.inl","detail/type_mat2x3.inl","detail/type_mat2x4.inl","detail/type_mat3x2.inl","detail/type_mat3x3.inl","detail/type_mat3x4.inl","detail/type_mat4x2.inl","detail/type_mat4x3.inl","detail/type_mat4x4.inl","detail/type_mat4x4_simd.inl","detail/type_quat.inl","detail/type_quat_simd.inl","detail/type_vec1.inl","detail/type_vec2.inl","detail/type_vec3.inl","detail/type_vec4.inl","detail/type_vec4_simd.inl","detail/_features.hpp","detail/_fixes.hpp","detail/_noise.hpp","detail/_swizzle.hpp","detail/_swizzle_func.hpp","detail/_vectorize.hpp","detail/compute_common.hpp","detail/compute_vector_relational.hpp","detail/qualifier.hpp","detail/setup.hpp","detail/type_float.hpp","detail/type_half.hpp","detail/type_mat2x2.hpp","detail/type_mat2x3.hpp","detail/type_mat2x4.hpp","detail/type_mat3x2.hpp","detail/type_mat3x3.hpp","detail/type_mat3x4.hpp","detail/type_mat4x2.hpp","detail/type_mat4x3.hpp","detail/type_mat4x4.hpp","detail/type_quat.hpp","detail/type_vec1.hpp","detail/type_vec2.hpp","detail/type_vec3.hpp","detail/type_vec4.hpp","ext/matrix_clip_space.inl","ext/matrix_common.inl","ext/matrix_projection.inl","ext/matrix_relational.inl","ext/matrix_transform.inl","ext/quaternion_common.inl","ext/quaternion_common_simd.inl","ext/quaternion_exponential.inl","ext/quaternion_geometric.inl","ext/quaternion_relational.inl","ext/quaternion_transform.inl","ext/quaternion_trigonometric.inl","ext/scalar_common.inl","ext/scalar_constants.inl","ext/scalar_integer.inl","ext/scalar_packing.inl","ext/scalar_relational.inl","ext/scalar_ulp.inl","ext/vector_common.inl","ext/vector_integer.inl","ext/vector_packing.inl","ext/vector_relational.inl","ext/vector_ulp.inl","ext/matrix_clip_space.hpp","ext/matrix_common.hpp","ext/matrix_double2x2.hpp","ext/matrix_double2x2_precision.hpp","ext/matrix_double2x3.hpp","ext/matrix_double2x3_precision.hpp","ext/matrix_double2x4.hpp","ext/matrix_double2x4_precision.hpp","ext/matrix_double3x2.hpp","ext/matrix_double3x2_precision.hpp","ext/matrix_double3x3.hpp","ext/matrix_double3x3_precision.hpp","ext/matrix_double3x4.hpp","ext/matrix_double3x4_precision.hpp","ext/matrix_double4x2.hpp","ext/matrix_double4x2_precision.hpp","ext/matrix_double4x3.hpp","ext/matrix_double4x3_precision.hpp","ext/matrix_double4x4.hpp","ext/matrix_double4x4_precision.hpp","ext/matrix_float2x2.hpp","ext/matrix_float2x2_precision.hpp","ext/matrix_float2x3.hpp","ext/matrix_float2x3_precision.hpp","ext/matrix_float2x4.hpp","ext/matrix_float2x4_precision.hpp","ext/matrix_float3x2.hpp","ext/matrix_float3x2_precision.hpp","ext/matrix_float3x3.hpp","ext/matrix_float3x3_precision.hpp","ext/matrix_float3x4.hpp","ext/matrix_float3x4_precision.hpp","ext/matrix_float4x2.hpp","ext/matrix_float4x2_precision.hpp","ext/matrix_float4x3.hpp","ext/matrix_float4x3_precision.hpp","ext/matrix_float4x4.hpp","ext/matrix_float4x4_precision.hpp","ext/matrix_int2x2.hpp","ext/matrix_int2x2_sized.hpp","ext/matrix_int2x3.hpp","ext/matrix_int2x3_sized.hpp","ext/matrix_int2x4.hpp","ext/matrix_int2x4_sized.hpp","ext/matrix_int3x2.hpp","ext/matrix_int3x2_sized.hpp","ext/matrix_int3x3.hpp","ext/matrix_int3x3_sized.hpp","ext/matrix_int3x4.hpp","ext/matrix_int3x4_sized.hpp","ext/matrix_int4x2.hpp","ext/matrix_int4x2_sized.hpp","ext/matrix_int4x3.hpp","ext/matrix_int4x3_sized.hpp","ext/matrix_int4x4.hpp","ext/matrix_int4x4_sized.hpp","ext/matrix_projection.hpp","ext/matrix_relational.hpp","ext/matrix_transform.hpp","ext/matrix_uint2x2.hpp","ext/matrix_uint2x2_sized.hpp","ext/matrix_uint2x3.hpp","ext/matrix_uint2x3_sized.hpp","ext/matrix_uint2x4.hpp","ext/matrix_uint2x4_sized.hpp","ext/matrix_uint3x2.hpp","ext/matrix_uint3x2_sized.hpp","ext/matrix_uint3x3.hpp","ext/matrix_uint3x3_sized.hpp","ext/matrix_uint3x4.hpp","ext/matrix_uint3x4_sized.hpp","ext/matrix_uint4x2.hpp","ext/matrix_uint4x2_sized.hpp","ext/matrix_uint4x3.hpp","ext/matrix_uint4x3_sized.hpp","ext/matrix_uint4x4.hpp","ext/matrix_uint4x4_sized.hpp","ext/quaternion_common.hpp","ext/quaternion_double.hpp","ext/quaternion_double_precision.hpp","ext/quaternion_exponential.hpp","ext/quaternion_float.hpp","ext/quaternion_float_precision.hpp","ext/quaternion_geometric.hpp","ext/quaternion_relational.hpp","ext/quaternion_transform.hpp","ext/quaternion_trigonometric.hpp","ext/scalar_common.hpp","ext/scalar_constants.hpp","ext/scalar_int_sized.hpp","ext/scalar_integer.hpp","ext/scalar_packing.hpp","ext/scalar_relational.hpp","ext/scalar_uint_sized.hpp","ext/scalar_ulp.hpp","ext/vector_bool1.hpp","ext/vector_bool1_precision.hpp","ext/vector_bool2.hpp","ext/vector_bool2_precision.hpp","ext/vector_bool3.hpp","ext/vector_bool3_precision.hpp","ext/vector_bool4.hpp","ext/vector_bool4_precision.hpp","ext/vector_common.hpp","ext/vector_double1.hpp","ext/vector_double1_precision.hpp","ext/vector_double2.hpp","ext/vector_double2_precision.hpp","ext/vector_double3.hpp","ext/vector_double3_precision.hpp","ext/vector_double4.hpp","ext/vector_double4_precision.hpp","ext/vector_float1.hpp","ext/vector_float1_precision.hpp","ext/vector_float2.hpp","ext/vector_float2_precision.hpp","ext/vector_float3.hpp","ext/vector_float3_precision.hpp","ext/vector_float4.hpp","ext/vector_float4_precision.hpp","ext/vector_int1.hpp","ext/vector_int1_sized.hpp","ext/vector_int2.hpp","ext/vector_int2_sized.hpp","ext/vector_int3.hpp","ext/vector_int3_sized.hpp","ext/vector_int4.hpp","ext/vector_int4_sized.hpp","ext/vector_integer.hpp","ext/vector_packing.hpp","ext/vector_relational.hpp","ext/vector_uint1.hpp","ext/vector_uint1_sized.hpp","ext/vector_uint2.hpp","ext/vector_uint2_sized.hpp","ext/vector_uint3.hpp","ext/vector_uint3_sized.hpp","ext/vector_uint4.hpp","ext/vector_uint4_sized.hpp","ext/vector_ulp.hpp","gtc/bitfield.inl","gtc/color_space.inl","gtc/constants.inl","gtc/epsilon.inl","gtc/integer.inl","gtc/matrix_access.inl","gtc/matrix_inverse.inl","gtc/matrix_transform.inl","gtc/noise.inl","gtc/packing.inl","gtc/quaternion.inl","gtc/quaternion_simd.inl","gtc/random.inl","gtc/reciprocal.inl","gtc/round.inl","gtc/type_precision.inl","gtc/type_ptr.inl","gtc/ulp.inl","gtc/bitfield.hpp","gtc/color_space.hpp","gtc/constants.hpp","gtc/epsilon.hpp","gtc/integer.hpp","gtc/matrix_access.hpp","gtc/matrix_integer.hpp","gtc/matrix_inverse.hpp","gtc/matrix_transform.hpp","gtc/noise.hpp","gtc/packing.hpp","gtc/quaternion.hpp","gtc/random.hpp","gtc/reciprocal.hpp","gtc/round.hpp","gtc/type_aligned.hpp","gtc/type_precision.hpp","gtc/type_ptr.hpp","gtc/ulp.hpp","gtc/vec1.hpp","gtx/associated_min_max.inl","gtx/bit.inl","gtx/closest_point.inl","gtx/color_encoding.inl","gtx/color_space.inl","gtx/color_space_YCoCg.inl","gtx/common.inl","gtx/compatibility.inl","gtx/component_wise.inl","gtx/dual_quaternion.inl","gtx/easing.inl","gtx/euler_angles.inl","gtx/extend.inl","gtx/extended_min_max.inl","gtx/exterior_product.inl","gtx/fast_exponential.inl","gtx/fast_square_root.inl","gtx/fast_trigonometry.inl","gtx/float_notmalize.inl","gtx/functions.inl","gtx/gradient_paint.inl","gtx/handed_coordinate_space.inl","gtx/hash.inl","gtx/integer.inl","gtx/intersect.inl","gtx/io.inl","gtx/log_base.inl","gtx/matrix_cross_product.inl","gtx/matrix_decompose.inl","gtx/matrix_factorisation.inl","gtx/matrix_interpolation.inl","gtx/matrix_major_storage.inl","gtx/matrix_operation.inl","gtx/matrix_query.inl","gtx/matrix_transform_2d.inl","gtx/mixed_product.inl","gtx/norm.inl","gtx/normal.inl","gtx/normalize_dot.inl","gtx/number_precision.inl","gtx/optimum_pow.inl","gtx/orthonormalize.inl","gtx/perpendicular.inl","gtx/polar_coordinates.inl","gtx/projection.inl","gtx/quaternion.inl","gtx/raw_data.inl","gtx/rotate_normalized_axis.inl","gtx/rotate_vector.inl","gtx/scalar_relational.inl","gtx/spline.inl","gtx/std_based_type.inl","gtx/string_cast.inl","gtx/texture.inl","gtx/transform.inl","gtx/transform2.inl","gtx/type_aligned.inl","gtx/type_trait.inl","gtx/vector_angle.inl","gtx/vector_query.inl","gtx/wrap.inl","gtx/associated_min_max.hpp","gtx/bit.hpp","gtx/closest_point.hpp","gtx/color_encoding.hpp","gtx/color_space.hpp","gtx/color_space_YCoCg.hpp","gtx/common.hpp","gtx/compatibility.hpp","gtx/component_wise.hpp","gtx/dual_quaternion.hpp","gtx/easing.hpp","gtx/euler_angles.hpp","gtx/extend.hpp","gtx/extended_min_max.hpp","gtx/exterior_product.hpp","gtx/fast_exponential.hpp","gtx/fast_square_root.hpp","gtx/fast_trigonometry.hpp","gtx/functions.hpp","gtx/gradient_paint.hpp","gtx/handed_coordinate_space.hpp","gtx/hash.hpp","gtx/integer.hpp","gtx/intersect.hpp","gtx/io.hpp","gtx/log_base.hpp","gtx/matrix_cross_product.hpp","gtx/matrix_decompose.hpp","gtx/matrix_factorisation.hpp","gtx/matrix_interpolation.hpp","gtx/matrix_major_storage.hpp","gtx/matrix_operation.hpp","gtx/matrix_query.hpp","gtx/matrix_transform_2d.hpp","gtx/mixed_product.hpp","gtx/norm.hpp","gtx/normal.hpp","gtx/normalize_dot.hpp","gtx/number_precision.hpp","gtx/optimum_pow.hpp","gtx/orthonormalize.hpp","gtx/perpendicular.hpp","gtx/polar_coordinates.hpp","gtx/projection.hpp","gtx/quaternion.hpp","gtx/range.hpp","gtx/raw_data.hpp","gtx/rotate_normalized_axis.hpp","gtx/rotate_vector.hpp","gtx/scalar_multiplication.hpp","gtx/scalar_relational.hpp","gtx/spline.hpp","gtx/std_based_type.hpp","gtx/string_cast.hpp","gtx/texture.hpp","gtx/transform.hpp","gtx/transform2.hpp","gtx/type_aligned.hpp","gtx/type_trait.hpp","gtx/vec_swizzle.hpp","gtx/vector_angle.hpp","gtx/vector_query.hpp","gtx/wrap.hpp","simd/common.h","simd/exponential.h","simd/geometric.h","simd/integer.h","simd/matrix.h","simd/neon.h","simd/packing.h","simd/platform.h","simd/trigonometric.h","simd/vector_relational.h"]}],"fullName":"libglm_shared.so","linkFlags":"-Wl,--exclude-libs,libgcc.a -Wl,--exclude-libs,libgcc_real.a -Wl,--exclude-libs,libatomic.a -static-libstdc++ -Wl,--build-id -Wl,--fatal-warnings -Wl,--no-undefined -Qunused-arguments","linkLibraries":"-latomic -lm","linkerLanguage":"CXX","name":"glm_shared","sourceDirectory":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/cpp/glm-master/glm","sysroot":"/Users/jian.yeung/Library/Android/sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/darwin-x86_64/sysroot","type":"SHARED_LIBRARY"},{"buildDirectory":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86_64/src/main/cpp/glm-master/glm","name":"glm","sourceDirectory":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/cpp/glm-master/glm","type":"INTERFACE_LIBRARY"}]},{"buildDirectory":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86_64/src/main/cpp/glm-master","name":"glm","sourceDirectory":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/cpp/glm-master","targets":[{"artifacts":["/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/libs/x86_64/libglm_shared.so"],"buildDirectory":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86_64/src/main/cpp/glm-master/glm","fileGroups":[{"compileFlags":"-g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -std=c++11 -frtti -fexceptions -O0 -fno-limit-debug-info  -fPIC  ","defines":["RENDER_SUPPORTED","glm_shared_EXPORTS"],"includePath":[{"path":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/cpp/glm-master/glm/.."}],"isGenerated":false,"language":"CXX","sources":["detail/glm.cpp"]},{"isGenerated":false,"sources":["../CMakeLists.txt","../copying.txt","../manual.md","../readme.md","../util/glm.natvis","common.hpp","exponential.hpp","ext.hpp","fwd.hpp","geometric.hpp","glm.hpp","integer.hpp","mat2x2.hpp","mat2x3.hpp","mat2x4.hpp","mat3x2.hpp","mat3x3.hpp","mat3x4.hpp","mat4x2.hpp","mat4x3.hpp","mat4x4.hpp","matrix.hpp","packing.hpp","trigonometric.hpp","vec2.hpp","vec3.hpp","vec4.hpp","vector_relational.hpp","detail/func_common.inl","detail/func_common_simd.inl","detail/func_exponential.inl","detail/func_exponential_simd.inl","detail/func_geometric.inl","detail/func_geometric_simd.inl","detail/func_integer.inl","detail/func_integer_simd.inl","detail/func_matrix.inl","detail/func_matrix_simd.inl","detail/func_packing.inl","detail/func_packing_simd.inl","detail/func_trigonometric.inl","detail/func_trigonometric_simd.inl","detail/func_vector_relational.inl","detail/func_vector_relational_simd.inl","detail/type_half.inl","detail/type_mat2x2.inl","detail/type_mat2x3.inl","detail/type_mat2x4.inl","detail/type_mat3x2.inl","detail/type_mat3x3.inl","detail/type_mat3x4.inl","detail/type_mat4x2.inl","detail/type_mat4x3.inl","detail/type_mat4x4.inl","detail/type_mat4x4_simd.inl","detail/type_quat.inl","detail/type_quat_simd.inl","detail/type_vec1.inl","detail/type_vec2.inl","detail/type_vec3.inl","detail/type_vec4.inl","detail/type_vec4_simd.inl","detail/_features.hpp","detail/_fixes.hpp","detail/_noise.hpp","detail/_swizzle.hpp","detail/_swizzle_func.hpp","detail/_vectorize.hpp","detail/compute_common.hpp","detail/compute_vector_relational.hpp","detail/qualifier.hpp","detail/setup.hpp","detail/type_float.hpp","detail/type_half.hpp","detail/type_mat2x2.hpp","detail/type_mat2x3.hpp","detail/type_mat2x4.hpp","detail/type_mat3x2.hpp","detail/type_mat3x3.hpp","detail/type_mat3x4.hpp","detail/type_mat4x2.hpp","detail/type_mat4x3.hpp","detail/type_mat4x4.hpp","detail/type_quat.hpp","detail/type_vec1.hpp","detail/type_vec2.hpp","detail/type_vec3.hpp","detail/type_vec4.hpp","ext/matrix_clip_space.inl","ext/matrix_common.inl","ext/matrix_projection.inl","ext/matrix_relational.inl","ext/matrix_transform.inl","ext/quaternion_common.inl","ext/quaternion_common_simd.inl","ext/quaternion_exponential.inl","ext/quaternion_geometric.inl","ext/quaternion_relational.inl","ext/quaternion_transform.inl","ext/quaternion_trigonometric.inl","ext/scalar_common.inl","ext/scalar_constants.inl","ext/scalar_integer.inl","ext/scalar_packing.inl","ext/scalar_relational.inl","ext/scalar_ulp.inl","ext/vector_common.inl","ext/vector_integer.inl","ext/vector_packing.inl","ext/vector_relational.inl","ext/vector_ulp.inl","ext/matrix_clip_space.hpp","ext/matrix_common.hpp","ext/matrix_double2x2.hpp","ext/matrix_double2x2_precision.hpp","ext/matrix_double2x3.hpp","ext/matrix_double2x3_precision.hpp","ext/matrix_double2x4.hpp","ext/matrix_double2x4_precision.hpp","ext/matrix_double3x2.hpp","ext/matrix_double3x2_precision.hpp","ext/matrix_double3x3.hpp","ext/matrix_double3x3_precision.hpp","ext/matrix_double3x4.hpp","ext/matrix_double3x4_precision.hpp","ext/matrix_double4x2.hpp","ext/matrix_double4x2_precision.hpp","ext/matrix_double4x3.hpp","ext/matrix_double4x3_precision.hpp","ext/matrix_double4x4.hpp","ext/matrix_double4x4_precision.hpp","ext/matrix_float2x2.hpp","ext/matrix_float2x2_precision.hpp","ext/matrix_float2x3.hpp","ext/matrix_float2x3_precision.hpp","ext/matrix_float2x4.hpp","ext/matrix_float2x4_precision.hpp","ext/matrix_float3x2.hpp","ext/matrix_float3x2_precision.hpp","ext/matrix_float3x3.hpp","ext/matrix_float3x3_precision.hpp","ext/matrix_float3x4.hpp","ext/matrix_float3x4_precision.hpp","ext/matrix_float4x2.hpp","ext/matrix_float4x2_precision.hpp","ext/matrix_float4x3.hpp","ext/matrix_float4x3_precision.hpp","ext/matrix_float4x4.hpp","ext/matrix_float4x4_precision.hpp","ext/matrix_int2x2.hpp","ext/matrix_int2x2_sized.hpp","ext/matrix_int2x3.hpp","ext/matrix_int2x3_sized.hpp","ext/matrix_int2x4.hpp","ext/matrix_int2x4_sized.hpp","ext/matrix_int3x2.hpp","ext/matrix_int3x2_sized.hpp","ext/matrix_int3x3.hpp","ext/matrix_int3x3_sized.hpp","ext/matrix_int3x4.hpp","ext/matrix_int3x4_sized.hpp","ext/matrix_int4x2.hpp","ext/matrix_int4x2_sized.hpp","ext/matrix_int4x3.hpp","ext/matrix_int4x3_sized.hpp","ext/matrix_int4x4.hpp","ext/matrix_int4x4_sized.hpp","ext/matrix_projection.hpp","ext/matrix_relational.hpp","ext/matrix_transform.hpp","ext/matrix_uint2x2.hpp","ext/matrix_uint2x2_sized.hpp","ext/matrix_uint2x3.hpp","ext/matrix_uint2x3_sized.hpp","ext/matrix_uint2x4.hpp","ext/matrix_uint2x4_sized.hpp","ext/matrix_uint3x2.hpp","ext/matrix_uint3x2_sized.hpp","ext/matrix_uint3x3.hpp","ext/matrix_uint3x3_sized.hpp","ext/matrix_uint3x4.hpp","ext/matrix_uint3x4_sized.hpp","ext/matrix_uint4x2.hpp","ext/matrix_uint4x2_sized.hpp","ext/matrix_uint4x3.hpp","ext/matrix_uint4x3_sized.hpp","ext/matrix_uint4x4.hpp","ext/matrix_uint4x4_sized.hpp","ext/quaternion_common.hpp","ext/quaternion_double.hpp","ext/quaternion_double_precision.hpp","ext/quaternion_exponential.hpp","ext/quaternion_float.hpp","ext/quaternion_float_precision.hpp","ext/quaternion_geometric.hpp","ext/quaternion_relational.hpp","ext/quaternion_transform.hpp","ext/quaternion_trigonometric.hpp","ext/scalar_common.hpp","ext/scalar_constants.hpp","ext/scalar_int_sized.hpp","ext/scalar_integer.hpp","ext/scalar_packing.hpp","ext/scalar_relational.hpp","ext/scalar_uint_sized.hpp","ext/scalar_ulp.hpp","ext/vector_bool1.hpp","ext/vector_bool1_precision.hpp","ext/vector_bool2.hpp","ext/vector_bool2_precision.hpp","ext/vector_bool3.hpp","ext/vector_bool3_precision.hpp","ext/vector_bool4.hpp","ext/vector_bool4_precision.hpp","ext/vector_common.hpp","ext/vector_double1.hpp","ext/vector_double1_precision.hpp","ext/vector_double2.hpp","ext/vector_double2_precision.hpp","ext/vector_double3.hpp","ext/vector_double3_precision.hpp","ext/vector_double4.hpp","ext/vector_double4_precision.hpp","ext/vector_float1.hpp","ext/vector_float1_precision.hpp","ext/vector_float2.hpp","ext/vector_float2_precision.hpp","ext/vector_float3.hpp","ext/vector_float3_precision.hpp","ext/vector_float4.hpp","ext/vector_float4_precision.hpp","ext/vector_int1.hpp","ext/vector_int1_sized.hpp","ext/vector_int2.hpp","ext/vector_int2_sized.hpp","ext/vector_int3.hpp","ext/vector_int3_sized.hpp","ext/vector_int4.hpp","ext/vector_int4_sized.hpp","ext/vector_integer.hpp","ext/vector_packing.hpp","ext/vector_relational.hpp","ext/vector_uint1.hpp","ext/vector_uint1_sized.hpp","ext/vector_uint2.hpp","ext/vector_uint2_sized.hpp","ext/vector_uint3.hpp","ext/vector_uint3_sized.hpp","ext/vector_uint4.hpp","ext/vector_uint4_sized.hpp","ext/vector_ulp.hpp","gtc/bitfield.inl","gtc/color_space.inl","gtc/constants.inl","gtc/epsilon.inl","gtc/integer.inl","gtc/matrix_access.inl","gtc/matrix_inverse.inl","gtc/matrix_transform.inl","gtc/noise.inl","gtc/packing.inl","gtc/quaternion.inl","gtc/quaternion_simd.inl","gtc/random.inl","gtc/reciprocal.inl","gtc/round.inl","gtc/type_precision.inl","gtc/type_ptr.inl","gtc/ulp.inl","gtc/bitfield.hpp","gtc/color_space.hpp","gtc/constants.hpp","gtc/epsilon.hpp","gtc/integer.hpp","gtc/matrix_access.hpp","gtc/matrix_integer.hpp","gtc/matrix_inverse.hpp","gtc/matrix_transform.hpp","gtc/noise.hpp","gtc/packing.hpp","gtc/quaternion.hpp","gtc/random.hpp","gtc/reciprocal.hpp","gtc/round.hpp","gtc/type_aligned.hpp","gtc/type_precision.hpp","gtc/type_ptr.hpp","gtc/ulp.hpp","gtc/vec1.hpp","gtx/associated_min_max.inl","gtx/bit.inl","gtx/closest_point.inl","gtx/color_encoding.inl","gtx/color_space.inl","gtx/color_space_YCoCg.inl","gtx/common.inl","gtx/compatibility.inl","gtx/component_wise.inl","gtx/dual_quaternion.inl","gtx/easing.inl","gtx/euler_angles.inl","gtx/extend.inl","gtx/extended_min_max.inl","gtx/exterior_product.inl","gtx/fast_exponential.inl","gtx/fast_square_root.inl","gtx/fast_trigonometry.inl","gtx/float_notmalize.inl","gtx/functions.inl","gtx/gradient_paint.inl","gtx/handed_coordinate_space.inl","gtx/hash.inl","gtx/integer.inl","gtx/intersect.inl","gtx/io.inl","gtx/log_base.inl","gtx/matrix_cross_product.inl","gtx/matrix_decompose.inl","gtx/matrix_factorisation.inl","gtx/matrix_interpolation.inl","gtx/matrix_major_storage.inl","gtx/matrix_operation.inl","gtx/matrix_query.inl","gtx/matrix_transform_2d.inl","gtx/mixed_product.inl","gtx/norm.inl","gtx/normal.inl","gtx/normalize_dot.inl","gtx/number_precision.inl","gtx/optimum_pow.inl","gtx/orthonormalize.inl","gtx/perpendicular.inl","gtx/polar_coordinates.inl","gtx/projection.inl","gtx/quaternion.inl","gtx/raw_data.inl","gtx/rotate_normalized_axis.inl","gtx/rotate_vector.inl","gtx/scalar_relational.inl","gtx/spline.inl","gtx/std_based_type.inl","gtx/string_cast.inl","gtx/texture.inl","gtx/transform.inl","gtx/transform2.inl","gtx/type_aligned.inl","gtx/type_trait.inl","gtx/vector_angle.inl","gtx/vector_query.inl","gtx/wrap.inl","gtx/associated_min_max.hpp","gtx/bit.hpp","gtx/closest_point.hpp","gtx/color_encoding.hpp","gtx/color_space.hpp","gtx/color_space_YCoCg.hpp","gtx/common.hpp","gtx/compatibility.hpp","gtx/component_wise.hpp","gtx/dual_quaternion.hpp","gtx/easing.hpp","gtx/euler_angles.hpp","gtx/extend.hpp","gtx/extended_min_max.hpp","gtx/exterior_product.hpp","gtx/fast_exponential.hpp","gtx/fast_square_root.hpp","gtx/fast_trigonometry.hpp","gtx/functions.hpp","gtx/gradient_paint.hpp","gtx/handed_coordinate_space.hpp","gtx/hash.hpp","gtx/integer.hpp","gtx/intersect.hpp","gtx/io.hpp","gtx/log_base.hpp","gtx/matrix_cross_product.hpp","gtx/matrix_decompose.hpp","gtx/matrix_factorisation.hpp","gtx/matrix_interpolation.hpp","gtx/matrix_major_storage.hpp","gtx/matrix_operation.hpp","gtx/matrix_query.hpp","gtx/matrix_transform_2d.hpp","gtx/mixed_product.hpp","gtx/norm.hpp","gtx/normal.hpp","gtx/normalize_dot.hpp","gtx/number_precision.hpp","gtx/optimum_pow.hpp","gtx/orthonormalize.hpp","gtx/perpendicular.hpp","gtx/polar_coordinates.hpp","gtx/projection.hpp","gtx/quaternion.hpp","gtx/range.hpp","gtx/raw_data.hpp","gtx/rotate_normalized_axis.hpp","gtx/rotate_vector.hpp","gtx/scalar_multiplication.hpp","gtx/scalar_relational.hpp","gtx/spline.hpp","gtx/std_based_type.hpp","gtx/string_cast.hpp","gtx/texture.hpp","gtx/transform.hpp","gtx/transform2.hpp","gtx/type_aligned.hpp","gtx/type_trait.hpp","gtx/vec_swizzle.hpp","gtx/vector_angle.hpp","gtx/vector_query.hpp","gtx/wrap.hpp","simd/common.h","simd/exponential.h","simd/geometric.h","simd/integer.h","simd/matrix.h","simd/neon.h","simd/packing.h","simd/platform.h","simd/trigonometric.h","simd/vector_relational.h"]}],"fullName":"libglm_shared.so","linkFlags":"-Wl,--exclude-libs,libgcc.a -Wl,--exclude-libs,libgcc_real.a -Wl,--exclude-libs,libatomic.a -static-libstdc++ -Wl,--build-id -Wl,--fatal-warnings -Wl,--no-undefined -Qunused-arguments","linkLibraries":"-latomic -lm","linkerLanguage":"CXX","name":"glm_shared","sourceDirectory":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/cpp/glm-master/glm","sysroot":"/Users/jian.yeung/Library/Android/sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/darwin-x86_64/sysroot","type":"SHARED_LIBRARY"},{"buildDirectory":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/x86_64/src/main/cpp/glm-master/glm","name":"glm","sourceDirectory":"/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/src/main/cpp/glm-master/glm","type":"INTERFACE_LIBRARY"}]}]}],"cookie":"","inReplyTo":"codemodel","type":"reply"}
+
+CMAKE SERVER: ]== "CMake Server" ==]
+

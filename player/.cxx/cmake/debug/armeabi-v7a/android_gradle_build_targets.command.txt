@@ -1,0 +1,8 @@
+Executable : /Users/jian.yeung/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja
+arguments : 
+-C
+/Users/jian.yeung/Documents/Android-Project/BBQVideo/player/.cxx/cmake/debug/armeabi-v7a
+glm_shared
+player-lib
+jvmArgs : 
+
