@@ -53,7 +53,9 @@ TriangleFilter::TriangleFilter() : program(0), mPositionHandle(0), mColorHandle(
 }
 
 TriangleFilter::~TriangleFilter() {
-    DLOGI(TRIANGLE_FILTER_TAG, "~~~~TriangleFilter ~TriangleFilter~~~\n");
+    if (DebugEnable && FILTER_DEBUG) {
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~~TriangleFilter ~TriangleFilter~~~\n");
+    }
 }
 
 void TriangleFilter::init() {
@@ -65,7 +67,9 @@ void TriangleFilter::unInit() {
 }
 
 void TriangleFilter::onSurfaceCreated(ANativeWindow *nativeWindow) {
-    DLOGI(TRIANGLE_FILTER_TAG, "~~~Triangle Filter Render onSurfaceCreated~~~\n");
+    if (DebugEnable && FILTER_DEBUG) {
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~Triangle Filter Render onSurfaceCreated~~~\n");
+    }
     if (program != 0) {
         return;
     }
@@ -80,7 +84,9 @@ void TriangleFilter::onSurfaceCreated(ANativeWindow *nativeWindow) {
 }
 
 void TriangleFilter::onSurfaceChanged(ANativeWindow *nativeWindow, int format, int width, int height) {
-    DLOGI(TRIANGLE_FILTER_TAG, "~~~Triangle Filter Render onSurfaceChanged~~~\n");
+    if (DebugEnable && FILTER_DEBUG) {
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~Triangle Filter Render onSurfaceChanged~~~\n");
+    }
     this->format = format;
     this->width = width;
     this->height = height;
@@ -92,7 +98,9 @@ void TriangleFilter::onSurfaceChanged(ANativeWindow *nativeWindow, int format, i
 }
 
 void TriangleFilter::draw() {
-    DLOGI(TRIANGLE_FILTER_TAG, "~~~Triangle Filter Render draw~~~\n");
+    if (DebugEnable && FILTER_DEBUG) {
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~Triangle Filter Render draw~~~\n");
+    }
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glUseProgram(program);
     glUniformMatrix4fv(mModelHandle, 1, GL_FALSE, glm::value_ptr(Model));

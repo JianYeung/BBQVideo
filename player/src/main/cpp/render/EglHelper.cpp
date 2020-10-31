@@ -16,14 +16,14 @@ EglHelper::~EglHelper() {
 }
 
 bool EglHelper::start() {
-    if (EGL_DEBUG) {
+    if (DebugEnable && EGL_DEBUG) {
         DFLOGI(EGL_TAG, "start() tid = %d", GetCurrentThreadID());
     }
     return inner_init();
 }
 
 bool EglHelper::start(EGLSurfaceType surfaceType) {
-    if (EGL_DEBUG) {
+    if (DebugEnable && EGL_DEBUG) {
         DFLOGI(EGL_TAG, "start() surfaceType = %d, tid = %d", (int) surfaceType,
                GetCurrentThreadID());
     }
@@ -36,7 +36,7 @@ bool EglHelper::createEglSurface(ANativeWindow *window) {
 }
 
 bool EglHelper::createEglSurface(ANativeWindow *window, int width, int height) {
-    if (EGL_DEBUG) {
+    if (DebugEnable && EGL_DEBUG) {
         DFLOGI(EGL_TAG, "createSurface() tid = %d", GetCurrentThreadID());
     }
     bool result;
@@ -49,7 +49,9 @@ bool EglHelper::createEglSurface(ANativeWindow *window, int width, int height) {
             result = inner_createWindowEglSurface(window);
             break;
     }
-    DLOGI(EGL_TAG, "createSurface() result = %d ", result);
+    if (DebugEnable && EGL_DEBUG) {
+        DFLOGD(EGL_TAG, "createSurface() result = %d ", result);
+    }
     if (result) {
         inner_makeEglContext();
     } else {
@@ -59,21 +61,21 @@ bool EglHelper::createEglSurface(ANativeWindow *window, int width, int height) {
 }
 
 bool EglHelper::swapBuffer() {
-    if (EGL_DEBUG) {
+    if (DebugEnable && EGL_DEBUG) {
         DFLOGI(EGL_TAG, "swapBuffer() tid = %d", GetCurrentThreadID());
     }
     return inner_swapBuffer();
 }
 
 void EglHelper::destroyEglSurface() {
-    if (EGL_DEBUG) {
+    if (DebugEnable && EGL_DEBUG) {
         DFLOGI(EGL_TAG, "destroySurface() tid = %d", GetCurrentThreadID());
     }
     inner_destroyEglSurface();
 }
 
 void EglHelper::finish() {
-    if (EGL_DEBUG) {
+    if (DebugEnable && EGL_DEBUG) {
         DFLOGI(EGL_TAG, "finish() tid = %d", GetCurrentThreadID());
     }
     inner_destroyEglSurface();
@@ -81,7 +83,7 @@ void EglHelper::finish() {
 }
 
 bool EglHelper::inner_init() {
-    if (EGL_DEBUG) {
+    if (DebugEnable && EGL_DEBUG) {
         DFLOGI(EGL_TAG, "inner_init() tid = %d", GetCurrentThreadID());
     }
     mEglDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
@@ -117,7 +119,7 @@ bool EglHelper::inner_init() {
 }
 
 bool EglHelper::inner_createWindowEglSurface(ANativeWindow *nativeWindow) {
-    if (EGL_DEBUG) {
+    if (DebugEnable && EGL_DEBUG) {
         DFLOGI(EGL_TAG, "inner_createWindowEglSurface() tid = %d", GetCurrentThreadID());
     }
 
@@ -137,12 +139,9 @@ bool EglHelper::inner_createWindowEglSurface(ANativeWindow *nativeWindow) {
 
     EGLint format;
     if (!eglGetConfigAttrib(mEglDisplay, mEglConfig, EGL_NATIVE_VISUAL_ID, &format)) {
-        DFLOGE(EGL_TAG, "eglGetConfigAttrib() failed tid = %d", GetCurrentThreadID());
         checkEglError("eglGetConfigAttrib");
         inner_destroyEglSurfaceImp();
         return false;
-    } else {
-        DFLOGI(EGL_TAG, "eglGetConfigAttrib() Success tid = %d", GetCurrentThreadID());
     }
 
     ANativeWindow_setBuffersGeometry(nativeWindow, 0, 0, format);
@@ -155,7 +154,7 @@ bool EglHelper::inner_createWindowEglSurface(ANativeWindow *nativeWindow) {
         switch (eglGetError()) {
             case EGL_BAD_ALLOC:
                 // Not enough resources available. Handle and recover
-                if (EGL_DEBUG) {
+                if (DebugEnable && EGL_DEBUG) {
                     DFLOGE(EGL_TAG,
                            "eglCreateWindowSurface() Not enough resources available tid = %d",
                            GetCurrentThreadID());
@@ -163,7 +162,7 @@ bool EglHelper::inner_createWindowEglSurface(ANativeWindow *nativeWindow) {
                 break;
             case EGL_BAD_CONFIG:
                 // Verify that provided EGLConfig is valid
-                if (EGL_DEBUG) {
+                if (DebugEnable && EGL_DEBUG) {
                     DFLOGE(EGL_TAG,
                            "eglCreateWindowSurface() provided EGLConfig is invalid tid = %d",
                            GetCurrentThreadID());
@@ -172,7 +171,7 @@ bool EglHelper::inner_createWindowEglSurface(ANativeWindow *nativeWindow) {
             case EGL_BAD_PARAMETER:
                 // Verify that the EGL_WIDTH and EGL_HEIGHT are
                 // non-negative values
-                if (EGL_DEBUG) {
+                if (DebugEnable && EGL_DEBUG) {
                     DFLOGE(EGL_TAG,
                            "eglCreateWindowSurface() provided EGL_WIDTH and EGL_HEIGHT is invalid tid = %d",
                            GetCurrentThreadID());
@@ -181,7 +180,7 @@ bool EglHelper::inner_createWindowEglSurface(ANativeWindow *nativeWindow) {
             case EGL_BAD_MATCH:
                 // Check window and EGLConfig attributes to determine
                 // compatibility and pbuffer-texture parameters
-                if (EGL_DEBUG) {
+                if (DebugEnable && EGL_DEBUG) {
                     DFLOGE(EGL_TAG,
                            "eglCreateWindowSurface() Check window and EGLConfig attributes tid = %d",
                            GetCurrentThreadID());
@@ -189,8 +188,6 @@ bool EglHelper::inner_createWindowEglSurface(ANativeWindow *nativeWindow) {
                 break;
             default:
                 if (eglGetError() != EGL_SUCCESS) {
-                    DFLOGE(EGL_TAG, "eglCreateWindowSurface() failed tid = %d",
-                           GetCurrentThreadID());
                     checkEglError("eglCreateWindowSurface");
                 }
                 break;
@@ -202,7 +199,7 @@ bool EglHelper::inner_createWindowEglSurface(ANativeWindow *nativeWindow) {
 }
 
 bool EglHelper::inner_createPbufferEglSurface(int width, int height) {
-    if (EGL_DEBUG) {
+    if (DebugEnable && EGL_DEBUG) {
         DFLOGI("EglHelper", "inner_createPbufferEglSurface() tid = %d", GetCurrentThreadID());
     }
     if (mEglDisplay == nullptr) {
@@ -225,36 +222,41 @@ bool EglHelper::inner_createPbufferEglSurface(int width, int height) {
         switch (eglGetError()) {
             case EGL_BAD_ALLOC:
                 // Not enough resources available. Handle and recover
-                if (EGL_DEBUG) {
+                if (DebugEnable && EGL_DEBUG) {
                     DFLOGE(EGL_TAG,
-                           "eglCreateWindowSurface() Not enough resources available tid = %d",
+                           "eglCreatePbufferSurface() Not enough resources available tid = %d",
                            GetCurrentThreadID());
                 }
                 break;
             case EGL_BAD_CONFIG:
                 // Verify that provided EGLConfig is valid
-                if (EGL_DEBUG) {
+                if (DebugEnable && EGL_DEBUG) {
                     DFLOGE(EGL_TAG,
-                           "eglCreateWindowSurface() provided EGLConfig is invalid tid = %d",
+                           "eglCreatePbufferSurface() provided EGLConfig is invalid tid = %d",
                            GetCurrentThreadID());
                 }
                 break;
             case EGL_BAD_PARAMETER:
                 // Verify that the EGL_WIDTH and EGL_HEIGHT are
                 // non-negative values
-                if (EGL_DEBUG) {
+                if (DebugEnable && EGL_DEBUG) {
                     DFLOGE(EGL_TAG,
-                           "eglCreateWindowSurface() provided EGL_WIDTH and EGL_HEIGHT is invalid tid = %d",
+                           "eglCreatePbufferSurface() provided EGL_WIDTH and EGL_HEIGHT is invalid tid = %d",
                            GetCurrentThreadID());
                 }
                 break;
             case EGL_BAD_MATCH:
                 // Check window and EGLConfig attributes to determine
                 // compatibility and pbuffer-texture parameters
-                if (EGL_DEBUG) {
+                if (DebugEnable && EGL_DEBUG) {
                     DFLOGE(EGL_TAG,
-                           "eglCreateWindowSurface() Check window and EGLConfig attributes tid = %d",
+                           "eglCreatePbufferSurface() Check pbuffer and EGLConfig attributes tid = %d",
                            GetCurrentThreadID());
+                }
+                break;
+            default:
+                if (eglGetError() != EGL_SUCCESS) {
+                    checkEglError("eglCreatePbufferSurface");
                 }
                 break;
         }
@@ -265,7 +267,7 @@ bool EglHelper::inner_createPbufferEglSurface(int width, int height) {
 }
 
 void EglHelper::inner_makeEglContext() {
-    if (EGL_DEBUG) {
+    if (DebugEnable && EGL_DEBUG) {
         DFLOGI(EGL_TAG, "inner_makeEglContext() tid = %d", GetCurrentThreadID());
     }
 
@@ -289,7 +291,7 @@ void EglHelper::inner_makeEglContext() {
 }
 
 void EglHelper::inner_doneEglContext() {
-    if (EGL_DEBUG) {
+    if (DebugEnable && EGL_DEBUG) {
         DFLOGI(EGL_TAG, "inner_doneEglContext() tid = %d", GetCurrentThreadID());
     }
 
@@ -303,35 +305,40 @@ void EglHelper::inner_doneEglContext() {
 }
 
 bool EglHelper::inner_swapBuffer() {
-    if (EGL_DEBUG) {
+    if (DebugEnable && EGL_DEBUG) {
         DFLOGI(EGL_TAG, "inner_swapBuffer() tid = %d", GetCurrentThreadID());
     }
     if (mEglDisplay != EGL_NO_DISPLAY && mEglSurface != EGL_NO_SURFACE) {
         bool status = eglSwapBuffers(mEglDisplay, mEglSurface);
-        if (EGL_DEBUG) {
+        if (DebugEnable && EGL_DEBUG) {
             DFLOGD(EGL_TAG, "inner_swapBuffer() status = %d", status);
         }
         if(!status) {
             checkEglError("eglSwapBuffers");
+            swapEglError = eglGetError();
         }
         return status;
     }
     return false;
 }
 
+int EglHelper::getSwapEglError() {
+    return swapEglError;
+}
+
 bool EglHelper::hasEglSurface() {
-    if (EGL_DEBUG) {
+    if (DebugEnable && EGL_DEBUG) {
         DFLOGI(EGL_TAG, "hasEglSurface() tid = %d", GetCurrentThreadID());
     }
     bool result = mEglSurface != nullptr && mEglSurface != EGL_NO_SURFACE;
-    if (EGL_DEBUG) {
+    if (DebugEnable && EGL_DEBUG) {
         //DFLOGD(EGL_TAG, "hasEglSurface() result = %d, tid = %d", result, GetCurrentThreadID());
     }
     return result;
 }
 
 void EglHelper::inner_destroyEglSurface() {
-    if (EGL_DEBUG) {
+    if (DebugEnable && EGL_DEBUG) {
         DFLOGI(EGL_TAG, "inner_destroyEglSurface() tid = %d", GetCurrentThreadID());
     }
 
@@ -341,34 +348,36 @@ void EglHelper::inner_destroyEglSurface() {
 }
 
 void EglHelper::inner_destroyEglSurfaceImp() {
-    if (EGL_DEBUG) {
+    if (DebugEnable && EGL_DEBUG) {
         DFLOGI(EGL_TAG, "inner_destroyEglSurfaceImp() tid = %d", GetCurrentThreadID());
     }
     if (mEglSurface != nullptr && mEglSurface != EGL_NO_SURFACE) {
         if (!eglMakeCurrent(mEglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT)) {
             checkEglError("eglMakeCurrent");
+            return;
         }
 
         if (!eglDestroySurface(mEglDisplay, mEglSurface)) {
             checkEglError("eglDestroySurface");
+            return;
         }
         mEglSurface = nullptr;
     }
 }
 
 bool EglHelper::hasEglContext() {
-    if (EGL_DEBUG) {
+    if (DebugEnable && EGL_DEBUG) {
         DFLOGI(EGL_TAG, "hasEglContext() tid = %d", GetCurrentThreadID());
     }
     bool result = mEglContext != nullptr && mEglContext != EGL_NO_CONTEXT;
-    if (EGL_DEBUG) {
+    if (DebugEnable && EGL_DEBUG) {
         //DFLOGD(EGL_TAG, "hasEglContext() result = %d, tid = %d", result, GetCurrentThreadID());
     }
     return result;
 }
 
 void EglHelper::inner_finish() {
-    if (EGL_DEBUG) {
+    if (DebugEnable && EGL_DEBUG) {
         DFLOGI(EGL_TAG, "inner_finish() tid = %d", GetCurrentThreadID());
     }
 
@@ -376,12 +385,14 @@ void EglHelper::inner_finish() {
         if (mEglContext != nullptr && mEglContext != EGL_NO_CONTEXT) {
             if (!eglDestroyContext(mEglDisplay, mEglContext)) {
                 checkEglError("eglDestroyContext");
+                return;
             }
             mEglContext = nullptr;
         }
 
         if (!eglTerminate(mEglDisplay)) {
             checkEglError("eglTerminate");
+            return;
         }
         mEglDisplay = nullptr;
     }

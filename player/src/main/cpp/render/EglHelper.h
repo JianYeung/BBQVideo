@@ -50,6 +50,7 @@ class EglHelper {
 
 private:
     const char *EGL_TAG = "EglHelper";
+    EGLSurfaceType mEglSurfaceType = WINDOW_SURFACE;
 
     EGLint mEglMajorVersion;
     EGLint mEglMinorVersion;
@@ -60,7 +61,7 @@ private:
     EGLContext mEglContext = nullptr;
     EGLSurface mEglSurface = nullptr;
 
-    EGLSurfaceType mEglSurfaceType = WINDOW_SURFACE;
+    int swapEglError = EGL_SUCCESS;
 
 private:
     bool inner_init();
@@ -84,6 +85,7 @@ public:
     bool swapBuffer();
     bool hasEglSurface();
     bool hasEglContext();
+    int getSwapEglError();
     void destroyEglSurface();
     void finish();
 };

@@ -8,8 +8,9 @@
 #include <EGL/egl.h>
 #include <GLES3/gl3.h>
 
-#define EGL_ERROR_TAG "egl_error"
-#define GL_ERROR_TAG "gl_error"
+#define EGL_ERROR_TAG "EGLError"
+#define GL_ERROR_TAG "GLError"
+
 #define GL_ERROR_DEBUG true
 
 static void checkEglError(const char* op) {
@@ -19,7 +20,7 @@ static void checkEglError(const char* op) {
             continue;
         }
 
-        if (GL_ERROR_DEBUG) {
+        if (DebugEnable && GL_ERROR_DEBUG) {
             DFLOGE(EGL_ERROR_TAG, "error::after %s() eglError (0x%x)\n", op, error);
         }
     }
@@ -28,7 +29,7 @@ static void checkEglError(const char* op) {
 static void checkGlError(const char* op) {
     GLint error;
     for (error = glGetError(); error; error = glGetError()) {
-        if (GL_ERROR_DEBUG) {
+        if (DebugEnable && GL_ERROR_DEBUG) {
             DFLOGE(GL_ERROR_TAG, "error::after %s() glError (0x%x)\n", op, error);
         }
     }

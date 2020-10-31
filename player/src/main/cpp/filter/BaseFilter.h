@@ -8,6 +8,8 @@
 
 #include <android/native_window.h>
 
+#define FILTER_DEBUG true
+
 enum class FilterType {
     NORMAL = 0,
     TRIANGLE = 1,

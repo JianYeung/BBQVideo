@@ -44,4 +44,6 @@
 #define DFLOGD(tag, format, ...)  __android_log_print(ANDROID_LOG_DEBUG, tag, format, ##__VA_ARGS__)
 #define DFLOGE(tag, format, ...)  __android_log_print(ANDROID_LOG_ERROR, tag, format, ##__VA_ARGS__)
 
+const bool DebugEnable = true;
+
 #endif //BBQVIDEO_DLOG_H
