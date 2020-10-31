@@ -36,13 +36,24 @@ void GLRender::setRenderMode(RenderMode mode) {
     if (GL_RENDER_DEBUG) {
         DLOGI(GL_RENDER_TAG, "setRenderMode()");
     }
-    this->renderMode = mode;
+    this->mRenderMode = mode;
 }
 
 void GLRender::requestRender() {
     if (GL_RENDER_DEBUG) {
         DLOGI(GL_RENDER_TAG, "requestRender()");
     }
+    this->mRequestRender = true;
+}
+
+bool GLRender::readyToDraw() {
+    DFLOGI(GL_RENDER_TAG,
+           "readyToDraw mPaused = %d, mHasSurface = %ld, mSurfaceIsBad = %d, mLostEglContext = %d, mWidth = %d, mHeight = %d, mRequestRender = %d",
+           mPaused, mHasSurface, mSurfaceIsBad, mLostEglContext, mSurfaceWidth, mSurfaceHeight,
+           mRequestRender);
+    return (!mPaused) && mHasSurface && (!mSurfaceIsBad) && (!mLostEglContext)
+           && (mSurfaceWidth > 0) && (mSurfaceHeight > 0) &&
+           (mRequestRender || mRenderMode == RenderMode::RENDERMODE_CONTINUOUSLY);
 }
 
 void *guardedRun(void *data) {
@@ -55,56 +66,121 @@ void GLRender::setFilter(BaseFilter *filter) {
     if (GL_RENDER_DEBUG) {
         DLOGI(GL_RENDER_TAG, "setFilter()");
     }
-    if (filter_ != nullptr) {
+    if (mFilter != nullptr) {
         throw std::runtime_error("setFilter has already been called for this instance.");
     }
-    this->filter_ = filter;
+    this->mFilter = filter;
     this->isRunning = true;
     pthread_create(&render_thread, nullptr, guardedRun, this);
 }
 
 void GLRender::prepareRenderThread() {
-    eglHelper = EglHelper();
-    pthread_mutex_lock(&render_mutex);
+    mEglHelper = EglHelper();
     while (isRunning) {
-        if (eglHelper.eglSurfaceIsBad && hasEglSurface) {
+        pthread_mutex_lock(&render_mutex);
+        if (!mHasSurface) {
+            pthread_cond_wait(&surface_cond, &render_mutex);
+        }
+
+        if (mEglHelper.hasEglContext()) {
+            //DFLOGD(GL_RENDER_TAG, "mHaveEGLContext = true");
+            mHasEglContext = true;
+        }
+
+        if (mEglHelper.hasEglSurface()) {
+            //DFLOGD(GL_RENDER_TAG, "mHaveEGLSurface = true");
+            mHasEglSurface = true;
+        }
+
+        if (mSurfaceIsBad && mHasEglSurface) {
+            DFLOGE(GL_RENDER_TAG, "mSurfaceIsBad = true");
+            stopEglSurfaceLocked();
+        }
+
+        if (mLostEglContext && mHasEglContext) {
+            DFLOGE(GL_RENDER_TAG, "mLostEglContext = true");
             stopEglContextLocked();
-            return;
         }
 
-        if (eglHelper.lostEglContext && hasEglContext) {
+        bool pausing = false;
+        if (mPaused != mRequestPaused) {
+            DFLOGD(GL_RENDER_TAG, "mRequestPaused = true");
+            pausing = mRequestPaused;
+            mPaused = mRequestPaused;
+        }
+
+        if (pausing && mHasEglSurface) {
+            DFLOGD(GL_RENDER_TAG, "pausing stopEglSurfaceLocked");
+            stopEglSurfaceLocked();
+        }
+
+        if (pausing && mHasEglContext) {
+            DFLOGD(GL_RENDER_TAG, "pausing stopEglContextLocked");
             stopEglContextLocked();
-            return;
         }
 
-        if (!hasEglContext) {
-            hasEglContext = eglHelper.start();
-        }
-
-        if (hasEglContext && !hasEglSurface) {
-            if (surfaceChanged) {
-                hasEglSurface = eglHelper.createSurface(surfaceWindow, surfaceWidth, surfaceHeight);
-            } else {
+        if (readyToDraw()) {
+            if (!mHasEglContext && !mHasEglSurface && !mSizeChanged) {
                 pthread_cond_wait(&surface_changed_cond, &render_mutex);
             }
-        }
 
-        if (hasEglSurface) {
-            if (hasSurface) {
-                filter_->onSurfaceCreated(surfaceWindow);
-            } else {
-                pthread_cond_wait(&surface_cond, &render_mutex);
+            if (mSizeChanged) {
+                DFLOGD(GL_RENDER_TAG, "mGLRender resize");
+                if (mHasEglSurface) {
+                    stopEglSurfaceLocked();
+                }
             }
 
-            if (surfaceChanged) {
-                filter_->onSurfaceChanged(surfaceWindow, surfaceFormat, surfaceWidth, surfaceHeight);
-            } else {
-                pthread_cond_wait(&surface_changed_cond, &render_mutex);
+            if (!mHasEglContext && mHasEglSurface) {
+                DFLOGD(GL_RENDER_TAG, "mHaveEGLContext = false, mHaveEGLSurface = true");
+                mLostEglContext = true;
             }
 
-            filter_->draw();
-            eglHelper.swap();
+            if (!mHasEglContext && !mHasEglSurface) {
+                DFLOGD(GL_RENDER_TAG, "mHaveEGLContext = false, mHaveEGLSurface = false");
+                if (mEglHelper.start()) {
+                    DFLOGD(GL_RENDER_TAG, "mEglHelper start success");
+                    mHasEglContext = true;
+                    if (mFilter != nullptr) {
+                        mFilter->onSurfaceCreated(mSurfaceWindow);
+                    }
+                } else {
+                    DFLOGE(GL_RENDER_TAG, "mEglHelper start failed");
+                    mLostEglContext = true;
+                }
+            }
+
+            if (mHasEglContext && !mHasEglSurface) {
+                DFLOGD(GL_RENDER_TAG, "mHaveEGLContext = true, mHaveEGLSurface = false");
+                if (mEglHelper.createEglSurface(mSurfaceWindow)) {
+                    DFLOGD(GL_RENDER_TAG, "mEglHelper createEglSurface success");
+                    mHasEglSurface = true;
+                    if (mSizeChanged) {
+                        if (mFilter != nullptr) {
+                            mFilter->onSurfaceChanged(mSurfaceWindow, mSurfaceFormat, mSurfaceWidth, mSurfaceHeight);
+                        }
+                        mSizeChanged = false;
+                    }
+                } else {
+                    DFLOGE(GL_RENDER_TAG, "mEglHelper createEglSurface failed");
+                    mSurfaceIsBad = true;
+                }
+            }
+
+            if (mHasEglContext && mHasEglSurface) {
+                DFLOGD(GL_RENDER_TAG, "mHaveEGLContext = true, mHaveEGLSurface = true");
+                if (mFilter != nullptr) {
+                    mFilter->draw();
+                }
+                if (mEglHelper.swapBuffer()) {
+                    DFLOGD(GL_RENDER_TAG, "mEglHelper swapBuffer success");
+                } else {
+                    mSurfaceIsBad = true;
+                    DFLOGE(GL_RENDER_TAG, "mEglHelper swapBuffer failed");
+                }
+            }
         }
+        pthread_mutex_unlock(&render_mutex);
     }
     stopEglSurfaceLocked();
     stopEglContextLocked();
@@ -115,8 +191,8 @@ void GLRender::onSurfaceCreated(ANativeWindow *window) {
     if (GL_RENDER_DEBUG) {
         DLOGI(GL_RENDER_TAG, "onSurfaceCreated()");
     }
-    this->hasSurface = true;
-    this->surfaceWindow = window;
+    this->mHasSurface = true;
+    this->mSurfaceWindow = window;
     pthread_cond_signal(&surface_cond);
 }
 
@@ -124,11 +200,11 @@ void GLRender::onSurfaceChanged(ANativeWindow *window, int format, int width, in
     if (GL_RENDER_DEBUG) {
         DLOGI(GL_RENDER_TAG, "onSurfaceChanged()");
     }
-    this->surfaceChanged = true;
-    this->surfaceWindow = window;
-    this->surfaceFormat = format;
-    this->surfaceWidth = width;
-    this->surfaceHeight = height;
+    this->mSizeChanged = true;
+    this->mSurfaceWindow = window;
+    this->mSurfaceFormat = format;
+    this->mSurfaceWidth = width;
+    this->mSurfaceHeight = height;
     pthread_cond_signal(&surface_changed_cond);
 }
 
@@ -136,18 +212,16 @@ void GLRender::onSurfaceDestroyed(ANativeWindow *window) {
     if (GL_RENDER_DEBUG) {
         DLOGI(GL_RENDER_TAG, "onSurfaceDestroyed()");
     }
-    this->isRunning = false;
-    this->hasSurface = false;
-    this->surfaceChanged = false;
+    this->mRequestPaused = true;
 }
 
 void GLRender::stopEglSurfaceLocked() {
     if (GL_RENDER_DEBUG) {
         DLOGI(GL_RENDER_TAG, "stopEglSurfaceLocked()");
     }
-    if (hasEglSurface) {
-        hasEglSurface = false;
-        eglHelper.destroySurface();
+    if (mHasEglSurface) {
+        mHasEglSurface = false;
+        mEglHelper.destroyEglSurface();
     }
 }
 
@@ -155,10 +229,9 @@ void GLRender::stopEglContextLocked() {
     if (GL_RENDER_DEBUG) {
         DLOGI(GL_RENDER_TAG, "stopEglContextLocked()");
     }
-    if (hasEglContext) {
-        eglHelper.release();
-        hasEglContext = false;
-        pthread_mutex_unlock(&render_mutex);
+    if (mHasEglContext) {
+        mHasEglContext = false;
+        mEglHelper.finish();
     }
 }
 
@@ -166,7 +239,7 @@ void GLRender::onDestroy() {
     if (GL_RENDER_DEBUG) {
         DLOGI(GL_RENDER_TAG, "onDestroy()");
     }
-    if (filter_ != nullptr) {
-        filter_->onDestroy();
+    if (mFilter != nullptr) {
+        mFilter->onDestroy();
     }
 }

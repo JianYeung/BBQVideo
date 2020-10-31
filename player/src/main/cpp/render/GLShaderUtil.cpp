@@ -1,21 +1,19 @@
 //
-// Created by jian.yeung on 2020/10/28.
+// Created by jian.yeung on 2020/10/31.
 //
 
-#ifndef BBQVIDEO_SHADERUTIL_H
-#define BBQVIDEO_SHADERUTIL_H
-
-#include <GLES3/gl3.h>
+#include <DLog.h>
 #include <cstdlib>
-#include <GLErrorLog.h>
+#include "GLShaderUtil.h"
+#include "GLErrorLog.h"
 
-const char *ShaderUtil_TAG = "ShaderUtil";
+const char *GLShaderUtil_TAG = "GLShaderUtil";
 
-GLuint compileShader(GLenum type, const char *shaderSource) {
-    DLOGD(ShaderUtil_TAG, "~~~compileShader~~~\n");
+GLuint GLShaderUtil:: compileShader(GLenum type, const char *shaderSource) {
+    DLOGD(GLShaderUtil_TAG, "~~~compileShader~~~\n");
     GLuint shader = glCreateShader(type);
     if (shader == 0) {
-        DLOGE(ShaderUtil_TAG, "Could not create new shader.\n");
+        DLOGE(GLShaderUtil_TAG, "Could not create new shader.\n");
     }
     glShaderSource(shader, 1, &shaderSource, NULL);
     glCompileShader(shader);
@@ -28,20 +26,20 @@ GLuint compileShader(GLenum type, const char *shaderSource) {
             char *buf = (char *) malloc(sizeof(char) * infoLen);
             if (buf) {
                 glGetShaderInfoLog(shader, infoLen, NULL, buf);
-                DFLOGE(ShaderUtil_TAG, "Could not compile shader %d:\n%s\n", shader, buf);
+                DFLOGE(GLShaderUtil_TAG, "Could not compile shader %d:\n%s\n", shader, buf);
             }
             free(buf);
         }
         glDeleteShader(shader);
         shader = 0;
     } else {
-        DFLOGD(ShaderUtil_TAG, "Create a new shader %d\n", shader);
+        DFLOGD(GLShaderUtil_TAG, "Create a new shader %d\n", shader);
     }
     return shader;
 }
 
-GLuint linkProgram(GLuint vertexShader, GLuint fragmentShader) {
-    DLOGD(ShaderUtil_TAG, "~~~linkProgram~~~\n");
+GLuint GLShaderUtil::linkProgram(GLuint vertexShader, GLuint fragmentShader) {
+    DLOGD(GLShaderUtil_TAG, "~~~linkProgram~~~\n");
     GLuint program = glCreateProgram();
     if (program) {
         glAttachShader(program, vertexShader);
@@ -63,7 +61,7 @@ GLuint linkProgram(GLuint vertexShader, GLuint fragmentShader) {
                 char *buf = (char *) malloc(sizeof(char) * infoLen);
                 if (buf) {
                     glGetProgramInfoLog(program, infoLen, NULL, buf);
-                    DFLOGE(ShaderUtil_TAG, "Could not link program %d:\n%s\n", program, buf);
+                    DFLOGE(GLShaderUtil_TAG, "Could not link program %d:\n%s\n", program, buf);
                 }
                 free(buf);
             }
@@ -71,15 +69,15 @@ GLuint linkProgram(GLuint vertexShader, GLuint fragmentShader) {
             program = 0;
         }
     } else {
-        DLOGE(ShaderUtil_TAG, "Could not create program.\n");
+        DLOGE(GLShaderUtil_TAG, "Could not create program.\n");
     }
     return program;
 }
 
-GLboolean validateProgram(int program) {
-    DLOGD(ShaderUtil_TAG, "~~~validateProgram~~~\n");
+GLboolean GLShaderUtil::validateProgram(int program) {
+    DLOGD(GLShaderUtil_TAG, "~~~validateProgram~~~\n");
     if (!program) {
-        DLOGE(ShaderUtil_TAG, "programId invalid\n");
+        DLOGE(GLShaderUtil_TAG, "programId invalid\n");
         return GL_FALSE;
     }
 
@@ -95,7 +93,7 @@ GLboolean validateProgram(int program) {
             char *buf = (char *) malloc(sizeof(char) * infoLen);
             if (buf) {
                 glGetProgramInfoLog(program, infoLen, NULL, buf);
-                DFLOGE(ShaderUtil_TAG, "Could not validate program %d:\n%s\n", program, buf);
+                DFLOGE(GLShaderUtil_TAG, "Could not validate program %d:\n%s\n", program, buf);
             }
             free(buf);
         }
@@ -104,13 +102,11 @@ GLboolean validateProgram(int program) {
     return GL_TRUE;
 }
 
-GLuint buildProgram(const char *vertexShaderSource, const char *fragmentShaderSource) {
-    DLOGD(ShaderUtil_TAG, "~~~buildProgram~~~\n");
+GLuint GLShaderUtil::buildProgram(const char *vertexShaderSource, const char *fragmentShaderSource) {
+    DLOGD(GLShaderUtil_TAG, "~~~buildProgram~~~\n");
     GLuint vertexShader = compileShader(GL_VERTEX_SHADER, vertexShaderSource);
     GLuint fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
     GLuint program = linkProgram(vertexShader, fragmentShader);
     validateProgram(program);
     return program;
 }
-
-#endif //BBQVIDEO_SHADERUTIL_H

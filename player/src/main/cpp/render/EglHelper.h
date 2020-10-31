@@ -49,36 +49,29 @@ enum EGLSurfaceType {
 class EglHelper {
 
 private:
-    const char* EGL_TAG = "EglHelper";
+    const char *EGL_TAG = "EglHelper";
 
-    EGLint eglMajorVersion;
-    EGLint eglMinorVersion;
+    EGLint mEglMajorVersion;
+    EGLint mEglMinorVersion;
     EGLint numConfigs;
 
-    EGLDisplay eglDisplay;
-    EGLConfig eglConfig;
-    EGLContext eglContext;
-    EGLSurface eglSurface;
+    EGLDisplay mEglDisplay;
+    EGLConfig mEglConfig;
+    EGLContext mEglContext = nullptr;
+    EGLSurface mEglSurface = nullptr;
 
-    EGLSurfaceType eglSurfaceType = WINDOW_SURFACE;
-    ANativeWindow *nativeWindow;
-
-    PFNEGLPRESENTATIONTIMEANDROIDPROC pfneglPresentationTimeANDROID;
-
-public:
-    bool lostEglContext = false;
-    bool eglSurfaceIsBad = false;
+    EGLSurfaceType mEglSurfaceType = WINDOW_SURFACE;
 
 private:
     bool inner_init();
-    bool inner_createWindowSurface(ANativeWindow *nativeWindow);
-    bool inner_createPbufferSurface(int width, int height);
-    void inner_makeContext();
-    void inner_doneContext();
-    void inner_swap();
-    void inner_destroySurface();
-    void inner_destroySurfaceImp();
-    void inner_release();
+    bool inner_createWindowEglSurface(ANativeWindow *nativeWindow);
+    bool inner_createPbufferEglSurface(int width, int height);
+    void inner_makeEglContext();
+    void inner_doneEglContext();
+    bool inner_swapBuffer();
+    void inner_destroyEglSurface();
+    void inner_destroyEglSurfaceImp();
+    void inner_finish();
 
 public:
     EglHelper();
@@ -86,10 +79,13 @@ public:
 
     bool start();
     bool start(EGLSurfaceType surfaceType);
-    bool createSurface(ANativeWindow * nativeWindow, int width, int height);
-    void swap();
-    void destroySurface();
-    void release();
+    bool createEglSurface(ANativeWindow *nativeWindow);
+    bool createEglSurface(ANativeWindow *nativeWindow, int width, int height);
+    bool swapBuffer();
+    bool hasEglSurface();
+    bool hasEglContext();
+    void destroyEglSurface();
+    void finish();
 };
 
 
