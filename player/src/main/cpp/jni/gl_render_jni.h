@@ -52,6 +52,16 @@ void OnResume(JNIEnv *env, jobject thiz, jlong gl_render_handle) {
     glRender->onResume();
 }
 
+void OnAttachedToWindow(JNIEnv *env, jobject thiz, jlong gl_render_handle) {
+    GLRender *glRender = reinterpret_cast<GLRender *>(gl_render_handle);
+    glRender->onAttachedToWindow();
+}
+
+void OnDetachedFromWindow(JNIEnv *env, jobject thiz, jlong gl_render_handle) {
+    GLRender *glRender = reinterpret_cast<GLRender *>(gl_render_handle);
+    glRender->onDetachedFromWindow();
+}
+
 void SetRenderMode(JNIEnv *env, jobject thiz, jlong gl_render_handle, jint render_mode) {
     GLRender *glRender = reinterpret_cast<GLRender *>(gl_render_handle);
     RenderMode renderMode = static_cast<RenderMode>(render_mode);
@@ -91,8 +101,7 @@ void OnSurfaceCreated(JNIEnv *env, jobject thiz, jlong gl_render_handle, jobject
     glRender->onSurfaceCreated(nativeWindow);
 }
 
-void
-OnSurfaceChanged(JNIEnv *env, jobject thiz, jlong gl_render_handle, jobject surface, jint format,
+void OnSurfaceChanged(JNIEnv *env, jobject thiz, jlong gl_render_handle, jobject surface, jint format,
                  jint width, jint height) {
     if (GL_RENDER_JNI_DEBUG) {
         DFLOGI(GL_RENDER_JNI_TAG, "OnSurfaceChanged() handle = %ld", (long) gl_render_handle);
@@ -118,6 +127,8 @@ static JNINativeMethod gGLRenderMethods[] = {
         {"nativeUnInit",                "(J)V",                          (void *) UnInitialize},
         {"nativePause",                 "(J)V",                          (void *) OnPause},
         {"nativeResume",                "(J)V",                          (void *) OnResume},
+        {"nativeAttachedToWindow",      "(J)V",                          (void *) OnAttachedToWindow},
+        {"nativeDetachedFromWindow",    "(J)V",                          (void *) OnDetachedFromWindow},
         {"nativeSetRenderMode",         "(JI)V",                         (void *) SetRenderMode},
         {"nativeSetFilter",             "(JI)V",                         (void *) SetFilter},
         {"nativeRequestRender",         "(J)V",                          (void *) RequestRender},

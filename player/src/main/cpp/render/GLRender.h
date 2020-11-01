@@ -34,8 +34,10 @@ private:
     BaseFilter *mFilter;
     RenderMode mRenderMode = RenderMode::RENDERMODE_WHEN_DIRTY;
     bool isRunning = false;
+    bool mDetached = false;
     bool mPaused = false;
     bool mRequestPaused = false;
+    bool mShouldExit = false;
     bool mHasSurface = false;
     bool mSizeChanged = false;
     bool mHasEglContext = false;
@@ -61,6 +63,10 @@ public:
 
     void onResume();
 
+    void onAttachedToWindow();
+
+    void onDetachedFromWindow();
+
     void setRenderMode(RenderMode mode);
 
     void setFilter(BaseFilter *render);
@@ -74,6 +80,8 @@ public:
     void onSurfaceChanged(ANativeWindow *window, int format, int width, int height);
 
     void onSurfaceDestroyed(ANativeWindow *window);
+
+    void requestExitAndWait();
 
     void stopEglSurfaceLocked();
 

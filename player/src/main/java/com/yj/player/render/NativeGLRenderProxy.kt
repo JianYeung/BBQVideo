@@ -48,6 +48,20 @@ class NativeGLRenderProxy {
         GLRenderHelper.onResume(nativeGLRenderHandle)
     }
 
+    fun onAttachedToWindow() {
+        if (INIT_HANDLE == nativeGLRenderHandle) {
+            throw RuntimeException("Native GLRender handle is InValid")
+        }
+        GLRenderHelper.onAttachedToWindow(nativeGLRenderHandle)
+    }
+
+    fun onDetachedFromWindow() {
+        if (INIT_HANDLE == nativeGLRenderHandle) {
+            throw RuntimeException("Native GLRender handle is InValid")
+        }
+        GLRenderHelper.onDetachedFromWindow(nativeGLRenderHandle)
+    }
+
     fun setNativeRenderMode(rendMode: RendMode) {
         if (INIT_HANDLE == nativeGLRenderHandle) {
             throw RuntimeException("Native GLRender handle is InValid")

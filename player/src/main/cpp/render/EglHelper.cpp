@@ -332,7 +332,7 @@ bool EglHelper::hasEglSurface() {
     }
     bool result = mEglSurface != nullptr && mEglSurface != EGL_NO_SURFACE;
     if (DebugEnable && EGL_DEBUG) {
-        //DFLOGD(EGL_TAG, "hasEglSurface() result = %d, tid = %d", result, GetCurrentThreadID());
+        DFLOGD(EGL_TAG, "hasEglSurface() result = %d, tid = %d", result, GetCurrentThreadID());
     }
     return result;
 }
@@ -371,7 +371,7 @@ bool EglHelper::hasEglContext() {
     }
     bool result = mEglContext != nullptr && mEglContext != EGL_NO_CONTEXT;
     if (DebugEnable && EGL_DEBUG) {
-        //DFLOGD(EGL_TAG, "hasEglContext() result = %d, tid = %d", result, GetCurrentThreadID());
+        DFLOGD(EGL_TAG, "hasEglContext() result = %d, tid = %d", result, GetCurrentThreadID());
     }
     return result;
 }

@@ -19,9 +19,11 @@ class NativeGLSurfaceView(context: Context, attrs: AttributeSet) : SurfaceView(c
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        nativeGLRenderProxy.onAttachedToWindow()
     }
 
     override fun onDetachedFromWindow() {
+        nativeGLRenderProxy.onDetachedFromWindow()
         super.onDetachedFromWindow()
     }
 
