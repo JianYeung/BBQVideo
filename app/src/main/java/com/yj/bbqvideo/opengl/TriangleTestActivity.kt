@@ -3,6 +3,7 @@ package com.yj.bbqvideo.opengl
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.yj.bbqvideo.R
+import com.yj.bbqvideo.util.DLog
 import com.yj.player.render.NativeGLSurfaceView
 
 class TriangleTestActivity : AppCompatActivity() {
@@ -17,16 +18,25 @@ class TriangleTestActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
+        if (TAG != null) {
+            DLog.d(TAG,"onPause")
+        }
         nativeSurfaceView.onPause()
     }
 
     override fun onResume() {
         super.onResume()
+        DLog.d(TAG,"onResume")
         nativeSurfaceView.onResume()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        DLog.d(TAG,"onDestroy")
         nativeSurfaceView.onDestroy()
+    }
+
+    companion object {
+        private val TAG = TriangleTestActivity::class.simpleName
     }
 }
