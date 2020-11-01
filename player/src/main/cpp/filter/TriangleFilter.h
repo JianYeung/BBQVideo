@@ -8,14 +8,14 @@
 #include <GLES3/gl3.h>
 #include "BaseFilter.h"
 
-static const int COORDS_PER_VERTEX = 3;
-static const int COORDS_PER_COLORS = 4;
-
 class TriangleFilter : public BaseFilter {
 private:
     const char* TRIANGLE_FILTER_TAG = "TriangleFilter";
     //parameter
     GLuint program;
+    GLuint vao;
+    GLuint vbo;
+    GLuint ebo;
 
     //Handle
     GLuint mPositionHandle;
@@ -27,6 +27,7 @@ public:
 
     void setUp() override;
     void tearDown() override;
+    void initVAO();
     void onSurfaceCreated(ANativeWindow *nativeWindow) override;
     void onSurfaceChanged(ANativeWindow *nativeWindow, int format, int width, int height) override;
     void updateMVPMatrix() override;

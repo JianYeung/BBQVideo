@@ -248,7 +248,6 @@ void GLRender::prepareRenderThread() {
             if (mHasEglContext && mHasEglSurface) {
                 if (DebugEnable && GL_RENDER_DEBUG) {
                     DLOGD(GL_RENDER_TAG, "mHaveEGLContext = true, mHaveEGLSurface = true");
-                    DFLOGD(GL_RENDER_TAG, "mmFilter = %ld", (long)mFilter);
                 }
                 if (mFilter != nullptr) {
                     if (DebugEnable && GL_RENDER_DEBUG) {
