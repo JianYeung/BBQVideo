@@ -320,6 +320,8 @@ void GLRender::onSurfaceDestroyed(ANativeWindow *window) {
     this->mHasSurface = false;
     if (mFilter != nullptr) {
         mFilter->onDestroy();
+        delete mFilter;
+        mFilter = nullptr;
     }
 }
 

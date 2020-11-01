@@ -4,8 +4,6 @@
 
 #include <DLog.h>
 #include <GLShaderUtil.h>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <GLErrorLog.h>
 #include "TriangleFilter.h"
 
@@ -48,26 +46,34 @@ const GLfloat colors[] = {
 const GLint indexs[] = {0, 1, 2};
 
 TriangleFilter::TriangleFilter() : program(0), mPositionHandle(0), mColorHandle(0) {
-
+    if (DebugEnable && FILTER_DEBUG) {
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~~TriangleFilter TriangleFilter()~~~\n");
+    }
+    setUp();
 }
 
 TriangleFilter::~TriangleFilter() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(TRIANGLE_FILTER_TAG, "~~~~TriangleFilter ~TriangleFilter~~~\n");
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~~TriangleFilter ~TriangleFilter()~~~\n");
+    }
+    tearDown();
+}
+
+void TriangleFilter::setUp() {
+    if (DebugEnable && FILTER_DEBUG) {
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~~TriangleFilter setUp()~~~\n");
     }
 }
 
-void TriangleFilter::init() {
-
-}
-
-void TriangleFilter::unInit() {
-
+void TriangleFilter::tearDown() {
+    if (DebugEnable && FILTER_DEBUG) {
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~~TriangleFilter tearDown()~~~\n");
+    }
 }
 
 void TriangleFilter::onSurfaceCreated(ANativeWindow *nativeWindow) {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(TRIANGLE_FILTER_TAG, "~~~Triangle Filter Render onSurfaceCreated~~~\n");
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~Triangle Filter onSurfaceCreated()~~~\n");
     }
     program = GLShaderUtil::buildProgram(vShaderStr, fShaderStr);
     if (program == INVALID_PROGRAM) {
@@ -88,16 +94,12 @@ void TriangleFilter::onSurfaceCreated(ANativeWindow *nativeWindow) {
 
 void TriangleFilter::onSurfaceChanged(ANativeWindow *nativeWindow, int format, int width, int height) {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(TRIANGLE_FILTER_TAG, "~~~Triangle Filter Render onSurfaceChanged~~~\n");
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~Triangle Filter onSurfaceChanged()~~~\n");
     }
     this->format = format;
     this->width = width;
     this->height = height;
     glViewport(0, 0, width, height);
-    float ratio = (float) width / height;
-    Projection = glm::perspective(glm::radians(30.0f), ratio, 1.0f, 500.0f);
-    View = glm::lookAt(glm::vec3(5.0f, 5.0f, 10.0f), glm::vec3(0.0f, 0.0f, 0.0f),
-                       glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 void TriangleFilter::updateMVPMatrix() {
@@ -106,7 +108,7 @@ void TriangleFilter::updateMVPMatrix() {
 
 void TriangleFilter::draw() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(TRIANGLE_FILTER_TAG, "~~~Triangle Filter Render draw~~~\n");
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~Triangle Filter draw()~~~\n");
     }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -128,5 +130,7 @@ void TriangleFilter::draw() {
 }
 
 void TriangleFilter::onDestroy() {
-
+    if (DebugEnable && FILTER_DEBUG) {
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~Triangle Filter onDestroy()~~~\n");
+    }
 }

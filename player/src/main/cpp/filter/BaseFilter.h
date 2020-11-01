@@ -27,8 +27,8 @@ public:
     BaseFilter();
     ~BaseFilter();
 
-    virtual void init();
-    virtual void unInit();
+    virtual void setUp();
+    virtual void tearDown();
     virtual void onSurfaceCreated(ANativeWindow *nativeWindow);
     virtual void onSurfaceChanged(ANativeWindow *nativeWindow, int format, int width, int height);
     virtual void updateMVPMatrix();

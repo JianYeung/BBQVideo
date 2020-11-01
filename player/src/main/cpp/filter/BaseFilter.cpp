@@ -12,11 +12,11 @@ BaseFilter::~BaseFilter() {
 
 }
 
-void BaseFilter::init() {
+void BaseFilter::setUp() {
 
 }
 
-void BaseFilter::unInit() {
+void BaseFilter::tearDown() {
 
 }
 
