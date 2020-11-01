@@ -38,6 +38,7 @@ public:
     void unInit() override;
     void onSurfaceCreated(ANativeWindow *nativeWindow) override;
     void onSurfaceChanged(ANativeWindow *nativeWindow, int format, int width, int height) override;
+    void updateMVPMatrix() override;
     void draw() override;
     void onDestroy() override;
 };

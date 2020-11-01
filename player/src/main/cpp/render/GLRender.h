@@ -15,7 +15,7 @@ enum class RenderMode {
     RENDERMODE_CONTINUOUSLY = 1,
 };
 
-const bool GL_RENDER_DEBUG = true;
+const bool GL_RENDER_DEBUG = false;
 
 class GLRender {
 

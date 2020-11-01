@@ -39,7 +39,7 @@ const EGLint ctxAttr[] = {
         EGL_NONE
 };
 
-const bool EGL_DEBUG = true;
+const bool EGL_DEBUG = false;
 
 enum EGLSurfaceType {
     WINDOW_SURFACE,

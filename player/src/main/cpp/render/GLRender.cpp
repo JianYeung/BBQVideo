@@ -86,7 +86,7 @@ void GLRender::requestRender() {
 bool GLRender::readyToDraw() {
     if (DebugEnable && GL_RENDER_DEBUG) {
         DFLOGI(GL_RENDER_TAG,
-               "readyToDraw mPaused = %d, mHasSurface = %ld, mSurfaceIsBad = %d, mLostEglContext = %d, mWidth = %d, mHeight = %d, mRequestRender = %d",
+               "readyToDraw mPaused = %d, mHasSurface = %d, mSurfaceIsBad = %d, mLostEglContext = %d, mWidth = %d, mHeight = %d, mRequestRender = %d",
                mPaused, mHasSurface, mSurfaceIsBad, mLostEglContext, mSurfaceWidth, mSurfaceHeight,
                mRequestRender);
     }
@@ -100,7 +100,7 @@ void GLRender::setFilter(BaseFilter *filter) {
         DLOGI(GL_RENDER_TAG, "setFilter()");
     }
     if (mFilter != nullptr) {
-        throw std::runtime_error("setFilter haxs already been called for this instance.");
+        throw std::runtime_error("setFilter has already been called for this instance.");
     }
     this->mFilter = filter;
     pthread_create(&render_thread, nullptr, guardedRun, this);
@@ -113,7 +113,7 @@ void GLRender::prepareRenderThread() {
         pthread_mutex_lock(&render_mutex);
         if (mShouldExit) {
             if (DebugEnable && GL_RENDER_DEBUG) {
-                DLOGE(GL_RENDER_TAG, "mShouldExit = true");
+                DLOGD(GL_RENDER_TAG, "mShouldExit = true");
             }
             break;
         }
@@ -205,12 +205,6 @@ void GLRender::prepareRenderThread() {
                         DLOGD(GL_RENDER_TAG, "mEglHelper start success");
                     }
                     mHasEglContext = true;
-                    if (mFilter != nullptr) {
-                        if (DebugEnable && GL_RENDER_DEBUG) {
-                            DLOGD(GL_RENDER_TAG, "Filter surface create...");
-                        }
-                        mFilter->onSurfaceCreated(mSurfaceWindow);
-                    }
                 } else {
                     if (DebugEnable && GL_RENDER_DEBUG) {
                         DLOGE(GL_RENDER_TAG, "mEglHelper start failed");
@@ -228,6 +222,12 @@ void GLRender::prepareRenderThread() {
                         DLOGD(GL_RENDER_TAG, "mEglHelper createEglSurface success");
                     }
                     mHasEglSurface = true;
+                    if (mFilter != nullptr) {
+                        if (DebugEnable && GL_RENDER_DEBUG) {
+                            DLOGD(GL_RENDER_TAG, "~~~Filter surface create~~~");
+                        }
+                        mFilter->onSurfaceCreated(mSurfaceWindow);
+                    }
                     if (mSizeChanged) {
                         if (mFilter != nullptr) {
                             if (DebugEnable && GL_RENDER_DEBUG) {

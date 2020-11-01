@@ -144,12 +144,12 @@ bool EglHelper::inner_createWindowEglSurface(ANativeWindow *nativeWindow) {
         return false;
     }
 
-    ANativeWindow_setBuffersGeometry(nativeWindow, 0, 0, format);
-    int surfaceAttribs[] = {
-            EGL_NONE
-    };
+//    ANativeWindow_setBuffersGeometry(nativeWindow, 0, 0, format);
+//    int surfaceAttribs[] = {
+//            EGL_NONE
+//    };
 
-    mEglSurface = eglCreateWindowSurface(mEglDisplay, mEglConfig, nativeWindow, surfaceAttribs);
+    mEglSurface = eglCreateWindowSurface(mEglDisplay, mEglConfig, nativeWindow, nullptr);
     if (mEglSurface == nullptr || mEglSurface == EGL_NO_SURFACE) {
         switch (eglGetError()) {
             case EGL_BAD_ALLOC:
@@ -328,11 +328,11 @@ int EglHelper::getSwapEglError() {
 
 bool EglHelper::hasEglSurface() {
     if (DebugEnable && EGL_DEBUG) {
-        DFLOGI(EGL_TAG, "hasEglSurface() tid = %d", GetCurrentThreadID());
+        //DFLOGI(EGL_TAG, "hasEglSurface() tid = %d", GetCurrentThreadID());
     }
     bool result = mEglSurface != nullptr && mEglSurface != EGL_NO_SURFACE;
     if (DebugEnable && EGL_DEBUG) {
-        DFLOGD(EGL_TAG, "hasEglSurface() result = %d, tid = %d", result, GetCurrentThreadID());
+        //DFLOGD(EGL_TAG, "hasEglSurface() result = %d, tid = %d", result, GetCurrentThreadID());
     }
     return result;
 }
@@ -367,11 +367,11 @@ void EglHelper::inner_destroyEglSurfaceImp() {
 
 bool EglHelper::hasEglContext() {
     if (DebugEnable && EGL_DEBUG) {
-        DFLOGI(EGL_TAG, "hasEglContext() tid = %d", GetCurrentThreadID());
+        //DFLOGI(EGL_TAG, "hasEglContext() tid = %d", GetCurrentThreadID());
     }
     bool result = mEglContext != nullptr && mEglContext != EGL_NO_CONTEXT;
     if (DebugEnable && EGL_DEBUG) {
-        DFLOGD(EGL_TAG, "hasEglContext() result = %d, tid = %d", result, GetCurrentThreadID());
+        //DFLOGD(EGL_TAG, "hasEglContext() result = %d, tid = %d", result, GetCurrentThreadID());
     }
     return result;
 }

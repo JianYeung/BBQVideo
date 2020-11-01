@@ -9,6 +9,7 @@
 #include <android/native_window.h>
 
 #define FILTER_DEBUG true
+#define INVALID_PROGRAM 0
 
 enum class FilterType {
     NORMAL = 0,
@@ -30,6 +31,7 @@ public:
     virtual void unInit();
     virtual void onSurfaceCreated(ANativeWindow *nativeWindow);
     virtual void onSurfaceChanged(ANativeWindow *nativeWindow, int format, int width, int height);
+    virtual void updateMVPMatrix();
     virtual void draw();
     virtual void onDestroy();
 };

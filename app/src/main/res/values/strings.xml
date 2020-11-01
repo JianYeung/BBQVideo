@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">BBQVideo</string>
-    <string name="open_gl_test">OpenGL Test</string>
-    <string name="video_previewer">Video Previewer</string>
-    <string name="triangle_test">triangle_test</string>
+    <string name="video_previewer">Video 测试用例</string>
+    <string name="open_gl_test">OpenGL 测试用例</string>
+    <string name="triangle_test">三角形Demo</string>
 </resources>

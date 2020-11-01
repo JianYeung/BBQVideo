@@ -6,6 +6,7 @@
 #include <GLShaderUtil.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <GLErrorLog.h>
 #include "TriangleFilter.h"
 
 const char *vShaderStr =
@@ -18,7 +19,7 @@ const char *vShaderStr =
         "out vec4 vColor;                         \n"
         "void main()                              \n"
         "{                                        \n"
-        "   gl_Position = vPosition;              \n"
+        "   gl_Position = vec4(aPosition, 1.0);   \n"
         "   vColor = aColor;                      \n"
         "}                                        \n";
 
@@ -33,22 +34,20 @@ const char *fShaderStr =
         "}                                            \n";
 
 const GLfloat positions[] = {
-        0.0f, 0.5f, 0.0f,
+        0.0f, 0.25f, 0.0f,
         -0.5f, -0.5f, 0.0f,
         0.5f, -0.5f, 0.0f,
 };
 
 const GLfloat colors[] = {
+        1.0f,0.0f,0.0f,1.0f,
         0.0f,1.0f,0.0f,1.0f,
-        1.0f,0.0f,0.0f,1.0f,
-        1.0f,0.0f,0.0f,1.0f,
+        0.0f,0.0f,1.0f,1.0f,
 };
 
-const GLint indexs[] = {0, 2, 1};
+const GLint indexs[] = {0, 1, 2};
 
-TriangleFilter::TriangleFilter() : program(0), mPositionHandle(0), mColorHandle(0),
-                                   mModelHandle(0), mViewHandle(0), mProjectionHandle(0),
-                                   Model(1.0), View(1.0), Projection(1.0) {
+TriangleFilter::TriangleFilter() : program(0), mPositionHandle(0), mColorHandle(0) {
 
 }
 
@@ -70,17 +69,21 @@ void TriangleFilter::onSurfaceCreated(ANativeWindow *nativeWindow) {
     if (DebugEnable && FILTER_DEBUG) {
         DLOGI(TRIANGLE_FILTER_TAG, "~~~Triangle Filter Render onSurfaceCreated~~~\n");
     }
-    if (program != 0) {
+    program = GLShaderUtil::buildProgram(vShaderStr, fShaderStr);
+    if (program == INVALID_PROGRAM) {
+        DLOGD(TRIANGLE_FILTER_TAG, "Not build valid program\n");
         return;
     }
-    program = GLShaderUtil::buildProgram(vShaderStr, fShaderStr);
     mPositionHandle = (GLuint) glGetAttribLocation(program, "aPosition");
+    checkGlError("glGetAttribLocation position");
     glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX, GL_FLOAT, GL_FALSE,COORDS_PER_VERTEX * sizeof(GLfloat), positions);
+    checkGlError("glVertexAttribPointer position");
     mColorHandle = (GLuint) glGetAttribLocation(program, "aColor");
+    checkGlError("glGetAttribLocation color");
     glVertexAttribPointer(mColorHandle, COORDS_PER_COLORS, GL_FLOAT, GL_FALSE,COORDS_PER_COLORS * sizeof(GLfloat), colors);
-    mModelHandle = glGetUniformLocation(program, "model");
-    mViewHandle = glGetUniformLocation(program, "view");
-    mProjectionHandle = glGetUniformLocation(program, "projection");
+    checkGlError("glVertexAttribPointer color");
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glEnable(GL_DEPTH_TEST);
 }
 
 void TriangleFilter::onSurfaceChanged(ANativeWindow *nativeWindow, int format, int width, int height) {
@@ -97,18 +100,29 @@ void TriangleFilter::onSurfaceChanged(ANativeWindow *nativeWindow, int format, i
                        glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
+void TriangleFilter::updateMVPMatrix() {
+
+}
+
 void TriangleFilter::draw() {
     if (DebugEnable && FILTER_DEBUG) {
         DLOGI(TRIANGLE_FILTER_TAG, "~~~Triangle Filter Render draw~~~\n");
     }
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    if (program == INVALID_PROGRAM){
+        DLOGD(TRIANGLE_FILTER_TAG, "Invalid program\n");
+        return;
+    }
+    updateMVPMatrix();
     glUseProgram(program);
-    glUniformMatrix4fv(mModelHandle, 1, GL_FALSE, glm::value_ptr(Model));
-    glUniformMatrix4fv(mViewHandle, 1, GL_FALSE, glm::value_ptr(View));
-    glUniformMatrix4fv(mProjectionHandle, 1, GL_FALSE, glm::value_ptr(Projection));
+    checkGlError("glUseProgram");
     glEnableVertexAttribArray(mPositionHandle);
+    checkGlError("glEnableVertexAttribArray position");
     glEnableVertexAttribArray(mColorHandle);
+    checkGlError("glEnableVertexAttribArray color");
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, indexs);
+    checkGlError("glDrawElements");
     glDisableVertexAttribArray(mPositionHandle);
     glDisableVertexAttribArray(mColorHandle);
 }

@@ -9,14 +9,17 @@
 
 const char *GLShaderUtil_TAG = "GLShaderUtil";
 
-GLuint GLShaderUtil:: compileShader(GLenum type, const char *shaderSource) {
+GLuint GLShaderUtil::compileShader(GLenum type, const char *shaderSource) {
     DLOGD(GLShaderUtil_TAG, "~~~compileShader~~~\n");
     GLuint shader = glCreateShader(type);
+    checkGlError("glCreateShader");
     if (shader == 0) {
         DLOGE(GLShaderUtil_TAG, "Could not create new shader.\n");
     }
     glShaderSource(shader, 1, &shaderSource, NULL);
+    checkGlError("glShaderSource");
     glCompileShader(shader);
+    checkGlError("glCompileShader");
     GLint compiled = 0;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
     if (!compiled) {
@@ -33,7 +36,7 @@ GLuint GLShaderUtil:: compileShader(GLenum type, const char *shaderSource) {
         glDeleteShader(shader);
         shader = 0;
     } else {
-        DFLOGD(GLShaderUtil_TAG, "Create a new shader %d\n", shader);
+        DFLOGD(GLShaderUtil_TAG, "Create type = 0x%x, shader = %d Success! \n", type, shader);
     }
     return shader;
 }
@@ -103,10 +106,13 @@ GLboolean GLShaderUtil::validateProgram(int program) {
 }
 
 GLuint GLShaderUtil::buildProgram(const char *vertexShaderSource, const char *fragmentShaderSource) {
-    DLOGD(GLShaderUtil_TAG, "~~~buildProgram~~~\n");
+    DLOGD(GLShaderUtil_TAG, "~~~buildProgram Start~~~\n");
+    DFLOGD(GLShaderUtil_TAG, "vertexShaderSource =%s\n", vertexShaderSource);
+    DFLOGD(GLShaderUtil_TAG, "fragmentShaderSource =%s\n", fragmentShaderSource);
     GLuint vertexShader = compileShader(GL_VERTEX_SHADER, vertexShaderSource);
     GLuint fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
     GLuint program = linkProgram(vertexShader, fragmentShader);
     validateProgram(program);
+    DLOGD(GLShaderUtil_TAG, "~~~buildProgram End~~~\n");
     return program;
 }

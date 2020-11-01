@@ -30,6 +30,10 @@ void BaseFilter::onSurfaceChanged(ANativeWindow *nativeWindow, int format, int w
     this->height = height;
 }
 
+void BaseFilter::updateMVPMatrix() {
+
+}
+
 void BaseFilter::draw() {
 
 }
