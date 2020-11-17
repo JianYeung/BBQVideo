@@ -4,9 +4,14 @@
 #include <pthread.h>
 #include <stdexcept>
 #include <DLog.h>
+#include <TriangleFilter.h>
+#include <CameraFilter.h>
 #include "GLRender.h"
 
 GLRender::GLRender() {
+    if (DebugEnable && GL_RENDER_DEBUG) {
+        DLOGI(GL_RENDER_TAG, "GLRender GLRender()");
+    }
     pthread_mutex_init(&render_mutex, nullptr);
     pthread_cond_init(&surface_cond, nullptr);
     pthread_cond_init(&surface_changed_cond, nullptr);
@@ -69,6 +74,13 @@ void GLRender::onDetachedFromWindow() {
     mDetached = true;
 }
 
+void GLRender::setRotation(Rotation rotation) {
+    if (DebugEnable && GL_RENDER_DEBUG) {
+        DLOGI(GL_RENDER_TAG, "GLRender setRotation()");
+    }
+    this->mRotation = rotation;
+}
+
 void GLRender::setRenderMode(RenderMode mode) {
     if (DebugEnable && GL_RENDER_DEBUG) {
         DLOGI(GL_RENDER_TAG, "GLRender setRenderMode()");
@@ -83,6 +95,15 @@ void GLRender::requestRender() {
     this->mRequestRender = true;
 }
 
+void GLRender::updatePreviewFrame(unsigned char *data, int format, int width, int height) {
+    if (DebugEnable && GL_RENDER_DEBUG) {
+        DLOGI(GL_RENDER_TAG, "GLRender updatePreviewFrame()");
+    }
+    if (mFilter != nullptr) {
+        mFilter->updatePreviewFrame(data, format, width, height);
+    }
+}
+
 bool GLRender::readyToDraw() {
     if (DebugEnable && GL_RENDER_DEBUG) {
         DFLOGI(GL_RENDER_TAG,
@@ -95,18 +116,31 @@ bool GLRender::readyToDraw() {
            (mRequestRender || mRenderMode == RenderMode::RENDERMODE_CONTINUOUSLY);
 }
 
-void GLRender::setFilter(BaseFilter *filter) {
+void GLRender::setFilterType(FilterType filterType) {
     if (DebugEnable && GL_RENDER_DEBUG) {
         DLOGI(GL_RENDER_TAG, "GLRender setFilter()");
     }
-    if (mFilter != nullptr) {
-        throw std::runtime_error("setFilter has already been called for this instance.");
+    BaseFilter *baseFilter;
+    switch (filterType) {
+        case FilterType::TRIANGLE:
+            baseFilter = new TriangleFilter();
+            break;
+        case FilterType::CAMERA:
+            baseFilter = new CameraFilter();
+            break;
+        case FilterType::NORMAL:
+        default:
+            baseFilter = new BaseFilter();
+            break;
     }
-    this->mFilter = filter;
+    this->mFilter = baseFilter;
     pthread_create(&render_thread, nullptr, guardedRun, this);
 }
 
 void GLRender::prepareRenderThread() {
+    if (DebugEnable && GL_RENDER_DEBUG) {
+        DLOGI(GL_RENDER_TAG, "GLRender prepareRenderThread()");
+    }
     mEglHelper = EglHelper();
     this->isRunning = true;
     while (true) {
@@ -249,6 +283,7 @@ void GLRender::prepareRenderThread() {
                 if (DebugEnable && GL_RENDER_DEBUG) {
                     DLOGD(GL_RENDER_TAG, "mHaveEGLContext = true, mHaveEGLSurface = true");
                 }
+                this->mRequestRender = false;
                 if (mFilter != nullptr) {
                     if (DebugEnable && GL_RENDER_DEBUG) {
                         DLOGD(GL_RENDER_TAG, "~~~Filter draw~~~");

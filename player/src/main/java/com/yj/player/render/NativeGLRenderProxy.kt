@@ -1,7 +1,10 @@
 package com.yj.player.render
 
 import android.view.Surface
+import com.yj.player.camera.Rotation
+import com.yj.player.view.FilterType
 import com.yj.player.jni.GLRenderHelper
+import com.yj.player.view.RenderMode
 
 class NativeGLRenderProxy {
     private var nativeGLRenderHandle: Long = INIT_HANDLE
@@ -62,14 +65,21 @@ class NativeGLRenderProxy {
         GLRenderHelper.onDetachedFromWindow(nativeGLRenderHandle)
     }
 
-    fun setNativeRenderMode(rendMode: RendMode) {
+    fun setNativeRotation(rotation: Rotation) {
         if (INIT_HANDLE == nativeGLRenderHandle) {
             throw RuntimeException("Native GLRender handle is InValid")
         }
-        if (rendMode == RendMode.UNKNOWN) {
+        GLRenderHelper.setRotation(nativeGLRenderHandle, rotation)
+    }
+
+    fun setNativeRenderMode(renderMode: RenderMode) {
+        if (INIT_HANDLE == nativeGLRenderHandle) {
+            throw RuntimeException("Native GLRender handle is InValid")
+        }
+        if (renderMode == RenderMode.UNKNOWN) {
             throw RuntimeException("Render mode is InValid")
         }
-        GLRenderHelper.setRenderMode(nativeGLRenderHandle, rendMode)
+        GLRenderHelper.setRenderMode(nativeGLRenderHandle, renderMode)
     }
 
     fun setNativeFilter(filterType: FilterType) {
@@ -80,6 +90,13 @@ class NativeGLRenderProxy {
             throw RuntimeException("Filter type is InValid")
         }
         GLRenderHelper.setFilter(nativeGLRenderHandle, filterType)
+    }
+
+    fun updatePreviewFrame(data: ByteArray?, format: Int, width: Int, height: Int) {
+        if (INIT_HANDLE == nativeGLRenderHandle) {
+            throw RuntimeException("Native GLRender handle is InValid")
+        }
+        GLRenderHelper.updatePreviewFrame(nativeGLRenderHandle, data, format, width, height)
     }
 
     fun requestRender() {
@@ -115,6 +132,6 @@ class NativeGLRenderProxy {
     }
 
     companion object {
-        const val INIT_HANDLE :Long = 0
+        const val INIT_HANDLE: Long = 0
     }
 }
