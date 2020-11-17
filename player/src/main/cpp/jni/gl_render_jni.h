@@ -9,7 +9,7 @@
 #include <android/native_window.h>
 #include <DLog.h>
 
-const bool GL_RENDER_JNI_DEBUG = true;
+const bool GL_RENDER_JNI_DEBUG = false;
 const char *GL_RENDER_JNI_TAG = "GLRenderJni";
 
 jlong CreateGLThreadHandle(JNIEnv *env, jobject thiz) {

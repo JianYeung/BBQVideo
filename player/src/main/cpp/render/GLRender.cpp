@@ -9,6 +9,9 @@
 #include "GLRender.h"
 
 GLRender::GLRender() {
+    if (DebugEnable && GL_RENDER_DEBUG) {
+        DLOGI(GL_RENDER_TAG, "GLRender GLRender()");
+    }
     pthread_mutex_init(&render_mutex, nullptr);
     pthread_cond_init(&surface_cond, nullptr);
     pthread_cond_init(&surface_changed_cond, nullptr);
@@ -135,6 +138,9 @@ void GLRender::setFilterType(FilterType filterType) {
 }
 
 void GLRender::prepareRenderThread() {
+    if (DebugEnable && GL_RENDER_DEBUG) {
+        DLOGI(GL_RENDER_TAG, "GLRender prepareRenderThread()");
+    }
     mEglHelper = EglHelper();
     this->isRunning = true;
     while (true) {
