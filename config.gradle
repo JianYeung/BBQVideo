@@ -7,7 +7,7 @@ ext {
             cmakeVersion     : "3.10.2",
             ndkVersion       : "21.3.6528147",
             versionCode      : 1,
-            versionName      : "0.1"
+            versionName      : "0.2"
     ]
 
     kotlin = [
