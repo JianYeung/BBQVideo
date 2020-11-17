@@ -69,7 +69,6 @@ class NativeGLSurfaceView : SurfaceView, SurfaceHolder.Callback {
      */
     fun setRotation(rotation: Rotation) {
         nativeGLRenderProxy.setNativeRotation(rotation)
-        requestRender()
     }
 
     /**
