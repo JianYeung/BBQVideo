@@ -3,4 +3,5 @@
     <string name="video_previewer">Video 测试用例</string>
     <string name="open_gl_test">OpenGL 测试用例</string>
     <string name="triangle_test">三角形Demo</string>
+    <string name="camera_preview">相机预览</string>
 </resources>

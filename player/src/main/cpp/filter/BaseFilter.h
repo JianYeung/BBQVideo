@@ -7,21 +7,43 @@
 
 
 #include <android/native_window.h>
+#include <GLES3/gl3.h>
 
 #define FILTER_DEBUG true
-#define INVALID_PROGRAM 0
 
 enum class FilterType {
     NORMAL = 0,
     TRIANGLE = 1,
+    CAMERA = 2,
+    UNKNOWN = 0xFF,
+};
+
+enum class Rotation {
+    NORMAL = 0,
+    ROTATION_90 = 1,
+    ROTATION_180 = 2,
+    ROTATION_270 = 3,
     UNKNOWN = 0xFF,
 };
 
 class BaseFilter {
 protected:
-    int format;
-    int width;
-    int height;
+    //surface parameter
+    int pixelFormat;
+    int surfaceWidth;
+    int surfaceHeight;
+
+    //GL parameter
+    const char *vShaderStr;
+    const char *fShaderStr;
+    GLuint program;
+    GLuint vao;
+    GLuint vbo;
+    GLuint ebo;
+
+    //GL Handle
+    GLuint mPositionHandle;
+    GLuint mColorHandle;
 
 public:
     BaseFilter();
@@ -29,9 +51,9 @@ public:
 
     virtual void setUp();
     virtual void tearDown();
+    virtual void updatePreviewFrame(unsigned char *data, int format, int width, int height);
     virtual void onSurfaceCreated(ANativeWindow *nativeWindow);
     virtual void onSurfaceChanged(ANativeWindow *nativeWindow, int format, int width, int height);
-    virtual void updateMVPMatrix();
     virtual void draw();
     virtual void onDestroy();
 };

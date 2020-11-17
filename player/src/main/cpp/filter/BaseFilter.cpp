@@ -4,7 +4,8 @@
 
 #include "BaseFilter.h"
 
-BaseFilter::BaseFilter() {
+BaseFilter::BaseFilter() : program(0), mPositionHandle(0), mColorHandle(0),
+                           vao(0), vbo(0), ebo(0) {
 
 }
 
@@ -25,12 +26,10 @@ void BaseFilter::onSurfaceCreated(ANativeWindow *nativeWindow) {
 }
 
 void BaseFilter::onSurfaceChanged(ANativeWindow *nativeWindow, int format, int width, int height) {
-    this->format = format;
-    this->width = width;
-    this->height = height;
+
 }
 
-void BaseFilter::updateMVPMatrix() {
+void BaseFilter::updatePreviewFrame(unsigned char *data, int format, int width, int height) {
 
 }
 

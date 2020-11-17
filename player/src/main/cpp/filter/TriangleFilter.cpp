@@ -8,44 +8,13 @@
 #include <Constant.h>
 #include "TriangleFilter.h"
 
-const char *vShaderStr =
-        "#version 300 es                          \n"
-        "layout(location = 0) in vec3 aPosition;  \n"
-        "layout(location = 1) in vec4 aColor;     \n"
-        "out vec4 vColor;                         \n"
-        "void main()                              \n"
-        "{                                        \n"
-        "   gl_Position = vec4(aPosition, 1.0);   \n"
-        "   vColor = aColor;                      \n"
-        "}                                        \n";
-
-const char *fShaderStr =
-        "#version 300 es                              \n"
-        "precision mediump float;                     \n"
-        "in vec4 vColor;                              \n"
-        "out vec4 fragColor;                          \n"
-        "void main()                                  \n"
-        "{                                            \n"
-        "   fragColor = vColor;                       \n"
-        "}                                            \n";
-
-const GLfloat vertex_color_coords[] = {
-        // Positions          // Colors
-        0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,   // Top Right
-        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,  // Bottom Right
-        0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,   // Bottom Left
-};
-
-const GLshort vertex_indexs[] = {0, 1, 2};
-
-const GLint VERTEX_COLOR_COORDS_LENGTH = 18;
+const GLint VERTEX_COLOR_COORDS_LENGTH = 21;
 
 const GLint VERTEX_INDICES_LENGTH = 3;
 
 const GLint STRIDE_PRE_COORD = 7;
 
-TriangleFilter::TriangleFilter() : program(0), mPositionHandle(0), mColorHandle(0),
-                                   vao(0), vbo(0), ebo(0) {
+TriangleFilter::TriangleFilter() : BaseFilter() {
     if (DebugEnable && FILTER_DEBUG) {
         DLOGI(TRIANGLE_FILTER_TAG, "~~~~TriangleFilter TriangleFilter()~~~\n");
     }
@@ -63,6 +32,34 @@ void TriangleFilter::setUp() {
     if (DebugEnable && FILTER_DEBUG) {
         DLOGI(TRIANGLE_FILTER_TAG, "~~~~TriangleFilter setUp()~~~\n");
     }
+    vShaderStr =
+            "#version 300 es                          \n"
+            "layout(location = 0) in vec3 aPosition;  \n"
+            "layout(location = 1) in vec4 aColor;     \n"
+            "out vec4 vColor;                         \n"
+            "void main()                              \n"
+            "{                                        \n"
+            "   gl_Position = vec4(aPosition, 1.0);   \n"
+            "   vColor = aColor;                      \n"
+            "}                                        \n";
+
+    fShaderStr =
+            "#version 300 es                              \n"
+            "precision mediump float;                     \n"
+            "in vec4 vColor;                              \n"
+            "out vec4 fragColor;                          \n"
+            "void main()                                  \n"
+            "{                                            \n"
+            "   fragColor = vColor;                       \n"
+            "}                                            \n";
+    vertex_color_coords = new GLfloat[] {
+            // Positions          // Colors
+            0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,   // Top Right
+            -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,  // Bottom Right
+            0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,   // Bottom Left
+    };
+
+    vertex_indexs = new GLshort[] {0, 1, 2};
 }
 
 void TriangleFilter::tearDown() {
@@ -120,10 +117,10 @@ void TriangleFilter::initVAO() {
 
 void TriangleFilter::onSurfaceCreated(ANativeWindow *nativeWindow) {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(TRIANGLE_FILTER_TAG, "~~~Triangle Filter onSurfaceCreated()~~~\n");
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~TriangleFilter onSurfaceCreated()~~~\n");
     }
     program = GLShaderUtil::buildProgram(vShaderStr, fShaderStr);
-    if (program == INVALID_PROGRAM) {
+    if (program == GL_NONE) {
         DLOGD(TRIANGLE_FILTER_TAG, "Not build valid program\n");
         return;
     }
@@ -143,29 +140,29 @@ void TriangleFilter::onSurfaceCreated(ANativeWindow *nativeWindow) {
 void
 TriangleFilter::onSurfaceChanged(ANativeWindow *nativeWindow, int format, int width, int height) {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(TRIANGLE_FILTER_TAG, "~~~Triangle Filter onSurfaceChanged()~~~\n");
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~TriangleFilter onSurfaceChanged()~~~\n");
     }
-    this->format = format;
-    this->width = width;
-    this->height = height;
+    this->pixelFormat = format;
+    this->surfaceWidth = width;
+    this->surfaceHeight = height;
     glViewport(0, 0, width, height);
 }
 
-void TriangleFilter::updateMVPMatrix() {
+void TriangleFilter::updatePreviewFrame(unsigned char *data, int format, int width, int height) {
 
 }
 
 void TriangleFilter::draw() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(TRIANGLE_FILTER_TAG, "~~~Triangle Filter draw()~~~\n");
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~TriangleFilter draw()~~~\n");
     }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    if (program == INVALID_PROGRAM) {
+    if (program == GL_NONE) {
         DLOGD(TRIANGLE_FILTER_TAG, "Invalid program\n");
         return;
     }
-    updateMVPMatrix();
+
     glUseProgram(program);
     checkGlError("glUseProgram");
     // 绑定VAO
@@ -183,6 +180,15 @@ void TriangleFilter::draw() {
 
 void TriangleFilter::onDestroy() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(TRIANGLE_FILTER_TAG, "~~~Triangle Filter onDestroy()~~~\n");
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~TriangleFilter onDestroy()~~~\n");
+    }
+
+    if (vertex_color_coords != nullptr) {
+        delete vertex_color_coords;
+        vertex_color_coords = nullptr;
+    }
+    if (vertex_indexs != nullptr) {
+        delete vertex_indexs;
+        vertex_indexs = nullptr;
     }
 }

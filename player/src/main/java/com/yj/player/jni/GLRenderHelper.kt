@@ -1,9 +1,10 @@
 package com.yj.player.jni
 
 import android.view.Surface
+import com.yj.player.camera.Rotation
 import com.yj.player.render.NativeGLRenderProxy
-import com.yj.player.render.FilterType
-import com.yj.player.render.RendMode
+import com.yj.player.view.FilterType
+import com.yj.player.view.RenderMode
 
 object GLRenderHelper {
 
@@ -42,12 +43,20 @@ object GLRenderHelper {
         nativeDetachedFromWindow(glRenderHandle)
     }
 
-    fun setRenderMode(glRenderHandle: Long, renderMode: RendMode) {
+    fun setRenderMode(glRenderHandle: Long, renderMode: RenderMode) {
         nativeSetRenderMode(glRenderHandle, renderMode.value)
     }
 
     fun setFilter(glRenderHandle: Long, filterType: FilterType) {
         nativeSetFilter(glRenderHandle, filterType.value)
+    }
+
+    fun setRotation(glRenderHandle: Long, rotation: Rotation) {
+        nativeSetRotation(glRenderHandle, rotation.value)
+    }
+
+    fun updatePreviewFrame(glRenderHandle: Long, data: ByteArray?, format: Int, width: Int, height: Int) {
+        nativeUpdatePreviewFrame(glRenderHandle, data, format, width, height)
     }
 
     fun requestRender(glRenderHandle: Long) {
@@ -82,9 +91,13 @@ object GLRenderHelper {
 
     private external fun nativeDetachedFromWindow(glRenderHandle: Long)
 
+    private external fun nativeSetRotation(glRenderHandle: Long, rotation: Int)
+
     private external fun nativeSetRenderMode(glRenderHandle: Long, renderMode: Int)
 
     private external fun nativeSetFilter(glRenderHandle: Long, filterType: Int)
+
+    private external fun nativeUpdatePreviewFrame(glRenderHandle: Long, data: ByteArray?, format: Int, width: Int, height: Int)
 
     private external fun nativeRequestRender(glRenderHandle: Long)
 

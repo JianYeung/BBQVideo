@@ -1,4 +1,4 @@
-package com.yj.player.render
+package com.yj.player.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -6,15 +6,38 @@ import android.view.Surface
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.yj.player.PlayerManager
+import com.yj.player.camera.Rotation
+import com.yj.player.render.NativeGLRenderProxy
 
-class NativeGLSurfaceView(context: Context, attrs: AttributeSet) : SurfaceView(context, attrs), SurfaceHolder.Callback {
+class NativeGLSurfaceView : SurfaceView, SurfaceHolder.Callback {
 
-    private var nativeGLRenderProxy: NativeGLRenderProxy = PlayerManager.createNativeGLRenderProxy()
+    private val nativeGLRenderProxy: NativeGLRenderProxy by lazy {
+        PlayerManager.createNativeGLRenderProxy()
+    }
 
-    init {
+    constructor(context: Context) : super(context) {
         holder.addCallback(this)
-        nativeGLRenderProxy.setNativeRenderMode(RendMode.RENDERMODE_CONTINUOUSLY)
-        nativeGLRenderProxy.setNativeFilter(FilterType.TRIANGLE)
+    }
+
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+        holder.addCallback(this)
+    }
+
+    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(
+        context,
+        attrs,
+        defStyle
+    ) {
+        holder.addCallback(this)
+    }
+
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+        context,
+        attrs,
+        defStyleAttr,
+        defStyleRes
+    ) {
+        holder.addCallback(this)
     }
 
     override fun onAttachedToWindow() {
@@ -37,6 +60,52 @@ class NativeGLSurfaceView(context: Context, attrs: AttributeSet) : SurfaceView(c
 
     fun onDestroy() {
         nativeGLRenderProxy.onDestroy()
+    }
+
+    /**
+     * Sets the rotation of the displayed image.
+     *
+     * @param rotation new rotation
+     */
+    fun setRotation(rotation: Rotation) {
+        nativeGLRenderProxy.setNativeRotation(rotation)
+        requestRender()
+    }
+
+    /**
+     * Set Render Mode.
+     * @param renderMode one of the RENDERMODE_X constants
+     * @see RenderMode#RENDERMODE_CONTINUOUSLY
+     * @see RenderMode#RENDERMODE_WHEN_DIRTY
+     */
+    fun setRenderMode(renderMode: RenderMode) {
+        nativeGLRenderProxy.setNativeRenderMode(renderMode)
+    }
+
+    /**
+     * Set Filter Type.
+     * @param filterType one of the filterType constants
+     */
+    fun setFilterType(filterType: FilterType) {
+        nativeGLRenderProxy.setNativeFilter(filterType)
+    }
+
+    /**
+     *  Request render.
+     */
+    fun requestRender() {
+        nativeGLRenderProxy.requestRender();
+    }
+
+    /**
+     * Update camera preview frame with YUV format data.
+     *
+     * @param data   Camera preview YUV data for frame.
+     * @param width  width of camera preview
+     * @param height height of camera preview
+     */
+    fun updatePreviewFrame(data: ByteArray?, format: Int, width: Int, height: Int) {
+        nativeGLRenderProxy.updatePreviewFrame(data, format, width, height)
     }
 
     /**
