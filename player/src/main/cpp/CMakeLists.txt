@@ -21,16 +21,8 @@ add_definitions(-DRENDER_SUPPORTED)
 #add_definitions(-DENCODER_SUPPORTED)
 #add_definitions(-DRTMP_SUPPORTED)
 
-#设置OpenGLES, 如果当前系统版本过低设置拒绝编译
-if (${ANDROID_PLATFORM_LEVEL} LESS 11)
-    message(FATAL_ERROR "OpenGL 2 is not supported before API level 11 (currently using ${ANDROID_PLATFORM_LEVEL}).")
-    return()
-elseif (${ANDROID_PLATFORM_LEVEL} LESS 18)
-    add_definitions("-DDYNAMIC_ES3")
-    set(OPENGL-lib GLESv2)
-else ()
-    set(OPENGL-lib GLESv3)
-endif (${ANDROID_PLATFORM_LEVEL} LESS 11)
+#设置OpenGLES 为GLESv3
+set(OPENGL-lib GLESv3)
 
 #收集文件
 file(GLOB ROOT_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/*.h ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp)
