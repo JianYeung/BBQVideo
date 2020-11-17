@@ -45,29 +45,30 @@ void CameraFilter::setUp() {
             "}                                          \n";
 
     fShaderStr =
-            "#version 300 es                                                        \n"
-            "precision mediump float;                                               \n"
-            "layout(location = 0) uniform sampler2D samplerY;                       \n"
-            "layout(location = 1) uniform sampler2D samplerUV;                      \n"
-            "in vec2 v_texcoord;                                                    \n"
-            "out vec4 outColor;                                                     \n"
-            "void main() {                                                          \n"
-            "   vec4 c = vec4((texture(samplerY, v_texcoord).r - 16./255.) * 1.164);\n"
-            "   vec4 U; vec4 V;                                                     \n"
-            "    U = vec4(texture(samplerUV, v_texcoord).r - 128./255.);            \n"
-            "    V = vec4(texture(samplerUV, v_texcoord).a - 128./255.);            \n"
-            "   c += V * vec4(1.596, -0.813, 0, 0);                                 \n"
-            "   c += U * vec4(0, -0.392, 2.017, 0);                                 \n"
-            "   c.a = 1.0;                                                          \n"
-            "   outColor = c;                                                       \n"
-            "}                                                                      \n";
+            "#version 300 es                                        \n"
+            "precision mediump float;                               \n"
+            "in vec2 v_texcoord;                                    \n"
+            "layout(location = 0) uniform sampler2D y_texture;      \n"
+            "layout(location = 1) uniform sampler2D uv_texture;     \n"
+            "out vec4 outColor;                                     \n"
+            "void main()                                            \n"
+            "{                                                      \n"
+            "   vec3 yuv;                                           \n"
+            "   yuv.x = texture(y_texture, v_texcoord).r;           \n"
+            "   yuv.y = texture(uv_texture, v_texcoord).a-0.5;      \n"
+            "   yuv.z = texture(uv_texture, v_texcoord).r-0.5;      \n"
+            "   highp vec3 rgb = mat3( 1,       1,          1,      \n"
+            "               0,      -0.344,     1.770,              \n"
+            "               1.403,  -0.714,       0) * yuv;         \n"
+            "   outColor = vec4(rgb, 1);                            \n"
+            "}                                                      \n";
 
     vertex_color_coords = new GLfloat[]{
             // Positions        // Texture Coords
-             1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-             1.0f, -1.0f, 0.0f, 1.0f, 1.0f,
-            -1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-            -1.0f,  1.0f, 0.0f, 0.0f, 0.0f
+             1.0f,  1.0f, 0.0f, 0.0f, 0.0f,
+             1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+            -1.0f, -1.0f, 0.0f, 1.0f, 1.0f,
+            -1.0f,  1.0f, 0.0f, 0.0f, 1.0f
     };
 
     vertex_indexs = new GLshort[]{
