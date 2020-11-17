@@ -206,9 +206,7 @@ void CameraFilter::updatePreviewFrame(unsigned char *data, int format, int width
         DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter updatePreviewFrame()~~~\n");
     }
     if (data == nullptr || width == 0 || height == 0) {
-        if (DebugEnable && FILTER_DEBUG) {
-            DLOGE(CAMERA_FILTER_TAG, "~~~CameraFilter updatePreviewFrame() yuv data or width or height is invalid~~~\n");
-        }
+        DLOGE(CAMERA_FILTER_TAG, "~~~CameraFilter updatePreviewFrame() yuv data or width or height is invalid~~~\n");
         return;
     }
     this->yuvFormat = format;
@@ -222,7 +220,8 @@ void CameraFilter::updateYUVData() {
         DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter updateYUVData()~~~\n");
     }
 
-    if (yuvSrcData == nullptr) {
+    if (yuvSrcData == nullptr || yuvWidth == 0 || yuvHeight == 0) {
+        DLOGE(CAMERA_FILTER_TAG, "~~~CameraFilter yuvData or yuvWidth or yuvHeight is illegal~~~\n");
         return;
     }
 
