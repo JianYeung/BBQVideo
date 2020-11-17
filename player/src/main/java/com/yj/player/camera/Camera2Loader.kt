@@ -83,12 +83,12 @@ class Camera2Loader(private val activity: Activity) : CameraLoader() {
 
     private fun releaseCamera() {
         PlayerLog.d(TAG, "releaseCamera")
-        imageReader?.close()
         cameraInstance?.close()
         captureSession?.close()
-        imageReader = null
+        imageReader?.close()
         cameraInstance = null
         captureSession = null
+        imageReader = null
     }
 
     private fun getCameraId(facing: Int): String? {
