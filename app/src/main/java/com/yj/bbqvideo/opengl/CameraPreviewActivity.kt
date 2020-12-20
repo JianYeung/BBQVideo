@@ -69,7 +69,6 @@ class CameraPreviewActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         DLog.d(TAG, "onDestroy")
-        cameraLoader.release()
         nativeSurfaceView.onDestroy()
     }
 
