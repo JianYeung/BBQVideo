@@ -270,8 +270,8 @@ void VideoFilter::updateTextureData() {
 
     if (yuvType == 0) {
         updateTextureY(yuvSrcData, yuvWidth, yuvHeight, 0);
-        updateTextureUV(yuvSrcData + yuvWidth * yuvHeight, yuvWidth/2, yuvHeight/2, 1);
-        updateTextureUV(yuvSrcData + yuvWidth * yuvHeight * 5/4, yuvWidth/2, yuvHeight/2, 2);
+        updateTextureY(yuvSrcData + yuvWidth * yuvHeight, yuvWidth/2, yuvHeight/2, 1);
+        updateTextureY(yuvSrcData + yuvWidth * yuvHeight * 5/4, yuvWidth/2, yuvHeight/2, 2);
     } else {
         updateTextureY(yuvSrcData, yuvWidth, yuvHeight, 0);
         updateTextureUV(yuvSrcData + yuvWidth * yuvHeight, yuvWidth/2, yuvHeight/2, 3);
