@@ -21,7 +21,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="n">
-        <activity android:name=".video.FFMpegDecodePreviewActivity"></activity>
         <activity android:name=".opengl.OpenGLTestActivity" />
         <activity android:name=".opengl.CameraPreviewActivity" />
         <activity android:name=".opengl.TriangleTestActivity" />

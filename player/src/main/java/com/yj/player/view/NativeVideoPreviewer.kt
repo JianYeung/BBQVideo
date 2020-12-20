@@ -122,9 +122,6 @@ class NativeVideoPreviewer : SurfaceView, SurfaceHolder.Callback {
      * @see RenderMode#RENDERMODE_WHEN_DIRTY
      */
     fun setRenderMode(@NonNull renderMode: RenderMode) {
-        if (renderMode == null) {
-            throw RuntimeException("RenderMode is NULL")
-        }
         nativeGLRenderProxy.setNativeRenderMode(renderMode)
     }
 
@@ -133,9 +130,6 @@ class NativeVideoPreviewer : SurfaceView, SurfaceHolder.Callback {
      * @param filter one of the NativeFilterProxy object
      */
     fun setFilter(@NonNull filter: NativeFilterProxy) {
-        if (filter == null) {
-            throw RuntimeException("Filter is NULL")
-        }
         nativeFilterProxy = filter
         nativeGLRenderProxy.setNativeFilter(filter.getNativeFilterHandle())
         nativeVideoDecoderProxy.setNativeRender(nativeGLRenderProxy.getNativeGLRenderHandle())
