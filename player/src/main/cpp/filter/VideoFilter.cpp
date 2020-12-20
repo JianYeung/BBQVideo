@@ -17,7 +17,7 @@ const GLint VERTEX_INDICES_LENGTH = 6;
 
 const GLint STRIDE_PRE_COORD = 5;
 
-VideoFilter::VideoFilter() : BaseFilter(), yuvSrcData(nullptr) {
+VideoFilter::VideoFilter() : BaseFilter(), yuvData(nullptr) {
     if (DebugEnable && FILTER_DEBUG) {
         DLOGI(VIDEO_FILTER_TAG, "~~~VideoFilter::VideoFilter()~~~\n");
     }
@@ -198,7 +198,7 @@ void VideoFilter::onSurfaceCreated(ANativeWindow *nativeWindow) {
     }
     program = GLShaderUtil::buildProgram(vShaderStr, fShaderStr);
     if (program == GL_NONE) {
-        DLOGD(VIDEO_FILTER_TAG, "Not build valid program\n");
+        DLOGD(VIDEO_FILTER_TAG, "onSurfaceCreated() Render program is invalid!!!");
         return;
     }
 
@@ -232,10 +232,10 @@ void VideoFilter::updatePreviewFrame(VideoFrame *videoFrame) {
         DLOGI(VIDEO_FILTER_TAG, "~~~VideoFilter::updatePreviewFrame()~~~\n");
     }
     if (!isValidVideoFrame(videoFrame)) {
-        DLOGE(VIDEO_FILTER_TAG, "yuv data or width or height is invalid\n");
+        DLOGE(VIDEO_FILTER_TAG, "updatePreviewFrame() yuv data or width or height is invalid");
         return;
     }
-    this->yuvSrcData = videoFrame->getData();
+    this->yuvData = videoFrame->getData();
     this->yuvFormat = videoFrame->getFormat();
     this->yuvWidth = videoFrame->getWidth();
     this->yuvHeight = videoFrame->getHeight();
@@ -263,18 +263,18 @@ void VideoFilter::updateTextureData() {
         DLOGI(VIDEO_FILTER_TAG, "~~~VideoFilter::updateTextureData()~~~\n");
     }
 
-    if (yuvSrcData == nullptr || yuvWidth <= 0 || yuvHeight <= 0) {
-        DLOGE(VIDEO_FILTER_TAG, "yuvData or yuvWidth or yuvHeight is illegal\n");
+    if (yuvData == nullptr || yuvWidth <= 0 || yuvHeight <= 0) {
+        DLOGE(VIDEO_FILTER_TAG, "updateTextureData() yuvData or yuvWidth or yuvHeight is invalid");
         return;
     }
 
     if (yuvType == 0) {
-        updateTextureY(yuvSrcData, yuvWidth, yuvHeight, 0);
-        updateTextureY(yuvSrcData + yuvWidth * yuvHeight, yuvWidth/2, yuvHeight/2, 1);
-        updateTextureY(yuvSrcData + yuvWidth * yuvHeight * 5/4, yuvWidth/2, yuvHeight/2, 2);
+        updateTextureY(yuvData, yuvWidth, yuvHeight, 0);
+        updateTextureY(yuvData + yuvWidth * yuvHeight, yuvWidth / 2, yuvHeight / 2, 1);
+        updateTextureY(yuvData + yuvWidth * yuvHeight * 5 / 4, yuvWidth / 2, yuvHeight / 2, 2);
     } else {
-        updateTextureY(yuvSrcData, yuvWidth, yuvHeight, 0);
-        updateTextureUV(yuvSrcData + yuvWidth * yuvHeight, yuvWidth/2, yuvHeight/2, 3);
+        updateTextureY(yuvData, yuvWidth, yuvHeight, 0);
+        updateTextureUV(yuvData + yuvWidth * yuvHeight, yuvWidth / 2, yuvHeight / 2, 3);
     }
 }
 
@@ -283,8 +283,8 @@ void VideoFilter::updateTextureY(uint8_t *data, int width, int height, int index
         DFLOGI(VIDEO_FILTER_TAG, "~~~VideoFilter::updateTextureY() index: %d ~~~\n", index);
     }
 
-    if (data == nullptr || width == 0 || height == 0 || index > 3) {
-        DLOGE(VIDEO_FILTER_TAG, "data or width or height is illegal\n");
+    if (data == nullptr || width <= 0 || height <= 0 || index > 3) {
+        DLOGE(VIDEO_FILTER_TAG, "updateTextureY() yuvData or yuvWidth or yuvHeight is invalid");
         return;
     }
 
@@ -303,8 +303,8 @@ void VideoFilter::updateTextureUV(uint8_t *data, int width, int height, int inde
         DFLOGI(VIDEO_FILTER_TAG, "~~~VideoFilter::updateTextureUV() index: %d ~~~\n", index);
     }
 
-    if (data == nullptr || width == 0 || height == 0 || index > 3) {
-        DLOGE(VIDEO_FILTER_TAG, "data or width or height is illegal\n");
+    if (data == nullptr || width <= 0 || height <= 0 || index > 3) {
+        DLOGE(VIDEO_FILTER_TAG, "updateTextureUV() yuvData or yuvWidth or yuvHeight is invalid");
         return;
     }
 
@@ -325,7 +325,7 @@ void VideoFilter::draw() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     if (program == GL_NONE) {
-        DLOGD(VIDEO_FILTER_TAG, "Invalid program\n");
+        DLOGE(VIDEO_FILTER_TAG, "draw() Render program is invalid!!!");
         return;
     }
     glUseProgram(program);

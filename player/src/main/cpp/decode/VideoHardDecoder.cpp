@@ -110,13 +110,16 @@ void VideoHardDecoder::stop() {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
         DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::stop()~~~\n");
     }
+    isCodecRelease = true;
     sendMessage(kMsgCodecDone, true);
+    releaseCodec();
 }
 
 void VideoHardDecoder::release() {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
         DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::release()~~~\n");
     }
+    isCodecRelease = true;
     if (codec != nullptr) {
         releaseCodec();
         codec = nullptr;
@@ -199,15 +202,12 @@ void VideoHardDecoder::doDecodeWork() {
     }
 
     if (!isCodecReady) {
-        if (DebugEnable && VIDEO_DECODER_DEBUG) {
-            DLOGE(HARD_DECODER_TAG, "init media codec failed!!!");
-        }
+        DLOGE(HARD_DECODER_TAG, "doDecodeWork() Codec has not initialized，please init codec first!!!");
         return;
     }
 
     if (!sawInputEOS) {
-        ssize_t bufIdx = -1;
-        bufIdx = AMediaCodec_dequeueInputBuffer(codec, 2000);
+        ssize_t bufIdx = AMediaCodec_dequeueInputBuffer(codec, 2000);
         if (DebugEnable && VIDEO_DECODER_DEBUG) {
             DFLOGD(HARD_DECODER_TAG, "input buffer index: %zd", bufIdx);
         }
@@ -261,6 +261,7 @@ void VideoHardDecoder::doDecodeWork() {
                         glRender->requestRender();
                     }
                 }
+                AMediaCodec_releaseOutputBuffer(codec, status, info.size != 0);
                 int64_t delay = (renderStart + presentationNano) - systemNanoTime();
                 if (DebugEnable && VIDEO_DECODER_DEBUG) {
                     int time = delay > 0 ? (int) delay: 0;
@@ -270,7 +271,6 @@ void VideoHardDecoder::doDecodeWork() {
                     usleep(delay / 1000);
                 }
             }
-            AMediaCodec_releaseOutputBuffer(codec, status, info.size != 0);
         } else if (status == AMEDIACODEC_INFO_OUTPUT_BUFFERS_CHANGED) {
             if (DebugEnable && VIDEO_DECODER_DEBUG) {
                 DLOGD(HARD_DECODER_TAG, "output buffers changed");
@@ -315,7 +315,7 @@ void VideoHardDecoder::doDecodeWork() {
         sendMessage(kMsgCodecBuffer);
     }
 
-    if (sawInputEOS && sawOutputEOS) {
+    if (sawInputEOS && sawOutputEOS && !isCodecRelease) {
         if (extractor != nullptr && codec != nullptr) {
             AMediaExtractor_seekTo(extractor, 0, AMEDIAEXTRACTOR_SEEK_NEXT_SYNC);
             AMediaCodec_flush(codec);
@@ -337,7 +337,6 @@ void VideoHardDecoder::doResumeWork() {
     }
     if (!isPlaying) {
         renderStart = -1;
-        isPlaying = true;
         sendMessage(kMsgCodecBuffer);
     }
 
@@ -350,9 +349,7 @@ void VideoHardDecoder::doPauseWork() {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
         DLOGI(HARD_DECODER_TAG, "~~~DecodeHandler::doPauseWork() Start~~~\n");
     }
-    if (isPlaying) {
-        isPlaying = false;
-    }
+    isPlaying = false;
     // flush all outstanding codecbuffer messages with a no-op message
     sendMessage(kMsgPauseAck, true);
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
@@ -370,12 +367,16 @@ void VideoHardDecoder::doSeekWork(int position) {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
         DFLOGD(HARD_DECODER_TAG, "seek position to %ld us\n", (long) seekPosition);
     }
-    AMediaExtractor_seekTo(extractor, seekPosition, AMEDIAEXTRACTOR_SEEK_CLOSEST_SYNC);
-    AMediaCodec_flush(codec);
-    renderStart = -1;
-    sawInputEOS = false;
-    sawOutputEOS = false;
-    sendMessage(kMsgCodecBuffer, true);
+    if (isCodecReady) {
+        AMediaExtractor_seekTo(extractor, seekPosition, AMEDIAEXTRACTOR_SEEK_CLOSEST_SYNC);
+        AMediaCodec_flush(codec);
+        renderStart = -1;
+        sawInputEOS = false;
+        sawOutputEOS = false;
+        sendMessage(kMsgCodecBuffer, true);
+    } else {
+        DLOGE(HARD_DECODER_TAG, "doSeekWork() Codec has not initialized，please init codec first!!!");
+    }
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
         DLOGI(HARD_DECODER_TAG, "~~~DecodeHandler::doSeekWork() End~~~\n");
     }
@@ -402,10 +403,10 @@ void VideoHardDecoder::releaseCodec() {
     }
 
     if (extractor != nullptr) {
-        //TODO 这里有个系统API crash，还不知道为什么，目前注释掉这个地方
-        //AMediaExtractor_delete(extractor);
+        AMediaExtractor_delete(extractor);
         extractor = nullptr;
     }
+    isCodecRelease = false;
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
         DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::releaseCodec() End~~~\n");
     }
@@ -537,8 +538,9 @@ void DecodeHandler::handleMessage(Message &msg) {
             if (DebugEnable && VIDEO_DECODER_DEBUG) {
                 DLOGD(HARD_DECODER_TAG, "handleMessage kMsgDecodeDone");
             }
-            auto decoder = (VideoHardDecoder *) msg.obj;
-            decoder->releaseCodec();
+            //TODO 由于Codec不是在这个线程创建的，所以就不能在这个线程销毁，后面会优化这个实现
+//            auto decoder = (VideoHardDecoder *) msg.obj;
+//            decoder->releaseCodec();
         }
             break;
         default:

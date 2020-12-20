@@ -15,7 +15,7 @@ const GLint VERTEX_INDICES_LENGTH = 6;
 
 const GLint STRIDE_PRE_COORD = 5;
 
-CameraFilter::CameraFilter() : BaseFilter(), yuvSrcData(nullptr) {
+CameraFilter::CameraFilter() : BaseFilter(), yuvData(nullptr) {
     if (DebugEnable && FILTER_DEBUG) {
         DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::CameraFilter()~~~\n");
     }
@@ -181,7 +181,7 @@ void CameraFilter::onSurfaceCreated(ANativeWindow *nativeWindow) {
     }
     program = GLShaderUtil::buildProgram(vShaderStr, fShaderStr);
     if (program == GL_NONE) {
-        DLOGD(CAMERA_FILTER_TAG, "Not build valid program\n");
+        DLOGD(CAMERA_FILTER_TAG, "onSurfaceCreated() Render program is invalid!!!");
         return;
     }
 
@@ -207,14 +207,14 @@ void CameraFilter::updatePreviewFrame(VideoFrame *videoFrame) {
         DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::updatePreviewFrame() Start~~~\n");
     }
     if (!isValidVideoFrame(videoFrame)) {
-        DLOGE(CAMERA_FILTER_TAG, "~~~CameraFilter updatePreviewFrame() yuv data or width or height is invalid~~~\n");
+        DLOGE(CAMERA_FILTER_TAG, "updatePreviewFrame() yuv data or width or height is invalid");
         return;
     }
 
     this->yuvFormat = videoFrame->getFormat();
     this->yuvWidth = videoFrame->getWidth();
     this->yuvHeight = videoFrame->getHeight();
-    this->yuvSrcData = videoFrame->getData();
+    this->yuvData = videoFrame->getData();
     if (DebugEnable && FILTER_DEBUG) {
         DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::updatePreviewFrame() End~~~\n");
     }
@@ -225,8 +225,8 @@ void CameraFilter::updateTextureData() {
         DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::updateTextureData() Start~~~\n");
     }
 
-    if (yuvSrcData == nullptr || yuvWidth <= 0 || yuvHeight <= 0) {
-        DLOGE(CAMERA_FILTER_TAG, "~~~CameraFilter yuvData or yuvWidth or yuvHeight is illegal~~~");
+    if (yuvData == nullptr || yuvWidth <= 0 || yuvHeight <= 0) {
+        DLOGE(CAMERA_FILTER_TAG, "updateTextureData() yuvData or yuvWidth or yuvHeight is invalid");
         return;
     }
 
@@ -234,7 +234,7 @@ void CameraFilter::updateTextureData() {
     checkGlError("glActiveTexture");
     glBindTexture(GL_TEXTURE_2D, yTextId);
     checkGlError("glBindTexture");
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, yuvWidth, yuvHeight, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, yuvSrcData);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, yuvWidth, yuvHeight, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, yuvData);
     checkGlError("glTexImage2D");
     glUniform1i(0,  0); // y_texture的location=0, 把纹理0赋值给y_texture
     checkGlError("glUniform1i");
@@ -243,7 +243,7 @@ void CameraFilter::updateTextureData() {
     checkGlError("glActiveTexture");
     glBindTexture(GL_TEXTURE_2D, uvTextId);
     checkGlError("glBindTexture");
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, yuvWidth / 2, yuvHeight / 2, 0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, yuvSrcData + yuvWidth * yuvHeight);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, yuvWidth / 2, yuvHeight / 2, 0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, yuvData + yuvWidth * yuvHeight);
     checkGlError("glTexImage2D");
     glUniform1i(1, 1); // u_texture的location=1, 把纹理1赋值给u_texture
     checkGlError("glUniform1i");
@@ -259,7 +259,7 @@ void CameraFilter::draw() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     if (program == GL_NONE) {
-        DLOGD(CAMERA_FILTER_TAG, "Invalid program\n");
+        DLOGD(CAMERA_FILTER_TAG, "draw() Render program is invalid!!!");
         return;
     }
     glUseProgram(program);

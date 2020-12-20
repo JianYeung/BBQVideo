@@ -59,6 +59,7 @@ private:
     long outDuration;
 
     bool isCodecReady = false;
+    bool isCodecRelease = false;
     bool isPlaying = false;
     bool sawInputEOS = false;
     bool sawOutputEOS = false;
