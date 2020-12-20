@@ -57,7 +57,7 @@ void VideoHardDecoder::start() {
         DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::start()~~~\n");
     }
     if (isPlaying) {
-        DLOGI(HARD_DECODER_TAG, "It is playing video, please stop to play first");
+        DLOGI(HARD_DECODER_TAG, "It is playing video, please stop to play first!!!");
         return;
     }
     if (!videoUrl.empty() && surfaceWindow != nullptr) {
@@ -152,7 +152,7 @@ bool VideoHardDecoder::initCodec() {
         }
         const char *mime;
         if (!AMediaFormat_getString(format, AMEDIAFORMAT_KEY_MIME, &mime)) {
-            DLOGE(HARD_DECODER_TAG, "Has no mime type!");
+            DLOGE(HARD_DECODER_TAG, "Has no mime type!!!");
             return JNI_FALSE;
         } else if (!strncmp(mime, "video/avc", 9)) {
             // Omitting most error handling for clarity.
@@ -464,7 +464,7 @@ void DecodeHandler::handleMessage(Message &msg) {
     }
     int what = msg.what;
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DFLOGD(HARD_DECODER_TAG, "handleMessage msg what = %d\n", msg.what);
+        DFLOGD(HARD_DECODER_TAG, "handleMessage msg what = %d", msg.what);
     }
     switch (what) {
         case kMsgInitCodec: {
