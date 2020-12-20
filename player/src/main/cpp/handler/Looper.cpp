@@ -1,6 +1,7 @@
 //
 // Created by jian.yeung on 2020/12/7.
 //
+#include <DLog.h>
 #include "Looper.h"
 
 #include "Handler.h"
@@ -43,11 +44,13 @@ void Looper::run(Looper *looper) {
 }
 
 Looper::Looper() {
+    DLOGI("Looper", "~~~Looper::Looper~~~\n");
     msg_queue_ = std::vector<Message>();
     msg_thread_ = std::thread(&Looper::run, this);
 }
 
 Looper::~Looper() {
+    DLOGI("Looper", "~~~Looper::~Looper~~~\n");
     {
         std::unique_lock<std::mutex> lock(queue_mutex_);
         stop = true;

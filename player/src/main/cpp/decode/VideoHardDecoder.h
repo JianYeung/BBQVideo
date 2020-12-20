@@ -10,6 +10,7 @@
 #include <media/NdkMediaExtractor.h>
 #include <Handler.h>
 #include <BaseFilter.h>
+#include <DLog.h>
 #include "VideoDecoder.h"
 
 enum {
@@ -31,7 +32,16 @@ private:
 
 public:
     DecodeHandler() : Handler() {
+        DLOGI("DecodeHandler", "~~~DecodeHandler::DecodeHandler~~~\n");
         my_looper_ = new Looper();
+    }
+
+    ~DecodeHandler() {
+        DLOGI("DecodeHandler", "~~~DecodeHandler::~DecodeHandler~~~\n");
+        if (my_looper_ != nullptr) {
+            delete my_looper_;
+            my_looper_ = nullptr;
+        }
     }
 
     void handleMessage(Message &msg) override;
