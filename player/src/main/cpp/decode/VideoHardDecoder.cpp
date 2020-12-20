@@ -3,7 +3,6 @@
 //
 
 #include <jni.h>
-#include <DLog.h>
 #include <unistd.h>
 #include "VideoHardDecoder.h"
 
