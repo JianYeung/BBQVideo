@@ -8,6 +8,8 @@ abstract class CameraLoader {
 
     abstract fun onPause()
 
+    abstract fun release();
+
     abstract fun switchCamera()
 
     abstract fun getCameraOrientation(): Int

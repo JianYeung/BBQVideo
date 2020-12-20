@@ -5,8 +5,9 @@
 #include <jni.h>
 #include <cassert>
 #include "decode_jni.h"
-#include "gl_render_jni.h"
 #include "encode_jni.h"
+#include "filter_jni.h"
+#include "gl_render_jni.h"
 #include "rtmp_jni.h"
 
 #ifdef __cplusplus
@@ -37,6 +38,10 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
 
 #ifdef RENDER_SUPPORTED
     if (registerNativeGLRenderMethods(env) != JNI_OK) {
+        return result;
+    }
+
+    if (registerNativeFilterMethods(env) != JNI_OK) {
         return result;
     }
 #endif

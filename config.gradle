@@ -11,14 +11,14 @@ ext {
     ]
 
     kotlin = [
-            kotlin_version : "1.4.10"
+            kotlin_version : "1.4.21"
     ]
 
     version = [
             androidXSdkVersion        : "1.3.2",
             androidXCompatSdkVersion  : "1.2.0",
-            constraintSdkVersion      : "2.0.2",
-            junitVesion               : "4.13",
+            constraintSdkVersion      : "2.0.4",
+            junitVesion               : "4.13.1",
             junitTestSdkVersion       : "1.1.2",
             espressoSdkVersion        : "3.3.0",
     ]

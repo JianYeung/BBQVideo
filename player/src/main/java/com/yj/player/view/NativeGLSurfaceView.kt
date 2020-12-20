@@ -6,11 +6,12 @@ import android.view.Surface
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.yj.player.PlayerManager
-import com.yj.player.camera.Rotation
+import com.yj.player.render.NativeFilterProxy
 import com.yj.player.render.NativeGLRenderProxy
+import com.yj.player.render.RenderMode
 
 class NativeGLSurfaceView : SurfaceView, SurfaceHolder.Callback {
-
+    private var nativeFilterProxy: NativeFilterProxy? = null
     private val nativeGLRenderProxy: NativeGLRenderProxy by lazy {
         PlayerManager.createNativeGLRenderProxy()
     }
@@ -46,8 +47,8 @@ class NativeGLSurfaceView : SurfaceView, SurfaceHolder.Callback {
     }
 
     override fun onDetachedFromWindow() {
-        nativeGLRenderProxy.onDetachedFromWindow()
         super.onDetachedFromWindow()
+        nativeGLRenderProxy.onDetachedFromWindow()
     }
 
     fun onPause() {
@@ -59,16 +60,8 @@ class NativeGLSurfaceView : SurfaceView, SurfaceHolder.Callback {
     }
 
     fun onDestroy() {
+        nativeFilterProxy?.onDestroy()
         nativeGLRenderProxy.onDestroy()
-    }
-
-    /**
-     * Sets the rotation of the displayed image.
-     *
-     * @param rotation new rotation
-     */
-    fun setRotation(rotation: Rotation) {
-        nativeGLRenderProxy.setNativeRotation(rotation)
     }
 
     /**
@@ -82,29 +75,19 @@ class NativeGLSurfaceView : SurfaceView, SurfaceHolder.Callback {
     }
 
     /**
-     * Set Filter Type.
-     * @param filterType one of the filterType constants
+     * Set Filter.
+     * @param filter one of the NativeFilterProxy object
      */
-    fun setFilterType(filterType: FilterType) {
-        nativeGLRenderProxy.setNativeFilter(filterType)
+    fun setFilter(filter: NativeFilterProxy) {
+        nativeFilterProxy = filter
+        nativeGLRenderProxy.setNativeFilter(filter.getNativeFilterHandle())
     }
 
     /**
      *  Request render.
      */
     fun requestRender() {
-        nativeGLRenderProxy.requestRender();
-    }
-
-    /**
-     * Update camera preview frame with YUV format data.
-     *
-     * @param data   Camera preview YUV data for frame.
-     * @param width  width of camera preview
-     * @param height height of camera preview
-     */
-    fun updatePreviewFrame(data: ByteArray?, format: Int, width: Int, height: Int) {
-        nativeGLRenderProxy.updatePreviewFrame(data, format, width, height)
+        nativeGLRenderProxy.requestRender()
     }
 
     /**

@@ -5,6 +5,7 @@
 #include <GLShaderUtil.h>
 #include <GLErrorLog.h>
 #include <Constant.h>
+#include <FrameUtil.h>
 #include "CameraFilter.h"
 #include "ImageUtil.h"
 
@@ -16,25 +17,24 @@ const GLint STRIDE_PRE_COORD = 5;
 
 CameraFilter::CameraFilter() : BaseFilter() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(CAMERA_FILTER_TAG, "~~~~CameraFilter CameraFilter()~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~~CameraFilter::CameraFilter()~~~\n");
     }
     setUp();
 }
 
 CameraFilter::~CameraFilter() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(CAMERA_FILTER_TAG, "~~~~CameraFilter ~CameraFilter()~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~~CameraFilter::~CameraFilter()~~~\n");
     }
     tearDown();
 }
 
 void CameraFilter::setUp() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(CAMERA_FILTER_TAG, "~~~~CameraFilter setUp()~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~~CameraFilter::setUp()~~~\n");
     }
     vShaderStr =
-            "#version 300 es                   "
-            "         \n"
+            "#version 300 es                            \n"
             "layout(location = 0) in vec4 a_position;   \n"
             "layout(location = 1) in vec2 a_texcoord;   \n"
             "out vec2 v_texcoord;                       \n"
@@ -79,13 +79,13 @@ void CameraFilter::setUp() {
 
 void CameraFilter::tearDown() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(CAMERA_FILTER_TAG, "~~~~CameraFilter tearDown()~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~~CameraFilter::tearDown()~~~\n");
     }
 }
 
 void CameraFilter::initVAO() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(CAMERA_FILTER_TAG, "~~~~CameraFilter initVAO() Start~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~~CameraFilter::initVAO() Start~~~\n");
     }
 
     //generate vao vbo ebo
@@ -134,13 +134,13 @@ void CameraFilter::initVAO() {
     checkGlError("glBindBuffer ebo");
 
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGD(CAMERA_FILTER_TAG, "~~~~CameraFilter initVAO() End~~~\n");
+        DLOGD(CAMERA_FILTER_TAG, "~~~~CameraFilter::initVAO() End~~~\n");
     }
 }
 
 void CameraFilter::initTexture() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter initTexture() Start~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::initTexture() Start~~~\n");
     }
     glActiveTexture(GL_TEXTURE0);
     glGenTextures(1, &yTextId);
@@ -171,13 +171,13 @@ void CameraFilter::initTexture() {
 
 
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter initTexture() End~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::initTexture() End~~~\n");
     }
 }
 
 void CameraFilter::onSurfaceCreated(ANativeWindow *nativeWindow) {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter onSurfaceCreated()~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::onSurfaceCreated()~~~\n");
     }
     program = GLShaderUtil::buildProgram(vShaderStr, fShaderStr);
     if (program == GL_NONE) {
@@ -194,7 +194,7 @@ void CameraFilter::onSurfaceCreated(ANativeWindow *nativeWindow) {
 void
 CameraFilter::onSurfaceChanged(ANativeWindow *nativeWindow, int format, int width, int height) {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter onSurfaceChanged()~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::onSurfaceChanged()~~~\n");
     }
     this->pixelFormat = format;
     this->surfaceWidth = width;
@@ -202,26 +202,30 @@ CameraFilter::onSurfaceChanged(ANativeWindow *nativeWindow, int format, int widt
     glViewport(0, 0, surfaceWidth, surfaceHeight);
 }
 
-void CameraFilter::updatePreviewFrame(unsigned char *data, int format, int width, int height) {
+void CameraFilter::updatePreviewFrame(VideoFrame *videoFrame) {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter updatePreviewFrame()~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::updatePreviewFrame() Start~~~\n");
     }
-    if (data == nullptr || width == 0 || height == 0) {
+    if (!isValidVideoFrame(videoFrame)) {
         DLOGE(CAMERA_FILTER_TAG, "~~~CameraFilter updatePreviewFrame() yuv data or width or height is invalid~~~\n");
         return;
     }
-    this->yuvFormat = format;
-    this->yuvWidth = width;
-    this->yuvHeight = height;
-    this->yuvSrcData = data;
+
+    this->yuvFormat = videoFrame->getFormat();
+    this->yuvWidth = videoFrame->getWidth();
+    this->yuvHeight = videoFrame->getHeight();
+    this->yuvSrcData = videoFrame->getData();
+    if (DebugEnable && FILTER_DEBUG) {
+        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::updatePreviewFrame() End~~~\n");
+    }
 }
 
-void CameraFilter::updateYUVData() {
+void CameraFilter::updateTextureData() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter updateYUVData()~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::updateTextureData() Start~~~\n");
     }
 
-    if (yuvSrcData == nullptr || yuvWidth == 0 || yuvHeight == 0) {
+    if (yuvSrcData == nullptr || yuvWidth <= 0 || yuvHeight <= 0) {
         DLOGE(CAMERA_FILTER_TAG, "~~~CameraFilter yuvData or yuvWidth or yuvHeight is illegal~~~\n");
         return;
     }
@@ -243,17 +247,14 @@ void CameraFilter::updateYUVData() {
     checkGlError("glTexImage2D");
     glUniform1i(1, 1); // u_texture的location=1, 把纹理1赋值给u_texture
     checkGlError("glUniform1i");
-}
-
-void CameraFilter::updateMVPMatrix() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter updateMVPMatrix()~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::updateTextureData() End~~~\n");
     }
 }
 
 void CameraFilter::draw() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter draw() Start~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::draw() Start~~~\n");
     }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -263,10 +264,8 @@ void CameraFilter::draw() {
     }
     glUseProgram(program);
     checkGlError("glUseProgram");
-    // 绑定MVP矩阵
-    updateMVPMatrix();
-    // 绑定YUV data
-    updateYUVData();
+    // 绑定Texture data
+    updateTextureData();
     // 绑定VAO
     glBindVertexArray(vao);
     checkGlError("glBindVertexArray");
@@ -280,13 +279,13 @@ void CameraFilter::draw() {
     glBindVertexArray(0);
     checkGlError("glBindVertexArray");
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter draw() End~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::draw() End~~~\n");
     }
 }
 
 void CameraFilter::onDestroy() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter onDestroy()~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::onDestroy()~~~\n");
     }
     if (vertex_color_coords != nullptr) {
         delete vertex_color_coords;

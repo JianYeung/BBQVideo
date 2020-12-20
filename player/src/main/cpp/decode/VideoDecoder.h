@@ -6,20 +6,31 @@
 #define BBQVIDEO_VIDEODECODER_H
 
 #include <string>
-#include <media/NdkMediaCodec.h>
+#include <android/native_window.h>
+#include <GLRender.h>
+
+#define VIDEO_DECODER_DEBUG true
+#define VIDEO_DECODER_TAG "VideoDecoder"
 
 class VideoDecoder {
 protected:
-    std::string url;
-    ANativeWindow *window;
-    int width;
-    int height;
+    std::string videoUrl;
+    ANativeWindow *surfaceWindow = nullptr;
+    int surfaceWidth;
+    int surfaceHeight;
 
 public:
-    virtual void setSource(std::string string) = 0;
+    VideoDecoder();
+    virtual ~VideoDecoder();
 
+    virtual void setRender(GLRender *glRender) = 0;
+    virtual void setDataSource(std::string url) = 0;
     virtual void setSurface(ANativeWindow *window, int width, int height) = 0;
-
+    virtual void start() = 0;
+    virtual void resume() = 0;
+    virtual void pause() = 0;
+    virtual void seek(int position) = 0;
+    virtual void stop() = 0;
     virtual void release() = 0;
 };
 

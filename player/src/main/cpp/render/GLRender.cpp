@@ -10,7 +10,7 @@
 
 GLRender::GLRender() {
     if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "GLRender GLRender()");
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::GLRender()~~~~");
     }
     pthread_mutex_init(&render_mutex, nullptr);
     pthread_cond_init(&surface_cond, nullptr);
@@ -18,15 +18,21 @@ GLRender::GLRender() {
 }
 
 GLRender::~GLRender() {
-
+    if (DebugEnable && GL_RENDER_DEBUG) {
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::~GLRender()~~~~");
+    }
 }
 
 void GLRender::init() {
-
+    if (DebugEnable && GL_RENDER_DEBUG) {
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::init()~~~~");
+    }
 }
 
 void GLRender::unInit() {
-
+    if (DebugEnable && GL_RENDER_DEBUG) {
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::unInit()~~~~");
+    }
 }
 
 void *guardedRun(void *data) {
@@ -37,14 +43,14 @@ void *guardedRun(void *data) {
 
 void GLRender::onPause() {
     if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "GLRender onPause()");
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::onPause()~~~~");
     }
     this->mRequestPaused = true;
 }
 
 void GLRender::onResume() {
     if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "GLRender onResume()");
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::onResume()~~~~");
     }
     this->mRequestPaused = false;
     this->mRequestRender = true;
@@ -52,7 +58,7 @@ void GLRender::onResume() {
 
 void GLRender::onAttachedToWindow() {
     if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "GLRender onAttachedToWindow()");
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::onAttachedToWindow()~~~~");
         DFLOGD(GL_RENDER_TAG, "onAttachedToWindow mDetached = %d, mFilter = %d, isRunning = %d", mDetached, (mFilter != nullptr), isRunning);
     }
     if (mDetached && (mFilter != nullptr)) {
@@ -65,7 +71,7 @@ void GLRender::onAttachedToWindow() {
 
 void GLRender::onDetachedFromWindow() {
     if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "GLRender onDetachedFromWindow()");
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::onDetachedFromWindow()~~~~");
         DFLOGD(GL_RENDER_TAG, "onDetachedFromWindow isRunning = %d", isRunning);
     }
     if (isRunning) {
@@ -74,72 +80,57 @@ void GLRender::onDetachedFromWindow() {
     mDetached = true;
 }
 
-void GLRender::setRotation(Rotation rotation) {
-    if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "GLRender setRotation()");
-    }
-    this->mRotation = rotation;
-}
-
 void GLRender::setRenderMode(RenderMode mode) {
     if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "GLRender setRenderMode()");
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::setRenderMode()~~~~");
     }
     this->mRenderMode = mode;
 }
 
+RenderMode GLRender::getRenderMode() {
+    if (DebugEnable && GL_RENDER_DEBUG) {
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::getRenderMode()~~~~");
+    }
+    return this->mRenderMode;
+}
+
 void GLRender::requestRender() {
     if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "GLRender requestRender()");
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::requestRender()~~~~");
     }
     this->mRequestRender = true;
 }
 
-void GLRender::updatePreviewFrame(unsigned char *data, int format, int width, int height) {
-    if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "GLRender updatePreviewFrame()");
-    }
-    if (mFilter != nullptr) {
-        mFilter->updatePreviewFrame(data, format, width, height);
-    }
-}
-
 bool GLRender::readyToDraw() {
     if (DebugEnable && GL_RENDER_DEBUG) {
-        DFLOGI(GL_RENDER_TAG,
-               "GLRender readyToDraw() mPaused = %d, mHasSurface = %d, mSurfaceIsBad = %d, mLostEglContext = %d, mWidth = %d, mHeight = %d, mRequestRender = %d",
-               mPaused, mHasSurface, mSurfaceIsBad, mLostEglContext, mSurfaceWidth, mSurfaceHeight,
-               mRequestRender);
+//        DFLOGI(GL_RENDER_TAG,
+//               "GLRender::readyToDraw() mPaused = %d, mHasSurface = %d, mSurfaceIsBad = %d, mLostEglContext = %d, mWidth = %d, mHeight = %d, mRequestRender = %d",
+//               mPaused, mHasSurface, mSurfaceIsBad, mLostEglContext, mSurfaceWidth, mSurfaceHeight,
+//               mRequestRender);
     }
     return (!mPaused) && mHasSurface && (!mSurfaceIsBad) && (!mLostEglContext)
            && (mSurfaceWidth > 0) && (mSurfaceHeight > 0) &&
            (mRequestRender || mRenderMode == RenderMode::RENDERMODE_CONTINUOUSLY);
 }
 
-void GLRender::setFilterType(FilterType filterType) {
+void GLRender::setFilter(BaseFilter *filter) {
     if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "GLRender setFilter()");
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::setFilter()~~~~");
     }
-    BaseFilter *baseFilter;
-    switch (filterType) {
-        case FilterType::TRIANGLE:
-            baseFilter = new TriangleFilter();
-            break;
-        case FilterType::CAMERA:
-            baseFilter = new CameraFilter();
-            break;
-        case FilterType::NORMAL:
-        default:
-            baseFilter = new BaseFilter();
-            break;
-    }
-    this->mFilter = baseFilter;
+    this->mFilter = filter;
     pthread_create(&render_thread, nullptr, guardedRun, this);
+}
+
+BaseFilter *GLRender::getFilter() {
+    if (DebugEnable && GL_RENDER_DEBUG) {
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::getFilter()~~~~");
+    }
+    return this->mFilter;
 }
 
 void GLRender::prepareRenderThread() {
     if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "GLRender prepareRenderThread()");
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::prepareRenderThread() start~~~~");
     }
     mEglHelper = EglHelper();
     this->isRunning = true;
@@ -258,14 +249,14 @@ void GLRender::prepareRenderThread() {
                     mHasEglSurface = true;
                     if (mFilter != nullptr) {
                         if (DebugEnable && GL_RENDER_DEBUG) {
-                            DLOGD(GL_RENDER_TAG, "~~~Filter surface create~~~");
+                            DLOGD(GL_RENDER_TAG, "~~~notify filter surface created~~~");
                         }
                         mFilter->onSurfaceCreated(mSurfaceWindow);
                     }
                     if (mSizeChanged) {
                         if (mFilter != nullptr) {
                             if (DebugEnable && GL_RENDER_DEBUG) {
-                                DLOGD(GL_RENDER_TAG, "~~~Filter size changed~~~");
+                                DLOGD(GL_RENDER_TAG, "~~~notify filter size changed~~~");
                             }
                             mFilter->onSurfaceChanged(mSurfaceWindow, mSurfaceFormat, mSurfaceWidth, mSurfaceHeight);
                         }
@@ -286,7 +277,7 @@ void GLRender::prepareRenderThread() {
                 this->mRequestRender = false;
                 if (mFilter != nullptr) {
                     if (DebugEnable && GL_RENDER_DEBUG) {
-                        DLOGD(GL_RENDER_TAG, "~~~Filter draw~~~");
+                        DLOGD(GL_RENDER_TAG, "~~~notify filter draw~~~");
                     }
                     mFilter->draw();
                 }
@@ -325,11 +316,14 @@ void GLRender::prepareRenderThread() {
     stopEglSurfaceLocked();
     stopEglContextLocked();
     pthread_mutex_unlock(&render_mutex);
+    if (DebugEnable && GL_RENDER_DEBUG) {
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::prepareRenderThread() end~~~~");
+    }
 }
 
 void GLRender::onSurfaceCreated(ANativeWindow *window) {
     if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "GLRender onSurfaceCreated()");
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::onSurfaceCreated()~~~~");
     }
     this->mHasSurface = true;
     this->mSurfaceWindow = window;
@@ -338,7 +332,7 @@ void GLRender::onSurfaceCreated(ANativeWindow *window) {
 
 void GLRender::onSurfaceChanged(ANativeWindow *window, int format, int width, int height) {
     if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "GLRender onSurfaceChanged()");
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::onSurfaceChanged()~~~~");
     }
     this->mSizeChanged = true;
     this->mSurfaceWindow = window;
@@ -350,21 +344,21 @@ void GLRender::onSurfaceChanged(ANativeWindow *window, int format, int width, in
 
 void GLRender::onSurfaceDestroyed(ANativeWindow *window) {
     if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "GLRender onSurfaceDestroyed()");
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::onSurfaceDestroyed()~~~~");
     }
     this->mHasSurface = false;
 }
 
 void GLRender::requestExitAndWait() {
     if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "GLRender requestExitAndWait()");
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::requestExitAndWait()~~~~");
     }
     this->mShouldExit = true;
 }
 
 void GLRender::stopEglSurfaceLocked() {
     if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "GLRender stopEglSurfaceLocked()");
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::stopEglSurfaceLocked()~~~~");
     }
     if (mHasEglSurface) {
         mHasEglSurface = false;
@@ -374,7 +368,7 @@ void GLRender::stopEglSurfaceLocked() {
 
 void GLRender::stopEglContextLocked() {
     if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "GLRender stopEglContextLocked()");
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::stopEglContextLocked()~~~~");
     }
     if (mHasEglContext) {
         mHasEglContext = false;
@@ -384,11 +378,6 @@ void GLRender::stopEglContextLocked() {
 
 void GLRender::onDestroy() {
     if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "GLRender onDestroy()");
-    }
-    if (mFilter != nullptr) {
-        mFilter->onDestroy();
-        delete mFilter;
-        mFilter = nullptr;
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::onDestroy()~~~~");
     }
 }

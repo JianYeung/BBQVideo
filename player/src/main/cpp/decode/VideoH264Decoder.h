@@ -9,10 +9,21 @@
 #include "VideoDecoder.h"
 
 class VideoH264Decoder : public VideoDecoder {
+private:
+    const char *H264_DECODER_TAG = "H264Decoder";
 
 public:
-    void setSource(std::string url) override;
+    VideoH264Decoder();
+    virtual ~VideoH264Decoder();
+
+    void setRender(GLRender *glRender) override;
+    void setDataSource(std::string url) override;
     void setSurface(ANativeWindow *nativeWindow, int width, int height) override;
+    void start() override;
+    void resume() override;
+    void pause() override;
+    void seek(int position) override;
+    void stop() override;
     void release() override;
 };
 

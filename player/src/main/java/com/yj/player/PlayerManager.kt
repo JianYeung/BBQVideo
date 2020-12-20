@@ -1,32 +1,40 @@
 package com.yj.player
 
-import com.yj.player.decode.VideoDecoderImpl
-import com.yj.player.encode.VideoEncoderImpl
+import com.yj.player.decode.NativeVideoDecoderProxy
+import com.yj.player.encode.NativeVideoEncoderProxy
+import com.yj.player.render.NativeGLRenderProxy
 import com.yj.player.jni.DecodeHelper
 import com.yj.player.jni.EncodeHelper
+import com.yj.player.jni.FilterHelper
 import com.yj.player.jni.GLRenderHelper
-import com.yj.player.render.NativeGLRenderProxy
+import com.yj.player.render.FilterType
+import com.yj.player.render.NativeFilterProxy
 import com.yj.player.rtmp.RtmpManagerImpl
 import java.lang.System.loadLibrary
 
 object PlayerManager {
 
-    private var hardDecodeEnable = true
+    private var softwareDecodeEnable = false
+    private var softwareEncodeEnable = true
 
     init {
         loadLibrary("player-lib")
+    }
+
+    fun createNativeFilterProxy(filterType: FilterType): NativeFilterProxy {
+        return FilterHelper.createFilterHandle(filterType)
     }
 
     fun createNativeGLRenderProxy(): NativeGLRenderProxy {
         return GLRenderHelper.createGLRenderHandle()
     }
 
-    fun createVideoDecoder(): VideoDecoderImpl {
-        return DecodeHelper.createVideoDecoder(hardDecodeEnable)
+    fun createNativeVideoDecoderProxy(): NativeVideoDecoderProxy {
+        return DecodeHelper.createVideoDecoderHandle(softwareDecodeEnable)
     }
 
-    fun createVideoEncoder(): VideoEncoderImpl {
-        return EncodeHelper.createVideoEncoder(hardDecodeEnable)
+    fun createNativeVideoEncoderProxy(): NativeVideoEncoderProxy {
+        return EncodeHelper.createVideoEncoderHandle(softwareEncodeEnable)
     }
 
     fun createRtmpManager(): RtmpManagerImpl {

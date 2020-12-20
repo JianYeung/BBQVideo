@@ -32,7 +32,12 @@ class Camera2Loader(private val activity: Activity) : CameraLoader() {
 
     override fun onPause() {
         PlayerLog.d(TAG, "onPause")
-        releaseCamera()
+        //releaseCamera()
+    }
+
+    override fun release() {
+        PlayerLog.d(TAG, "release")
+        releaseCamera();
     }
 
     override fun switchCamera() {

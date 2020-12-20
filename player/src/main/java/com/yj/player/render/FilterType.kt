@@ -1,4 +1,4 @@
-package com.yj.player.view
+package com.yj.player.render
 
 enum class FilterType(data: Int) {
     /**
@@ -15,6 +15,11 @@ enum class FilterType(data: Int) {
      *
      */
     CAMERA(2),
+
+    /**
+     *
+     */
+    VIDEO(3),
 
     /**
      *

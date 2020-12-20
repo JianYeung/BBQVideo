@@ -8,13 +8,16 @@
 
 #include <android/native_window.h>
 #include <GLES3/gl3.h>
+#include <VideoFrame.h>
 
 #define FILTER_DEBUG true
+#define BASE_FILTER_TAG "BaseFilter"
 
 enum class FilterType {
     NORMAL = 0,
     TRIANGLE = 1,
     CAMERA = 2,
+    VIDEO = 3,
     UNKNOWN = 0xFF,
 };
 
@@ -51,7 +54,7 @@ public:
 
     virtual void setUp();
     virtual void tearDown();
-    virtual void updatePreviewFrame(unsigned char *data, int format, int width, int height);
+    virtual void updatePreviewFrame(VideoFrame *videoFrame);
     virtual void onSurfaceCreated(ANativeWindow *nativeWindow);
     virtual void onSurfaceChanged(ANativeWindow *nativeWindow, int format, int width, int height);
     virtual void draw();

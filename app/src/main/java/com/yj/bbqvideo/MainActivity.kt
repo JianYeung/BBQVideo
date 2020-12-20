@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.yj.bbqvideo.opengl.OpenGLTestActivity
-import com.yj.bbqvideo.video.VideoPreviewerActivity
+import com.yj.bbqvideo.video.VideoDecodeTestActivity
 
 class MainActivity : AppCompatActivity(), View.OnClickListener  {
 
@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener  {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         findViewById<Button>(R.id.btn_open_gl_test).setOnClickListener(this)
-        findViewById<Button>(R.id.btn_video_previewer).setOnClickListener(this)
+        findViewById<Button>(R.id.btn_video_decode_test).setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -24,8 +24,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener  {
                 startActivity(intent)
             }
 
-            R.id.btn_video_previewer -> {
-                intent = Intent(this, VideoPreviewerActivity::class.java)
+            R.id.btn_video_decode_test -> {
+                intent = Intent(this, VideoDecodeTestActivity::class.java)
                 startActivity(intent)
             }
         }

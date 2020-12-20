@@ -23,7 +23,6 @@ public:
 
     void setUp() override;
     void tearDown() override;
-    void updatePreviewFrame(unsigned char * data, int format, int width, int height) override;
     void onSurfaceCreated(ANativeWindow *nativeWindow) override;
     void onSurfaceChanged(ANativeWindow *nativeWindow, int format, int width, int height) override;
     void draw() override;

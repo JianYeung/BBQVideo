@@ -6,17 +6,29 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.yj.bbqvideo.R
 import com.yj.bbqvideo.util.DLog
+import com.yj.player.PlayerManager
 import com.yj.player.camera.Camera2Loader
 import com.yj.player.camera.CameraLoader
 import com.yj.player.camera.Rotation
 import com.yj.player.camera.doOnLayout
-import com.yj.player.view.FilterType
+import com.yj.player.render.FilterType
+import com.yj.player.render.NativeFilterProxy
 import com.yj.player.view.NativeGLSurfaceView
-import com.yj.player.view.RenderMode
+import com.yj.player.render.RenderMode
 
 class CameraPreviewActivity : AppCompatActivity() {
-    private val nativeSurfaceView: NativeGLSurfaceView by lazy { findViewById(R.id.camera_preview_surfaceView) }
-    private val cameraLoader: CameraLoader by lazy { Camera2Loader(this) }
+    private val nativeSurfaceView: NativeGLSurfaceView by lazy {
+        findViewById(R.id.camera_preview_surfaceView)
+    }
+
+    private val filter: NativeFilterProxy by lazy {
+        PlayerManager.createNativeFilterProxy(FilterType.CAMERA)
+    }
+
+    private val cameraLoader: CameraLoader by lazy {
+        Camera2Loader(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera_preview)
@@ -29,12 +41,12 @@ class CameraPreviewActivity : AppCompatActivity() {
             }
         }
         cameraLoader.setOnPreviewFrameListener { data, format, width, height ->
-            nativeSurfaceView.updatePreviewFrame(data, format, width, height)
+            filter.updatePreviewFrame(data, format, width, height)
             nativeSurfaceView.requestRender()
         }
         nativeSurfaceView.run {
             setRenderMode(RenderMode.RENDERMODE_WHEN_DIRTY)
-            setFilterType(FilterType.CAMERA)
+            setFilter(filter)
         }
     }
 
@@ -57,6 +69,7 @@ class CameraPreviewActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         DLog.d(TAG, "onDestroy")
+        cameraLoader.release()
         nativeSurfaceView.onDestroy()
     }
 
