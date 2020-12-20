@@ -1,4 +1,4 @@
-package com.yj.player.view
+package com.yj.player.render
 
 enum class RenderMode(data: Int) {
     /**

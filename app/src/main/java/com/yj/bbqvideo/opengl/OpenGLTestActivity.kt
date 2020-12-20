@@ -13,7 +13,7 @@ import com.yj.bbqvideo.R
 import com.yj.bbqvideo.util.DLog
 
 class OpenGLTestActivity : AppCompatActivity(), View.OnClickListener {
-    private var hasCameraPermission = false;
+    private var hasCameraPermission = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_opengl_test)

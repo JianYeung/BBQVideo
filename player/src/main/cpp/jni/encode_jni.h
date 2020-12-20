@@ -9,12 +9,12 @@
 #include <VideoH264Encoder.h>
 #include <VideoHardEncoder.h>
 
-jlong createVideoEncoder(JNIEnv *env, jobject thiz, jboolean hard_encode_enable) {
+jlong CreateVideoEncoder(JNIEnv *env, jobject thiz, jboolean software_encode_enable) {
     VideoEncoder *videoEncoder = nullptr;
-    if (hard_encode_enable) {
-        videoEncoder = new VideoHardEncoder();
-    } else {
+    if (software_encode_enable) {
         videoEncoder = new VideoH264Encoder();
+    } else {
+        videoEncoder = new VideoHardEncoder();
     }
 
     //TODO 一定要delete，不然会内存泄露
@@ -22,7 +22,7 @@ jlong createVideoEncoder(JNIEnv *env, jobject thiz, jboolean hard_encode_enable)
 }
 
 static JNINativeMethod gEncodeMethods[] = {
-        {"nativeCreateVideoEncoder","(Z)J", (void *) createVideoEncoder},
+        {"nativeCreateVideoEncoder","(Z)J", (void *) CreateVideoEncoder},
 };
 
 static jint registerNativeEncodeMethods(JNIEnv *env) {

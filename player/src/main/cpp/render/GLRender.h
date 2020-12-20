@@ -32,7 +32,6 @@ private:
     int mSurfaceWidth;
     int mSurfaceHeight;
     BaseFilter *mFilter;
-    Rotation mRotation;
     RenderMode mRenderMode = RenderMode::RENDERMODE_WHEN_DIRTY;
 
     bool isRunning = false;
@@ -69,13 +68,13 @@ public:
 
     void onDetachedFromWindow();
 
-    void setRotation(Rotation rotation);
-
     void setRenderMode(RenderMode mode);
 
-    void setFilterType(FilterType filterType);
+    RenderMode getRenderMode();
 
-    void updatePreviewFrame(uint8_t* data, int format, int width, int height);
+    void setFilter(BaseFilter *filter);
+
+    BaseFilter* getFilter();
 
     void requestRender();
 

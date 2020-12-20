@@ -13,14 +13,13 @@ private:
     const char* CAMERA_FILTER_TAG = "CameraFilter";
 
     //OpenGL parameter
-    GLuint yTextId;
-    GLuint uvTextId;
     GLfloat *vertex_color_coords;
     GLshort *vertex_indexs;
+    GLuint yTextId;
+    GLuint uvTextId;
 
     //frame data
-    unsigned char *yuvSrcData;
-    unsigned char *yuv420pData;
+    uint8_t *yuvSrcData = nullptr;
     int yuvFormat;
     int yuvWidth;
     int yuvHeight;
@@ -28,8 +27,7 @@ private:
 private:
     void initVAO();
     void initTexture();
-    void updateYUVData();
-    void updateMVPMatrix();
+    void updateTextureData();
 
 public:
     CameraFilter();
@@ -37,7 +35,7 @@ public:
 
     void setUp() override;
     void tearDown() override;
-    void updatePreviewFrame(unsigned char *data, int format, int width, int height) override;
+    void updatePreviewFrame(VideoFrame *videoFrame) override;
     void onSurfaceCreated(ANativeWindow *nativeWindow) override;
     void onSurfaceChanged(ANativeWindow *nativeWindow, int format, int width, int height) override;
     void draw() override;

@@ -1,6 +1,6 @@
 package com.yj.player.encode
 
-class VideoEncoderImpl {
+class NativeVideoEncoderProxy {
     private var nativeEncoderHandle: Long = 0
 
     fun setNativeVideoEncoderHandle(nativeEncoderHandle: Long) {
