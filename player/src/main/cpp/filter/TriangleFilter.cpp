@@ -16,21 +16,21 @@ const GLint STRIDE_PRE_COORD = 7;
 
 TriangleFilter::TriangleFilter() : BaseFilter() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(TRIANGLE_FILTER_TAG, "~~~~TriangleFilter::TriangleFilter()~~~\n");
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~TriangleFilter::TriangleFilter()~~~\n");
     }
     setUp();
 }
 
 TriangleFilter::~TriangleFilter() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(TRIANGLE_FILTER_TAG, "~~~~TriangleFilter::~TriangleFilter()~~~\n");
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~TriangleFilter::~TriangleFilter()~~~\n");
     }
     tearDown();
 }
 
 void TriangleFilter::setUp() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(TRIANGLE_FILTER_TAG, "~~~~TriangleFilter::setUp()~~~\n");
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~TriangleFilter::setUp()~~~\n");
     }
     vShaderStr =
             "#version 300 es                          \n"
@@ -64,13 +64,13 @@ void TriangleFilter::setUp() {
 
 void TriangleFilter::tearDown() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(TRIANGLE_FILTER_TAG, "~~~~TriangleFilter::tearDown()~~~\n");
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~TriangleFilter::tearDown()~~~\n");
     }
 }
 
 void TriangleFilter::initVAO() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(TRIANGLE_FILTER_TAG, "~~~~TriangleFilter::initVAO() Start~~~\n");
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~TriangleFilter::initVAO() Start~~~\n");
     }
 
     //generate vao vbo ebo
@@ -82,7 +82,7 @@ void TriangleFilter::initVAO() {
     checkGlError("glGenVertexArrays");
 
     if (DebugEnable && FILTER_DEBUG) {
-        DFLOGD(TRIANGLE_FILTER_TAG, "~~~~Create VAO = %d, VBO = %d, EBO = %d ~~~\n", vao, vbo, ebo);
+        DFLOGD(TRIANGLE_FILTER_TAG, "~~~Create VAO = %d, VBO = %d, EBO = %d ~~~", vao, vbo, ebo);
     }
 
     // Bind VAO
@@ -111,7 +111,7 @@ void TriangleFilter::initVAO() {
     checkGlError("glBindVertexArray");
 
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(TRIANGLE_FILTER_TAG, "~~~~TriangleFilter initVAO() End~~~\n");
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~TriangleFilter initVAO() End~~~\n");
     }
 }
 
@@ -121,7 +121,7 @@ void TriangleFilter::onSurfaceCreated(ANativeWindow *nativeWindow) {
     }
     program = GLShaderUtil::buildProgram(vShaderStr, fShaderStr);
     if (program == GL_NONE) {
-        DLOGD(TRIANGLE_FILTER_TAG, "Not build valid program\n");
+        DLOGD(TRIANGLE_FILTER_TAG, "Not build valid program");
         return;
     }
     glClearColor(1.0, 1.0, 1.0, 1.0);
@@ -150,12 +150,12 @@ TriangleFilter::onSurfaceChanged(ANativeWindow *nativeWindow, int format, int wi
 
 void TriangleFilter::draw() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(TRIANGLE_FILTER_TAG, "~~~TriangleFilter::draw() start~~~\n");
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~TriangleFilter::draw() Start~~~\n");
     }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     if (program == GL_NONE) {
-        DLOGD(TRIANGLE_FILTER_TAG, "Invalid program\n");
+        DLOGD(TRIANGLE_FILTER_TAG, "Invalid program");
         return;
     }
 
@@ -173,13 +173,13 @@ void TriangleFilter::draw() {
     glBindVertexArray(0);
     checkGlError("glBindVertexArray");
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(TRIANGLE_FILTER_TAG, "~~~TriangleFilter::draw() end~~~\n");
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~TriangleFilter::draw() End~~~\n");
     }
 }
 
 void TriangleFilter::onDestroy() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(TRIANGLE_FILTER_TAG, "~~~TriangleFilter::onDestroy() start~~~\n");
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~TriangleFilter::onDestroy() Start~~~\n");
     }
 
     if (vertex_color_coords != nullptr) {
@@ -192,6 +192,6 @@ void TriangleFilter::onDestroy() {
     }
 
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(TRIANGLE_FILTER_TAG, "~~~TriangleFilter::onDestroy() end~~~\n");
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~TriangleFilter::onDestroy() End~~~\n");
     }
 }

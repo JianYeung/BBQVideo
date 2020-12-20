@@ -19,7 +19,7 @@ private:
     GLuint uvTextId;
 
     //frame data
-    uint8_t *yuvSrcData = nullptr;
+    uint8_t *yuvSrcData;
     int yuvFormat;
     int yuvWidth;
     int yuvHeight;

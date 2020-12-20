@@ -5,7 +5,7 @@
 #include <DLog.h>
 #include "VideoDecoder.h"
 
-VideoDecoder::VideoDecoder() {
+VideoDecoder::VideoDecoder() : surfaceWindow(nullptr) {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
         DLOGI(VIDEO_DECODER_TAG, "~~~~VideoDecoder::VideoDecoder()~~~\n");
     }
@@ -17,7 +17,7 @@ VideoDecoder::~VideoDecoder() {
     }
 }
 
-void VideoDecoder::setRender(GLRender *glRender)  {
+void VideoDecoder::setRender(GLRender *glRender) {
 
 }
 
@@ -51,6 +51,6 @@ void VideoDecoder::stop() {
 
 void VideoDecoder::release() {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(VIDEO_DECODER_TAG, "~~~~VideoDecoder::release()~~~\n");
+        DLOGI(VIDEO_DECODER_TAG, "~~~VideoDecoder::release()~~~\n");
     }
 }

@@ -8,23 +8,23 @@
 
 VideoHardDecoder::VideoHardDecoder() : VideoDecoder() {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::VideoHardDecoder~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::VideoHardDecoder()~~~\n");
     }
     decodeHandler = new DecodeHandler();
 }
 
 VideoHardDecoder::~VideoHardDecoder() {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::~VideoHardDecoder~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::~VideoHardDecoder()~~~\n");
     }
 }
 
 void VideoHardDecoder::setRender(GLRender *render)  {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::setRender~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::setRender()~~~\n");
     }
     if (render == nullptr) {
-        DLOGE(HARD_DECODER_TAG, "Invalid GLRender\n");
+        DLOGE(HARD_DECODER_TAG, "Invalid GLRender");
         return;
     }
     this->glRender = render;
@@ -33,7 +33,7 @@ void VideoHardDecoder::setRender(GLRender *render)  {
 
 void VideoHardDecoder::setDataSource(std::string url) {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::setDataSource~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::setDataSource()~~~\n");
     }
     videoUrl = std::move(url);
     restartCodec();
@@ -41,7 +41,7 @@ void VideoHardDecoder::setDataSource(std::string url) {
 
 void VideoHardDecoder::setSurface(ANativeWindow *nativeWindow, const int width, const int height) {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::setSurface~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::setSurface()~~~\n");
     }
     if (surfaceWindow != nullptr) {
         ANativeWindow_release(surfaceWindow);
@@ -54,10 +54,10 @@ void VideoHardDecoder::setSurface(ANativeWindow *nativeWindow, const int width, 
 
 void VideoHardDecoder::start() {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::start~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::start()~~~\n");
     }
     if (isPlaying) {
-        DLOGI(HARD_DECODER_TAG, "It is playing Video\n");
+        DLOGI(HARD_DECODER_TAG, "It is playing video, please stop to play first");
         return;
     }
     if (!videoUrl.empty() && surfaceWindow != nullptr) {
@@ -79,24 +79,24 @@ void VideoHardDecoder::start() {
 
 void VideoHardDecoder::resume() {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::resume~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::resume()~~~\n");
     }
     sendMessage(kMsgResume);
 }
 
 void VideoHardDecoder::pause() {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::pause~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::pause()~~~\n");
     }
     sendMessage(kMsgPause);
 }
 
 void VideoHardDecoder::seek(int position) {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::seek~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::seek()~~~\n");
     }
     if (position < 0 || position > 100) {
-        DLOGE(HARD_DECODER_TAG, "seek position is illegal\n");
+        DLOGE(HARD_DECODER_TAG, "seek position is illegal");
         return;
     }
 
@@ -108,14 +108,14 @@ void VideoHardDecoder::seek(int position) {
 
 void VideoHardDecoder::stop() {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::stop~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::stop()~~~\n");
     }
     sendMessage(kMsgCodecDone, true);
 }
 
 void VideoHardDecoder::release() {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::release~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::release()~~~\n");
     }
     if (codec != nullptr) {
         releaseCodec();
@@ -135,7 +135,7 @@ void VideoHardDecoder::release() {
 
 bool VideoHardDecoder::initCodec() {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::initCodec Start~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::initCodec() Start~~~\n");
     }
     if (extractor == nullptr) {
         extractor = AMediaExtractor_new();
@@ -162,7 +162,7 @@ bool VideoHardDecoder::initCodec() {
             outDuration = (long) (durationUs / 1000000);
 
             if (DebugEnable && VIDEO_DECODER_DEBUG) {
-                DFLOGD(HARD_DECODER_TAG, "video duration %ld us\n", (long) durationUs);
+                DFLOGD(HARD_DECODER_TAG, "video duration %ld us", (long) durationUs);
             }
             AMediaExtractor_selectTrack(extractor, i);
             codec = AMediaCodec_createDecoderByType(mime);
@@ -182,7 +182,7 @@ bool VideoHardDecoder::initCodec() {
         format = nullptr;
     }
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::initCodec End~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::initCodec() End~~~\n");
     }
     return true;
 }
@@ -195,7 +195,7 @@ int64_t systemNanoTime() {
 
 void VideoHardDecoder::doDecodeWork() {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::doDecodeWork Start~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::doDecodeWork() Start~~~\n");
     }
 
     if (!isCodecReady) {
@@ -247,7 +247,7 @@ void VideoHardDecoder::doDecodeWork() {
                 isPlaying = true;
                 long pts = info.presentationTimeUs;
                 if (DebugEnable && VIDEO_DECODER_DEBUG) {
-                    DFLOGD(HARD_DECODER_TAG, "output buffer pts: %ld ", pts);
+                    DFLOGD(HARD_DECODER_TAG, "output buffer pts: %ld", pts);
                 }
                 int64_t presentationNano = pts * 1000;
                 if (renderStart < 0) {
@@ -308,7 +308,7 @@ void VideoHardDecoder::doDecodeWork() {
     }
 
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGD(HARD_DECODER_TAG, "sawInputEOS = %d, sawOutputEOS = %d\n", sawInputEOS, sawOutputEOS);
+        DLOGD(HARD_DECODER_TAG, "sawInputEOS = %d, sawOutputEOS = %d", sawInputEOS, sawOutputEOS);
     }
 
     if (!sawInputEOS || !sawOutputEOS) {
@@ -327,13 +327,13 @@ void VideoHardDecoder::doDecodeWork() {
     }
 
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::doDecodeWork End~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::doDecodeWork() End~~~\n");
     }
 }
 
 void VideoHardDecoder::doResumeWork() {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~DecodeHandler::doResumeWork Start~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~DecodeHandler::doResumeWork() Start~~~\n");
     }
     if (!isPlaying) {
         renderStart = -1;
@@ -342,13 +342,13 @@ void VideoHardDecoder::doResumeWork() {
     }
 
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~DecodeHandler::doResumeWork End~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~DecodeHandler::doResumeWork() End~~~\n");
     }
 }
 
 void VideoHardDecoder::doPauseWork() {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~DecodeHandler::doPauseWork Start~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~DecodeHandler::doPauseWork() Start~~~\n");
     }
     if (isPlaying) {
         isPlaying = false;
@@ -356,14 +356,14 @@ void VideoHardDecoder::doPauseWork() {
     // flush all outstanding codecbuffer messages with a no-op message
     sendMessage(kMsgPauseAck, true);
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~DecodeHandler::doPauseWork End~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~DecodeHandler::doPauseWork() End~~~\n");
     }
 }
 
 
 void VideoHardDecoder::doSeekWork(int position) {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~DecodeHandler::doSeekWork Start~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~DecodeHandler::doSeekWork() Start~~~\n");
     }
 
     int64_t seekPosition = (outDuration * position * 1000000 / 100);
@@ -377,13 +377,13 @@ void VideoHardDecoder::doSeekWork(int position) {
     sawOutputEOS = false;
     sendMessage(kMsgCodecBuffer, true);
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~DecodeHandler::doSeekWork End~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~DecodeHandler::doSeekWork() End~~~\n");
     }
 }
 
 void VideoHardDecoder::releaseCodec() {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::releaseCodec Start~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::releaseCodec() Start~~~\n");
     }
     isCodecReady = false;
     isPlaying = false;
@@ -407,13 +407,13 @@ void VideoHardDecoder::releaseCodec() {
         extractor = nullptr;
     }
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::releaseCodec End~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::releaseCodec() End~~~\n");
     }
 }
 
 void VideoHardDecoder::restartCodec() {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::restartCodec~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::restartCodec()~~~\n");
     }
     if (!videoUrl.empty() && surfaceWindow != nullptr) {
         if (isCodecReady) {
@@ -425,14 +425,14 @@ void VideoHardDecoder::restartCodec() {
 
 bool VideoHardDecoder::getCodecReadyState() {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::getCodecReadyState~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::getCodecReadyState()~~~\n");
     }
     return this->isCodecReady;
 }
 
 void VideoHardDecoder::sendMessage(int what, bool flush) {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::sendMessage what~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::sendMessage() what~~~\n");
     }
     if (decodeHandler != nullptr) {
         if (flush) {
@@ -447,7 +447,7 @@ void VideoHardDecoder::sendMessage(int what, bool flush) {
 
 void VideoHardDecoder::sendMessage(Message &msg, bool flush) {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::sendMessage msg~~~\n");
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::sendMessage() msg~~~\n");
     }
     if (decodeHandler != nullptr) {
         if (flush) {

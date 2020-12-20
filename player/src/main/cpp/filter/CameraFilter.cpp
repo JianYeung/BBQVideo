@@ -15,23 +15,23 @@ const GLint VERTEX_INDICES_LENGTH = 6;
 
 const GLint STRIDE_PRE_COORD = 5;
 
-CameraFilter::CameraFilter() : BaseFilter() {
+CameraFilter::CameraFilter() : BaseFilter(), yuvSrcData(nullptr) {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(CAMERA_FILTER_TAG, "~~~~CameraFilter::CameraFilter()~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::CameraFilter()~~~\n");
     }
     setUp();
 }
 
 CameraFilter::~CameraFilter() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(CAMERA_FILTER_TAG, "~~~~CameraFilter::~CameraFilter()~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::~CameraFilter()~~~\n");
     }
     tearDown();
 }
 
 void CameraFilter::setUp() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(CAMERA_FILTER_TAG, "~~~~CameraFilter::setUp()~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::setUp()~~~\n");
     }
     vShaderStr =
             "#version 300 es                            \n"
@@ -79,13 +79,13 @@ void CameraFilter::setUp() {
 
 void CameraFilter::tearDown() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(CAMERA_FILTER_TAG, "~~~~CameraFilter::tearDown()~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::tearDown()~~~\n");
     }
 }
 
 void CameraFilter::initVAO() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(CAMERA_FILTER_TAG, "~~~~CameraFilter::initVAO() Start~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::initVAO() Start~~~\n");
     }
 
     //generate vao vbo ebo
@@ -97,7 +97,7 @@ void CameraFilter::initVAO() {
     checkGlError("glGenVertexArrays");
 
     if (DebugEnable && FILTER_DEBUG) {
-        DFLOGD(CAMERA_FILTER_TAG, "~~~~Create VAO = %d, VBO = %d, EBO = %d ~~~\n", vao, vbo, ebo);
+        DFLOGD(CAMERA_FILTER_TAG, "~~~Create VAO = %d, VBO = %d, EBO = %d ~~~", vao, vbo, ebo);
     }
 
     // Bind VAO
@@ -134,7 +134,7 @@ void CameraFilter::initVAO() {
     checkGlError("glBindBuffer ebo");
 
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGD(CAMERA_FILTER_TAG, "~~~~CameraFilter::initVAO() End~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::initVAO() End~~~\n");
     }
 }
 
@@ -226,7 +226,7 @@ void CameraFilter::updateTextureData() {
     }
 
     if (yuvSrcData == nullptr || yuvWidth <= 0 || yuvHeight <= 0) {
-        DLOGE(CAMERA_FILTER_TAG, "~~~CameraFilter yuvData or yuvWidth or yuvHeight is illegal~~~\n");
+        DLOGE(CAMERA_FILTER_TAG, "~~~CameraFilter yuvData or yuvWidth or yuvHeight is illegal~~~");
         return;
     }
 
@@ -285,7 +285,7 @@ void CameraFilter::draw() {
 
 void CameraFilter::onDestroy() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::onDestroy()~~~\n");
+        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::onDestroy() Start~~~\n");
     }
     if (vertex_color_coords != nullptr) {
         delete vertex_color_coords;
@@ -294,5 +294,8 @@ void CameraFilter::onDestroy() {
     if (vertex_indexs != nullptr) {
         delete vertex_indexs;
         vertex_indexs = nullptr;
+    }
+    if (DebugEnable && FILTER_DEBUG) {
+        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::onDestroy() End~~~\n");
     }
 }

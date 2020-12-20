@@ -58,11 +58,13 @@ class CodecDecodePreviewActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onPause() {
         super.onPause()
+        DLog.d(TAG, "onPause")
         nativeVideoPreviewer.onPause()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        DLog.d(TAG, "onDestroy")
         nativeVideoPreviewer.onDestroy()
     }
 
@@ -87,7 +89,7 @@ class CodecDecodePreviewActivity : AppCompatActivity(), View.OnClickListener {
                 nativeVideoPreviewer.resumeVideo()
             }
             R.id.seek -> {
-                 val progress = progressSeekBar.progress
+                val progress = progressSeekBar.progress
                 nativeVideoPreviewer.seekVideo(progress)
             }
             R.id.stop -> {

@@ -21,7 +21,7 @@ extern "C" {
 }
 #endif
 
-const bool DECODER_JNI_DEBUG = true;
+const bool DECODER_JNI_DEBUG = false;
 const char *DECODER_JNI_TAG = "DecoderJni";
 bool softwareDecodeEnable = false;
 
@@ -51,7 +51,7 @@ void ReleaseVideoDecoderHandle(JNIEnv *env, jobject thiz, jlong native_decoder_h
     }
     if (native_decoder_handle != 0) {
         if (DECODER_JNI_DEBUG) {
-            DFLOGD(DECODER_JNI_TAG, "software decode enable = %d",softwareDecodeEnable);
+            DFLOGD(DECODER_JNI_TAG, "ReleaseVideoDecoderHandle() software decode enable = %d",softwareDecodeEnable);
         }
         VideoDecoder *videoDecoder = reinterpret_cast<VideoDecoder *>(native_decoder_handle);
         if (videoDecoder != nullptr) {

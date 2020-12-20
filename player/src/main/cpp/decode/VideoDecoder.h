@@ -15,7 +15,7 @@
 class VideoDecoder {
 protected:
     std::string videoUrl;
-    ANativeWindow *surfaceWindow = nullptr;
+    ANativeWindow *surfaceWindow;
     int surfaceWidth;
     int surfaceHeight;
 

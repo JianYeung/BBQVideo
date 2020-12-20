@@ -17,23 +17,23 @@ const GLint VERTEX_INDICES_LENGTH = 6;
 
 const GLint STRIDE_PRE_COORD = 5;
 
-VideoFilter::VideoFilter() : BaseFilter(), mvpMatrixHandle(0) {
+VideoFilter::VideoFilter() : BaseFilter(), yuvSrcData(nullptr) {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(VIDEO_FILTER_TAG, "~~~~VideoFilter::VideoFilter()~~~\n");
+        DLOGI(VIDEO_FILTER_TAG, "~~~VideoFilter::VideoFilter()~~~\n");
     }
     setUp();
 }
 
 VideoFilter::~VideoFilter() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(VIDEO_FILTER_TAG, "~~~~VideoFilter::~VideoFilter()~~~\n");
+        DLOGI(VIDEO_FILTER_TAG, "~~~VideoFilter::~VideoFilter()~~~\n");
     }
     tearDown();
 }
 
 void VideoFilter::setUp() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(VIDEO_FILTER_TAG, "~~~~VideoFilter::setUp()~~~\n");
+        DLOGI(VIDEO_FILTER_TAG, "~~~VideoFilter::setUp()~~~\n");
     }
 
     vShaderStr = "#version 300 es\n"
@@ -93,13 +93,13 @@ void VideoFilter::setUp() {
 
 void VideoFilter::tearDown() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(VIDEO_FILTER_TAG, "~~~~VideoFilter::tearDown()~~~\n");
+        DLOGI(VIDEO_FILTER_TAG, "~~~VideoFilter::tearDown()~~~\n");
     }
 }
 
 void VideoFilter::initVAO() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(VIDEO_FILTER_TAG, "~~~~VideoFilter::initVAO() Start~~~\n");
+        DLOGI(VIDEO_FILTER_TAG, "~~~VideoFilter::initVAO() Start~~~\n");
     }
 
     //generate vao vbo ebo
@@ -111,7 +111,7 @@ void VideoFilter::initVAO() {
     checkGlError("glGenVertexArrays");
 
     if (DebugEnable && FILTER_DEBUG) {
-        DFLOGD(VIDEO_FILTER_TAG, "~~~~Create VAO = %d, VBO = %d, EBO = %d ~~~\n", vao, vbo, ebo);
+        DFLOGD(VIDEO_FILTER_TAG, "~~~Create VAO = %d, VBO = %d, EBO = %d ~~~\n", vao, vbo, ebo);
     }
 
     // Bind VAO
@@ -148,7 +148,7 @@ void VideoFilter::initVAO() {
     checkGlError("glBindBuffer ebo");
 
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGD(VIDEO_FILTER_TAG, "~~~~VideoFilter::initVAO() End~~~\n");
+        DLOGI(VIDEO_FILTER_TAG, "~~~VideoFilter::initVAO() End~~~\n");
     }
 }
 
@@ -177,7 +177,7 @@ void VideoFilter::initTexture() {
     yuvTypeHandle = glGetUniformLocation(program, "yuvType");
 
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(VIDEO_FILTER_TAG, "~~~VideoFilter::initOESTexture() End~~~\n");
+        DLOGI(VIDEO_FILTER_TAG, "~~~VideoFilter::initTexture() End~~~\n");
     }
 }
 
@@ -243,7 +243,7 @@ void VideoFilter::updatePreviewFrame(VideoFrame *videoFrame) {
 
 void VideoFilter::updateYUVType() {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(VIDEO_FILTER_TAG, "~~~VideoFilter::updateYUVType()~~~\n");
+        DFLOGI(VIDEO_FILTER_TAG, "~~~VideoFilter::updateYUVType() yuvType: %d ~~~\n", yuvType);
     }
     switch (yuvFormat) {
         case YUV420P:
@@ -280,7 +280,7 @@ void VideoFilter::updateTextureData() {
 
 void VideoFilter::updateTextureY(uint8_t *data, int width, int height, int index) {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(VIDEO_FILTER_TAG, "~~~VideoFilter::updateTextureY()~~~\n");
+        DFLOGI(VIDEO_FILTER_TAG, "~~~VideoFilter::updateTextureY() index: %d ~~~\n", index);
     }
 
     if (data == nullptr || width == 0 || height == 0 || index > 3) {
@@ -300,7 +300,7 @@ void VideoFilter::updateTextureY(uint8_t *data, int width, int height, int index
 
 void VideoFilter::updateTextureUV(uint8_t *data, int width, int height, int index) {
     if (DebugEnable && FILTER_DEBUG) {
-        DLOGI(VIDEO_FILTER_TAG, "~~~VideoFilter::updateTextureUV()~~~\n");
+        DFLOGI(VIDEO_FILTER_TAG, "~~~VideoFilter::updateTextureUV() index: %d ~~~\n", index);
     }
 
     if (data == nullptr || width == 0 || height == 0 || index > 3) {

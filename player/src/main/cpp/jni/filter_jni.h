@@ -11,7 +11,7 @@
 #include <CameraFilter.h>
 #include <VideoFilter.h>
 
-const bool FILTER_JNI_DEBUG = true;
+const bool FILTER_JNI_DEBUG = false;
 const char *FILTER_JNI_TAG = "FilterJni";
 FilterType filterType = FilterType::NORMAL;
 
@@ -48,7 +48,7 @@ void DestroyFilterHandle(JNIEnv *env, jobject thiz, jlong filter_handle) {
     }
     if (filter_handle != 0) {
         if (FILTER_JNI_DEBUG) {
-            DFLOGD(FILTER_JNI_TAG, "filter type = %d", (int) filterType);
+            DFLOGD(FILTER_JNI_TAG, "DestroyFilterHandle() filter type = %d", (int) filterType);
         }
         BaseFilter *filter = reinterpret_cast<BaseFilter *> (filter_handle);;
         if (filter != nullptr) {

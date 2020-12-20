@@ -4,7 +4,7 @@
 
 #include "VideoFrame.h"
 
-VideoFrame::VideoFrame() {
+VideoFrame::VideoFrame() : data(nullptr) {
 
 }
 
@@ -19,7 +19,7 @@ void VideoFrame::updateFrameInfo(uint8_t *data_, int format_, int width_, int he
     this->height = height_;
 }
 
-uint8_t * VideoFrame::getData() {
+uint8_t *VideoFrame::getData() {
     return this->data;
 }
 
