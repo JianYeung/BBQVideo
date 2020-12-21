@@ -4,8 +4,8 @@
     <string name="triangle_test">三角形渲染</string>
     <string name="camera_preview">相机预览</string>
     <string name="video_decode_test">Video解码 测试用例</string>
-    <string name="codec_decode_preview">MediaCodec解码渲染</string>
-    <string name="ffmpeg_decode_preview">FFMpeg解码渲染</string>
+    <string name="codec_decode_preview">Codec硬解码视频</string>
+    <string name="ffmpeg_decode_preview">FFMpeg软解码视频</string>
     <string name="input_url">请输入播放视频的URL</string>
     <string name="default_url">https://v-cdn.zjol.com.cn/280443.mp4</string>
     <string name="confirm">confirm</string>

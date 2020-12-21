@@ -161,11 +161,11 @@ bool VideoHardDecoder::initCodec() {
             // Omitting most error handling for clarity.
             // Production code should check for errors.
             int64_t durationUs;
-            AMediaFormat_getInt64(format, AMEDIAFORMAT_KEY_COLOR_FORMAT, &durationUs);
+            AMediaFormat_getInt64(format, AMEDIAFORMAT_KEY_DURATION, &durationUs);
             outDuration = (long) (durationUs / 1000000);
 
             if (DebugEnable && VIDEO_DECODER_DEBUG) {
-                DFLOGD(HARD_DECODER_TAG, "video duration %ld us", (long) durationUs);
+                DFLOGD(HARD_DECODER_TAG, "video duration %lld us", (long long) durationUs);
             }
             AMediaExtractor_selectTrack(extractor, i);
             codec = AMediaCodec_createDecoderByType(mime);
