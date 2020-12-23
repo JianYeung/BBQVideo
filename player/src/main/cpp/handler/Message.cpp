@@ -39,6 +39,10 @@ void Message::setObj(void *obj) {
     this->obj = obj;
 }
 
+void Message::setWhen(long uptimeMillis) {
+    when = std::chrono::system_clock::now() + std::chrono::milliseconds(uptimeMillis);
+}
+
 void Message::setWhen(std::chrono::system_clock::time_point &when) {
     this->when = when;
 }
