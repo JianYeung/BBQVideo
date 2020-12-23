@@ -45,7 +45,7 @@ class VideoDecodeTestActivity : AppCompatActivity(), View.OnClickListener{
         if (!hasInternetPermission()) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(Manifest.permission.CAMERA), REQUEST_INTERNET
+                arrayOf(Manifest.permission.INTERNET), REQUEST_INTERNET
             )
         } else {
             hasInternetPermission = true

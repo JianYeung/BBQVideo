@@ -14,8 +14,6 @@
 #include "VideoDecoder.h"
 
 enum {
-    kMsgInitCodec,
-    kMsgWaitingCodec,
     kMsgCodecBuffer,
     kMsgPause,
     kMsgResume,
@@ -89,7 +87,6 @@ public:
     void doPauseWork();
     void releaseCodec();
     void restartCodec();
-    bool getCodecReadyState();
 
     void sendMessage(int what, bool flush = false);
     void sendMessage(Message &msg, bool flush = false);

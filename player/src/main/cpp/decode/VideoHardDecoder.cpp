@@ -103,7 +103,7 @@ void VideoHardDecoder::seek(int position) {
     Message msg = Message();
     msg.what = kMsgSeek;
     msg.arg1 = position;
-    sendMessage(msg);
+    sendMessage(msg, true);
 }
 
 void VideoHardDecoder::stop() {
@@ -111,8 +111,8 @@ void VideoHardDecoder::stop() {
         DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::stop()~~~\n");
     }
     isCodecRelease = true;
-    sendMessage(kMsgCodecDone, true);
     releaseCodec();
+    sendMessage(kMsgCodecDone, true);
 }
 
 void VideoHardDecoder::release() {
@@ -357,7 +357,6 @@ void VideoHardDecoder::doPauseWork() {
     }
 }
 
-
 void VideoHardDecoder::doSeekWork(int position) {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
         DLOGI(HARD_DECODER_TAG, "~~~DecodeHandler::doSeekWork() Start~~~\n");
@@ -418,17 +417,11 @@ void VideoHardDecoder::restartCodec() {
     }
     if (!videoUrl.empty() && surfaceWindow != nullptr) {
         if (isCodecReady) {
+            isCodecRelease = true;
             releaseCodec();
         }
         initCodec();
     }
-}
-
-bool VideoHardDecoder::getCodecReadyState() {
-    if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::getCodecReadyState()~~~\n");
-    }
-    return this->isCodecReady;
 }
 
 void VideoHardDecoder::sendMessage(int what, bool flush) {
@@ -436,13 +429,10 @@ void VideoHardDecoder::sendMessage(int what, bool flush) {
         DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::sendMessage() what~~~\n");
     }
     if (decodeHandler != nullptr) {
-        if (flush) {
-            decodeHandler->removeCallbacksAndMessages();
-        }
         Message msg = Message();
         msg.what = what;
         msg.obj = this;
-        decodeHandler->sendMessage(msg);
+        decodeHandler->sendMessage(msg, flush);
     }
 }
 
@@ -451,11 +441,8 @@ void VideoHardDecoder::sendMessage(Message &msg, bool flush) {
         DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::sendMessage() msg~~~\n");
     }
     if (decodeHandler != nullptr) {
-        if (flush) {
-            decodeHandler->removeCallbacksAndMessages();
-        }
         msg.setObj(this);
-        decodeHandler->sendMessage(msg);
+        decodeHandler->sendMessage(msg, flush);
     }
 }
 
@@ -468,33 +455,6 @@ void DecodeHandler::handleMessage(Message &msg) {
         DFLOGD(HARD_DECODER_TAG, "handleMessage msg what = %d", msg.what);
     }
     switch (what) {
-        case kMsgInitCodec: {
-            if (DebugEnable && VIDEO_DECODER_DEBUG) {
-                DLOGD(HARD_DECODER_TAG, "handleMessage kMsgInitCodec");
-            }
-            auto decoder = (VideoHardDecoder *) msg.obj;
-            decoder->restartCodec();
-        }
-            break;
-        case kMsgWaitingCodec: {
-            auto decoder = (VideoHardDecoder *) msg.obj;
-            DFLOGD(HARD_DECODER_TAG, "Init codec state %d", decoder->getCodecReadyState());
-            if (decoder->getCodecReadyState()) {
-                decoder->sendMessage(kMsgCodecBuffer,true);
-                retryCount = 0;
-            } else {
-                if (retryCount < maxRetryCount) {
-                    sleep(20);
-                    decoder->sendMessage(kMsgWaitingCodec);
-                    retryCount++;
-                    DFLOGE(HARD_DECODER_TAG, "Wait %d time", retryCount);
-                } else {
-                    DLOGE(HARD_DECODER_TAG, "Init Codec Failed!!!");
-                    retryCount = 0;
-                }
-            }
-        }
-            break;
         case kMsgCodecBuffer: {
             if (DebugEnable && VIDEO_DECODER_DEBUG) {
                 DLOGD(HARD_DECODER_TAG, "handleMessage kMsgCodecBuffer");
@@ -538,9 +498,6 @@ void DecodeHandler::handleMessage(Message &msg) {
             if (DebugEnable && VIDEO_DECODER_DEBUG) {
                 DLOGD(HARD_DECODER_TAG, "handleMessage kMsgDecodeDone");
             }
-            //TODO 由于Codec不是在这个线程创建的，所以就不能在这个线程销毁，后面会优化这个实现
-//            auto decoder = (VideoHardDecoder *) msg.obj;
-//            decoder->releaseCodec();
         }
             break;
         default:
