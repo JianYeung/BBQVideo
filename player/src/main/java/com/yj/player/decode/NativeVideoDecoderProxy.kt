@@ -13,11 +13,32 @@ class NativeVideoDecoderProxy {
         this.nativeDecoderHandle = nativeDecoderHandle
     }
 
+    private fun destroyNativeVideoDecoderHandle() {
+        if (INIT_HANDLE == nativeDecoderHandle) {
+            throw RuntimeException("Native Decoder handle is InValid")
+        }
+        DecodeHelper.releaseDecoderHandle(nativeDecoderHandle)
+    }
+
+    fun setSurface(surface: Surface, width: Int, height: Int) {
+        if (INIT_HANDLE == nativeDecoderHandle) {
+            throw RuntimeException("Native Decoder handle is InValid")
+        }
+        DecodeHelper.setSurface(nativeDecoderHandle, surface, width, height)
+    }
+
     fun setNativeRender(nativeGLRenderHandle: Long) {
         if (INIT_HANDLE == nativeDecoderHandle) {
             throw RuntimeException("Native Decoder handle is InValid")
         }
         DecodeHelper.setRender(nativeDecoderHandle, nativeGLRenderHandle)
+    }
+
+    fun setPlayStatusCallback(nativePlayStatusCallback: NativePlayStatusCallback) {
+        if (INIT_HANDLE == nativeDecoderHandle) {
+            throw RuntimeException("Native Decoder handle is InValid")
+        }
+        DecodeHelper.setPlayStatusCallback(nativeDecoderHandle, nativePlayStatusCallback)
     }
 
     fun setDataSource(url: String) {
@@ -27,11 +48,11 @@ class NativeVideoDecoderProxy {
         DecodeHelper.setDataSource(nativeDecoderHandle, url)
     }
 
-    fun setSurface(surface: Surface, width: Int, height: Int) {
+    fun prepare() {
         if (INIT_HANDLE == nativeDecoderHandle) {
             throw RuntimeException("Native Decoder handle is InValid")
         }
-        DecodeHelper.setSurface(nativeDecoderHandle, surface, width, height)
+        DecodeHelper.prepare(nativeDecoderHandle)
     }
 
     fun start() {
@@ -70,10 +91,8 @@ class NativeVideoDecoderProxy {
     }
 
     fun release() {
-        if (INIT_HANDLE == nativeDecoderHandle) {
-            throw RuntimeException("Native Decoder handle is InValid")
-        }
-        DecodeHelper.releaseDecoderHandle(nativeDecoderHandle)
+        destroyNativeVideoDecoderHandle()
+        nativeDecoderHandle = 0
     }
 
     companion object {

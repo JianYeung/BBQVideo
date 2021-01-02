@@ -16,9 +16,11 @@ public:
     VideoH264Decoder();
     virtual ~VideoH264Decoder();
 
-    void setRender(GLRender *glRender) override;
-    void setDataSource(std::string url) override;
     void setSurface(ANativeWindow *nativeWindow, int width, int height) override;
+    void setRender(GLRender *glRender) override;
+    void setPlayStatusCallback(PlayStatusCallback *playStatusCallback) override;
+    void setDataSource(std::string url) override;
+    void prepare() override;
     void start() override;
     void resume() override;
     void pause() override;

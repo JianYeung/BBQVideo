@@ -12,7 +12,15 @@ VideoH264Decoder::~VideoH264Decoder() {
 
 }
 
+void VideoH264Decoder::setSurface(ANativeWindow *nativeWindow, int width, int height) {
+
+}
+
 void VideoH264Decoder::setRender(GLRender *glRender)  {
+
+}
+
+void VideoH264Decoder::setPlayStatusCallback(PlayStatusCallback *playStatusCallback) {
 
 }
 
@@ -20,7 +28,7 @@ void VideoH264Decoder::setDataSource(std::string url) {
 
 }
 
-void VideoH264Decoder::setSurface(ANativeWindow *nativeWindow, int width, int height) {
+void VideoH264Decoder::prepare() {
 
 }
 

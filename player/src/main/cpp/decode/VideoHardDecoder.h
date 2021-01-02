@@ -22,20 +22,17 @@ enum {
     kMsgCodecDone,
 };
 
-static int maxRetryCount = 5;
-
 class DecodeHandler : public Handler {
 private:
-    int retryCount = 0;
-
+    const char *DECODER_HANDLER_TAG = "DecodeHandler";
 public:
     DecodeHandler() : Handler() {
-        DLOGI("DecodeHandler", "~~~DecodeHandler::DecodeHandler~~~\n");
+        DLOGI(DECODER_HANDLER_TAG, "~~~DecodeHandler::DecodeHandler()~~~\n");
         my_looper_ = new Looper();
     }
 
     ~DecodeHandler() {
-        DLOGI("DecodeHandler", "~~~DecodeHandler::~DecodeHandler~~~\n");
+        DLOGI(DECODER_HANDLER_TAG, "~~~DecodeHandler::~DecodeHandler()~~~\n");
         if (my_looper_ != nullptr) {
             delete my_looper_;
             my_looper_ = nullptr;
@@ -56,6 +53,7 @@ private:
     int outHeight;
     long outDuration;
 
+    bool isCodecIniting = false;
     bool isCodecReady = false;
     bool isCodecRelease = false;
     bool isPlaying = false;
@@ -70,9 +68,11 @@ public:
     VideoHardDecoder();
     ~VideoHardDecoder();
 
-    void setRender(GLRender *glRender) override;
-    void setDataSource(std::string url) override;
     void setSurface(ANativeWindow *nativeWindow, int width, int height) override;
+    void setRender(GLRender *glRender) override;
+    void setPlayStatusCallback(PlayStatusCallback *playStatusListener) override;
+    void setDataSource(std::string url) override;
+    void prepare() override;
     void start() override;
     void resume() override;
     void pause() override;

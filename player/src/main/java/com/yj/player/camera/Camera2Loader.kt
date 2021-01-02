@@ -73,7 +73,7 @@ class Camera2Loader(private val activity: Activity) : CameraLoader() {
     @SuppressLint("MissingPermission")
     private fun setUpCamera() {
         PlayerLog.d(TAG, "setUpCamera")
-        var cameraId = getCameraId(cameraFacing) ?: return
+        val cameraId = getCameraId(cameraFacing) ?: return
         try {
             cameraManager.openCamera(cameraId, CameraDeviceCallback(), null)
         } catch (e: CameraAccessException) {

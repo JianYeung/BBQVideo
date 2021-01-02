@@ -8,6 +8,7 @@
 #include <string>
 #include <android/native_window.h>
 #include <GLRender.h>
+#include "PlayStatusCallback.h"
 
 #define VIDEO_DECODER_DEBUG true
 #define VIDEO_DECODER_TAG "VideoDecoder"
@@ -18,14 +19,17 @@ protected:
     ANativeWindow *surfaceWindow;
     int surfaceWidth;
     int surfaceHeight;
+    PlayStatusCallback *playStatusCallback;
 
 public:
     VideoDecoder();
     virtual ~VideoDecoder();
 
-    virtual void setRender(GLRender *glRender) = 0;
-    virtual void setDataSource(std::string url) = 0;
     virtual void setSurface(ANativeWindow *window, int width, int height) = 0;
+    virtual void setRender(GLRender *glRender) = 0;
+    virtual void setPlayStatusCallback(PlayStatusCallback *playStatusCallback) = 0;
+    virtual void setDataSource(std::string url) = 0;
+    virtual void prepare() = 0;
     virtual void start() = 0;
     virtual void resume() = 0;
     virtual void pause() = 0;

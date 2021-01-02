@@ -5,19 +5,27 @@
 #include <DLog.h>
 #include "VideoDecoder.h"
 
-VideoDecoder::VideoDecoder() : surfaceWindow(nullptr) {
+VideoDecoder::VideoDecoder() : surfaceWindow(nullptr), playStatusCallback(nullptr) {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(VIDEO_DECODER_TAG, "~~~~VideoDecoder::VideoDecoder()~~~\n");
+        DLOGI(VIDEO_DECODER_TAG, "~~~VideoDecoder::VideoDecoder()~~~\n");
     }
 }
 
 VideoDecoder::~VideoDecoder() {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(VIDEO_DECODER_TAG, "~~~~VideoDecoder::~VideoDecoder()~~~\n");
+        DLOGI(VIDEO_DECODER_TAG, "~~~VideoDecoder::~VideoDecoder()~~~\n");
     }
 }
 
+void VideoDecoder::setSurface(ANativeWindow *window, int width, int height) {
+
+}
+
 void VideoDecoder::setRender(GLRender *glRender) {
+
+}
+
+void VideoDecoder::setPlayStatusCallback(PlayStatusCallback *playStatusCallback) {
 
 }
 
@@ -25,7 +33,7 @@ void VideoDecoder::setDataSource(std::string url) {
 
 }
 
-void VideoDecoder::setSurface(ANativeWindow *window, int width, int height) {
+void VideoDecoder::prepare() {
 
 }
 

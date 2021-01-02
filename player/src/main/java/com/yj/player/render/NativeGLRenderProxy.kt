@@ -57,7 +57,7 @@ class NativeGLRenderProxy {
 
     fun onAttachedToWindow() {
         if (INIT_HANDLE == nativeGLRenderHandle) {
-            throw RuntimeException("Native GLRender handle is InValid")
+            return
         }
         GLRenderHelper.onAttachedToWindow(nativeGLRenderHandle)
     }
@@ -116,6 +116,7 @@ class NativeGLRenderProxy {
 
     fun onDestroy() {
         destroyNativeGLRenderHandle()
+        nativeGLRenderHandle = 0
     }
 
     companion object {

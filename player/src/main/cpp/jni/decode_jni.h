@@ -9,7 +9,7 @@
 #include <VideoH264Decoder.h>
 #include <android/native_window.h>
 #include <android/native_window_jni.h>
-#include <DLog.h>
+#include <PlayStatusCallback.h>
 #include <GLRender.h>
 
 #ifdef __cplusplus
@@ -66,6 +66,19 @@ void ReleaseVideoDecoderHandle(JNIEnv *env, jobject thiz, jlong native_decoder_h
     }
 }
 
+void SetSurface(JNIEnv *env, jobject thiz, jlong native_decoder_handle, jobject surface, jint width,
+                jint height) {
+    if (DECODER_JNI_DEBUG) {
+        DFLOGI(DECODER_JNI_TAG, "SetSurface() handle = %ld", (long) native_decoder_handle);
+        DFLOGD(DECODER_JNI_TAG, "SetSurface() width = %d, height = %d", width, height);
+    }
+    if (native_decoder_handle != 0 && surface != nullptr) {
+        VideoDecoder *videoDecoder = reinterpret_cast<VideoDecoder *>(native_decoder_handle);
+        ANativeWindow *nativeWindow = ANativeWindow_fromSurface(env, surface);
+        videoDecoder->setSurface(nativeWindow, width, height);
+    }
+}
+
 void SetRender(JNIEnv *env, jobject thiz, jlong native_decoder_handle, jlong native_render_handle) {
     if (DECODER_JNI_DEBUG) {
         DFLOGI(DECODER_JNI_TAG, "SetRender() handle = %ld", (long) native_decoder_handle);
@@ -93,16 +106,24 @@ void SetDataSource(JNIEnv *env, jobject thiz, jlong native_decoder_handle, jstri
     }
 }
 
-void SetSurface(JNIEnv *env, jobject thiz, jlong native_decoder_handle, jobject surface, jint width,
-                jint height) {
+void Prepare(JNIEnv *env, jobject thiz, jlong native_decoder_handle) {
     if (DECODER_JNI_DEBUG) {
-        DFLOGI(DECODER_JNI_TAG, "SetSurface() handle = %ld", (long) native_decoder_handle);
-        DFLOGD(DECODER_JNI_TAG, "SetSurface() width = %d, height = %d", width, height);
+        DFLOGI(DECODER_JNI_TAG, "Prepare() handle = %ld", (long) native_decoder_handle);
     }
-    if (native_decoder_handle != 0 && surface != nullptr) {
+    if (native_decoder_handle != 0) {
         VideoDecoder *videoDecoder = reinterpret_cast<VideoDecoder *>(native_decoder_handle);
-        ANativeWindow *nativeWindow = ANativeWindow_fromSurface(env, surface);
-        videoDecoder->setSurface(nativeWindow, width, height);
+        videoDecoder->prepare();
+    }
+}
+
+void SetPlayStatusCallback(JNIEnv *env, jobject thiz, jlong native_decoder_handle, jobject jobj_play_status_callback) {
+    if (DECODER_JNI_DEBUG) {
+        DFLOGI(DECODER_JNI_TAG, "SetPlayStatusCallback() handle = %ld", (long) native_decoder_handle);
+    }
+    if (native_decoder_handle != 0 && jobj_play_status_callback != nullptr) {
+        VideoDecoder *videoDecoder = reinterpret_cast<VideoDecoder *>(native_decoder_handle);
+        auto playStatusCallback = new PlayStatusCallback(javaVm, env, jobj_play_status_callback);
+        videoDecoder->setPlayStatusCallback(playStatusCallback);
     }
 }
 
@@ -158,16 +179,18 @@ void SeekDecode(JNIEnv *env, jobject thiz, jlong native_decoder_handle, jint pos
 }
 
 static JNINativeMethod gDecodeMethods[] = {
-        {"nativeCreateVideoDecoderHandle",  "(Z)J",                         (void *) CreateVideoDecoderHandle},
-        {"nativeReleaseVideoDecoderHandle", "(J)V",                         (void *) ReleaseVideoDecoderHandle},
-        {"nativeSetRender",                 "(JJ)V",                        (void *) SetRender},
-        {"nativeSetDataSource",             "(JLjava/lang/String;)V",       (void *) SetDataSource},
-        {"nativeSetSurface",                "(JLandroid/view/Surface;II)V", (void *) SetSurface},
-        {"nativeStartDecode",               "(J)V",                         (void *) StartDecode},
-        {"nativeStopDecode",                "(J)V",                         (void *) StopDecode},
-        {"nativeResumeDecode",              "(J)V",                         (void *) ResumeDecode},
-        {"nativePauseDecode",               "(J)V",                         (void *) PauseDecode},
-        {"nativeSeekDecode",                "(JI)V",                        (void *) SeekDecode},
+        {"nativeCreateVideoDecoderHandle",  "(Z)J",                                                 (void *) CreateVideoDecoderHandle},
+        {"nativeReleaseVideoDecoderHandle", "(J)V",                                                 (void *) ReleaseVideoDecoderHandle},
+        {"nativeSetSurface",                "(JLandroid/view/Surface;II)V",                         (void *) SetSurface},
+        {"nativeSetRender",                 "(JJ)V",                                                (void *) SetRender},
+        {"nativeSetDataSource",             "(JLjava/lang/String;)V",                               (void *) SetDataSource},
+        {"nativePrepare",                   "(J)V",                                                 (void *) Prepare},
+        {"nativeSetPlayStatusCallback",     "(JLcom/yj/player/decode/NativePlayStatusCallback;)V",  (void *) SetPlayStatusCallback},
+        {"nativeStartDecode",               "(J)V",                                                 (void *) StartDecode},
+        {"nativeStopDecode",                "(J)V",                                                 (void *) StopDecode},
+        {"nativeResumeDecode",              "(J)V",                                                 (void *) ResumeDecode},
+        {"nativePauseDecode",               "(J)V",                                                 (void *) PauseDecode},
+        {"nativeSeekDecode",                "(JI)V",                                                (void *) SeekDecode},
 };
 
 static jint registerNativeDecodeMethods(JNIEnv *env) {

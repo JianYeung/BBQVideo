@@ -5,5 +5,6 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="colorWhite">#FDFDFD</color>
     <color name="colorGold">#70E65E</color>
+    <color name="transparent">#00000000</color>
 
 </resources>

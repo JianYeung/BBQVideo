@@ -2,6 +2,7 @@ package com.yj.player.jni
 
 import android.view.Surface
 import com.yj.player.decode.NativeVideoDecoderProxy
+import com.yj.player.decode.NativePlayStatusCallback
 
 object DecodeHelper {
 
@@ -12,6 +13,14 @@ object DecodeHelper {
         return videoDecoderImpl
     }
 
+    fun releaseDecoderHandle(nativeDecoderHandle: Long) {
+        nativeReleaseVideoDecoderHandle(nativeDecoderHandle)
+    }
+
+    fun setSurface(nativeDecoderHandle: Long, surface: Surface, width: Int, height: Int) {
+        nativeSetSurface(nativeDecoderHandle, surface, width, height)
+    }
+
     fun setRender(nativeDecoderHandle: Long, nativeGLRenderHandle: Long) {
         nativeSetRender(nativeDecoderHandle, nativeGLRenderHandle)
     }
@@ -20,8 +29,12 @@ object DecodeHelper {
         nativeSetDataSource(nativeDecoderHandle, url)
     }
 
-    fun setSurface(nativeDecoderHandle: Long, surface: Surface, width: Int, height: Int) {
-        nativeSetSurface(nativeDecoderHandle, surface, width, height)
+    fun prepare(nativeDecoderHandle: Long) {
+        nativePrepare(nativeDecoderHandle)
+    }
+
+    fun setPlayStatusCallback(nativeDecoderHandle: Long, nativePlayStatusCallback: NativePlayStatusCallback) {
+        nativeSetPlayStatusCallback(nativeDecoderHandle, nativePlayStatusCallback)
     }
 
     fun startDecode(nativeDecoderHandle: Long) {
@@ -44,17 +57,19 @@ object DecodeHelper {
         nativeSeekDecode(nativeDecoderHandle, position)
     }
 
-    fun releaseDecoderHandle(nativeDecoderHandle: Long) {
-        nativeReleaseVideoDecoderHandle(nativeDecoderHandle)
-    }
-
     private external fun nativeCreateVideoDecoderHandle(softwareDecodeEnable: Boolean): Long
+
+    private external fun nativeReleaseVideoDecoderHandle(nativeDecoderHandle: Long)
+
+    private external fun nativeSetSurface(nativeDecoderHandle: Long, surface: Surface, width: Int, height: Int)
 
     private external fun nativeSetRender(nativeDecoderHandle: Long, nativeGLRenderHandle: Long)
 
+    private external fun nativeSetPlayStatusCallback(nativeDecoderHandle: Long, nativePlayStatusCallback: NativePlayStatusCallback)
+
     private external fun nativeSetDataSource(nativeDecoderHandle: Long, url: String)
 
-    private external fun nativeSetSurface(nativeDecoderHandle: Long, surface: Surface, width: Int, height: Int)
+    private external fun nativePrepare(nativeDecoderHandle: Long)
 
     private external fun nativeStartDecode(nativeDecoderHandle: Long)
 
@@ -65,6 +80,4 @@ object DecodeHelper {
     private external fun nativePauseDecode(nativeDecoderHandle: Long)
 
     private external fun nativeSeekDecode(nativeDecoderHandle: Long, position: Int)
-
-    private external fun nativeReleaseVideoDecoderHandle(nativeDecoderHandle: Long)
 }

@@ -35,6 +35,10 @@ Message::Message(int what, int arg1, int arg2, void *obj, long uptimeMillis, Han
     this->task = nullptr;
 }
 
+void Message::setArg3(long arg3) {
+    this->arg3 = arg3;
+}
+
 void Message::setObj(void *obj) {
     this->obj = obj;
 }
@@ -61,6 +65,7 @@ Message &Message::operator=(const Message &msg) {
     this->what = msg.what;
     this->arg1 = msg.arg1;
     this->arg2 = msg.arg2;
+    this->arg3 = msg.arg3;
     this->obj = msg.obj;
     this->when = msg.when;
     this->task = msg.task;

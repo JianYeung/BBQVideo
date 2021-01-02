@@ -35,6 +35,7 @@ class NativeFilterProxy {
 
     fun onDestroy() {
         destroyNativeFilterHandle()
+        nativeFilterHandle = 0
     }
 
     companion object {

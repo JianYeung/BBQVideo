@@ -19,26 +19,6 @@ VideoHardDecoder::~VideoHardDecoder() {
     }
 }
 
-void VideoHardDecoder::setRender(GLRender *render)  {
-    if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::setRender()~~~\n");
-    }
-    if (render == nullptr) {
-        DLOGE(HARD_DECODER_TAG, "Invalid GLRender");
-        return;
-    }
-    this->glRender = render;
-    this->filter = render->getFilter();
-}
-
-void VideoHardDecoder::setDataSource(std::string url) {
-    if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::setDataSource()~~~\n");
-    }
-    videoUrl = std::move(url);
-    restartCodec();
-}
-
 void VideoHardDecoder::setSurface(ANativeWindow *nativeWindow, const int width, const int height) {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
         DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::setSurface()~~~\n");
@@ -50,6 +30,39 @@ void VideoHardDecoder::setSurface(ANativeWindow *nativeWindow, const int width, 
     surfaceWindow = nativeWindow;
     surfaceWidth = width;
     surfaceHeight = height;
+}
+
+void VideoHardDecoder::setRender(GLRender *render) {
+    if (DebugEnable && VIDEO_DECODER_DEBUG) {
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::setRender()~~~\n");
+    }
+    if (render == nullptr) {
+        DLOGE(HARD_DECODER_TAG, "Invalid GLRender");
+        return;
+    }
+    this->glRender = render;
+    this->filter = render->getFilter();
+}
+
+void VideoHardDecoder::setPlayStatusCallback(PlayStatusCallback *playStatusCallback) {
+    if (DebugEnable && VIDEO_DECODER_DEBUG) {
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::setPlayStatusListener()~~~\n");
+    }
+    this->playStatusCallback = playStatusCallback;
+}
+
+void VideoHardDecoder::setDataSource(std::string url) {
+    if (DebugEnable && VIDEO_DECODER_DEBUG) {
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::setDataSource()~~~\n");
+    }
+    videoUrl = std::move(url);
+}
+
+void VideoHardDecoder::prepare() {
+    if (DebugEnable && VIDEO_DECODER_DEBUG) {
+        DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::prepare()~~~\n");
+    }
+    restartCodec();
 }
 
 void VideoHardDecoder::start() {
@@ -69,8 +82,6 @@ void VideoHardDecoder::start() {
             } else {
                 DLOGE(HARD_DECODER_TAG, "Init Codec Failed!!!");
             }
-            //TODO 先修复Handler不能处理定时信息，再使用异步方式创建解码器
-            //sendMessage(kMsgWaitingCodec);
         }
     } else {
         DLOGE(HARD_DECODER_TAG, "Has not video url or surface window!!!");
@@ -120,16 +131,17 @@ void VideoHardDecoder::release() {
         DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::release()~~~\n");
     }
     isCodecRelease = true;
-    if (codec != nullptr) {
-        releaseCodec();
-        codec = nullptr;
-        extractor = nullptr;
-    }
     if (decodeHandler != nullptr) {
         decodeHandler->quit();
         delete decodeHandler;
         decodeHandler = nullptr;
     }
+    if (playStatusCallback != nullptr) {
+        playStatusCallback->release();
+        delete playStatusCallback;
+        playStatusCallback = nullptr;
+    }
+    releaseCodec();
     if (surfaceWindow != nullptr) {
         ANativeWindow_release(surfaceWindow);
         surfaceWindow = nullptr;
@@ -140,11 +152,18 @@ bool VideoHardDecoder::initCodec() {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
         DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::initCodec() Start~~~\n");
     }
+    isCodecIniting = true;
     if (extractor == nullptr) {
         extractor = AMediaExtractor_new();
     }
 
-    AMediaExtractor_setDataSource(extractor, videoUrl.c_str());
+    int result = AMediaExtractor_setDataSource(extractor, videoUrl.c_str());
+    DFLOGE(HARD_DECODER_TAG, "~~~VideoHardDecoder::initCodec() AMediaExtractor_setDataSource result = %d~~~\n", result);
+    if (result != AMEDIA_OK) {
+        if (playStatusCallback != nullptr) {
+            playStatusCallback->onError(PLAYER_CAN_NOT_OPEN_URL);
+        }
+    }
     int numTracks = AMediaExtractor_getTrackCount(extractor);
     codec = nullptr;
     for (int i = 0; i < numTracks; i++) {
@@ -176,7 +195,12 @@ bool VideoHardDecoder::initCodec() {
             isPlaying = false;
             sawInputEOS = false;
             sawOutputEOS = false;
-            AMediaCodec_start(codec);
+            result = AMediaCodec_start(codec);
+            if (result == AMEDIA_OK) {
+                if (playStatusCallback != nullptr) {
+                    playStatusCallback->onPrepared(outDuration);
+                }
+            }
             break;
         }
     }
@@ -184,6 +208,7 @@ bool VideoHardDecoder::initCodec() {
         AMediaFormat_delete(format);
         format = nullptr;
     }
+    isCodecIniting = false;
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
         DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::initCodec() End~~~\n");
     }
@@ -202,7 +227,8 @@ void VideoHardDecoder::doDecodeWork() {
     }
 
     if (!isCodecReady) {
-        DLOGE(HARD_DECODER_TAG, "doDecodeWork() Codec has not initialized，please init codec first!!!");
+        DLOGE(HARD_DECODER_TAG,
+              "doDecodeWork() Codec has not initialized，please init codec first!!!");
         return;
     }
 
@@ -257,14 +283,15 @@ void VideoHardDecoder::doDecodeWork() {
                     VideoFrame frame = VideoFrame();
                     frame.updateFrameInfo(outputBuf, outFormat, outWidth, outHeight);
                     filter->updatePreviewFrame(&frame);
-                    if (glRender != nullptr && glRender->getRenderMode() == RenderMode::RENDERMODE_WHEN_DIRTY) {
+                    if (glRender != nullptr &&
+                        glRender->getRenderMode() == RenderMode::RENDERMODE_WHEN_DIRTY) {
                         glRender->requestRender();
                     }
                 }
                 AMediaCodec_releaseOutputBuffer(codec, status, info.size != 0);
                 int64_t delay = (renderStart + presentationNano) - systemNanoTime();
                 if (DebugEnable && VIDEO_DECODER_DEBUG) {
-                    int time = delay > 0 ? (int) delay: 0;
+                    int time = delay > 0 ? (int) delay : 0;
                     DFLOGD(HARD_DECODER_TAG, "After render, decoder sleep %d us", time);
                 }
                 if (delay > 0) {
@@ -289,7 +316,8 @@ void VideoHardDecoder::doDecodeWork() {
                 AMediaFormat_getInt32(format, AMEDIAFORMAT_KEY_HEIGHT, &val32);
                 outHeight = val32;
                 if (DebugEnable && VIDEO_DECODER_DEBUG) {
-                    DFLOGD(HARD_DECODER_TAG, "color format: %d, corp width: %d, corp height: %d", outFormat, outWidth, outFormat);
+                    DFLOGD(HARD_DECODER_TAG, "color format: %d, corp width: %d, corp height: %d",
+                           outFormat, outWidth, outFormat);
                 }
                 //TODO 优化项
 //                if (glRender != nullptr) {
@@ -416,7 +444,12 @@ void VideoHardDecoder::restartCodec() {
         DLOGI(HARD_DECODER_TAG, "~~~VideoHardDecoder::restartCodec()~~~\n");
     }
     if (!videoUrl.empty() && surfaceWindow != nullptr) {
-        if (isCodecReady) {
+        if (isCodecIniting) {
+            if (playStatusCallback != nullptr) {
+                playStatusCallback->onError(PLAYER_IS_INITING);
+            }
+            return;
+        } else if (isCodecReady) {
             isCodecRelease = true;
             releaseCodec();
         }

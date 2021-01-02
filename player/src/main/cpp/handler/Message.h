@@ -18,6 +18,7 @@ public:
     int what;
     int arg1;
     int arg2;
+    long arg3;
     void *obj;
     std::chrono::system_clock::time_point when;
     Function task;
@@ -39,6 +40,8 @@ public:
     explicit Message(int what, int arg1, int arg2, void *obj, long uptimeMillis, Handler *target);
 
     virtual ~Message();
+
+    void setArg3(long arg3);
 
     void setObj(void *obj);
 

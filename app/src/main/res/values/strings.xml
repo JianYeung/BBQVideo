@@ -9,6 +9,7 @@
     <string name="input_url">请输入播放视频的URL</string>
     <string name="default_url">https://v-cdn.zjol.com.cn/280443.mp4</string>
     <string name="confirm">confirm</string>
+    <string name="prepare">prepare</string>
     <string name="play">play</string>
     <string name="pause">pause</string>
     <string name="stop">stop</string>

@@ -378,6 +378,14 @@ void GLRender::stopEglContextLocked() {
 
 void GLRender::onDestroy() {
     if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "~~~~GLRender::onDestroy()~~~~");
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::onDestroy() Start~~~~");
+        DFLOGD(GL_RENDER_TAG, "onDestroy isRunning = %d", isRunning);
+    }
+    if (isRunning) {
+        requestExitAndWait();
+    }
+
+    if (DebugEnable && GL_RENDER_DEBUG) {
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::onDestroy() End~~~~");
     }
 }

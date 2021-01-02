@@ -5,28 +5,31 @@ import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.annotation.NonNull
+import androidx.annotation.Nullable
 import com.yj.player.PlayerManager
+import com.yj.player.decode.NativePlayStatusCallback
 import com.yj.player.decode.NativeVideoDecoderProxy
+import com.yj.player.listener.PlayError
+import com.yj.player.listener.PlayStatusListener
 import com.yj.player.render.NativeFilterProxy
 import com.yj.player.render.NativeGLRenderProxy
 import com.yj.player.render.RenderMode
+import com.yj.player.util.PlayerThreadPool
 
-class NativeVideoPreviewer : SurfaceView, SurfaceHolder.Callback {
+class NativeVideoPreviewer : SurfaceView, SurfaceHolder.Callback, NativePlayStatusCallback {
+    private var playStatusListener: PlayStatusListener? = null
     private var nativeFilterProxy: NativeFilterProxy? = null
-    private val nativeGLRenderProxy: NativeGLRenderProxy by lazy {
-        PlayerManager.createNativeGLRenderProxy()
-    }
-
-    private val nativeVideoDecoderProxy: NativeVideoDecoderProxy by lazy {
-        PlayerManager.createNativeVideoDecoderProxy()
-    }
+    private var nativeGLRenderProxy: NativeGLRenderProxy? = null
+    private var nativeVideoDecoderProxy: NativeVideoDecoderProxy? = null
 
     constructor(context: Context) : super(context) {
         holder.addCallback(this)
+        initNativePreviewerProxy()
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         holder.addCallback(this)
+        initNativePreviewerProxy()
     }
 
     constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(
@@ -35,6 +38,7 @@ class NativeVideoPreviewer : SurfaceView, SurfaceHolder.Callback {
         defStyle
     ) {
         holder.addCallback(this)
+        initNativePreviewerProxy()
     }
 
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
@@ -44,75 +48,112 @@ class NativeVideoPreviewer : SurfaceView, SurfaceHolder.Callback {
         defStyleRes
     ) {
         holder.addCallback(this)
+        initNativePreviewerProxy()
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        nativeGLRenderProxy.onAttachedToWindow()
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        nativeGLRenderProxy.onDetachedFromWindow()
+    private fun initNativePreviewerProxy() {
+        nativeGLRenderProxy = PlayerManager.createNativeGLRenderProxy()
+        nativeVideoDecoderProxy = PlayerManager.createNativeVideoDecoderProxy()
     }
 
     fun onPause() {
-        nativeVideoDecoderProxy.pause()
-        nativeGLRenderProxy.onPause()
+        if (nativeVideoDecoderProxy != null) {
+            nativeVideoDecoderProxy?.pause()
+        }
+        if (nativeGLRenderProxy != null) {
+            nativeGLRenderProxy?.onPause()
+        }
     }
 
     fun onResume() {
-        nativeGLRenderProxy.onResume()
-        nativeVideoDecoderProxy.resume()
+        if (nativeGLRenderProxy != null) {
+            nativeGLRenderProxy?.onResume()
+        }
+        if (nativeVideoDecoderProxy != null) {
+            nativeVideoDecoderProxy?.resume()
+        }
     }
 
     fun onDestroy() {
-        nativeVideoDecoderProxy.release()
-        nativeFilterProxy?.onDestroy()
-        nativeGLRenderProxy.onDestroy()
+        playStatusListener = null
+        if (nativeVideoDecoderProxy != null) {
+            nativeVideoDecoderProxy?.release()
+            nativeVideoDecoderProxy = null
+        }
+        if (nativeFilterProxy != null) {
+            nativeFilterProxy?.onDestroy()
+            nativeFilterProxy = null
+        }
+        if (nativeGLRenderProxy != null) {
+            nativeGLRenderProxy?.onDestroy()
+            nativeGLRenderProxy = null
+        }
     }
 
     /**
-     * Set Data source.
+     * Set Data source url.
      * @param url the url of video.
      */
     fun setDataSource(url: String) {
-        nativeVideoDecoderProxy.setDataSource(url)
+        if (nativeVideoDecoderProxy != null) {
+            nativeVideoDecoderProxy?.setDataSource(url)
+        }
+    }
+
+    /**
+     * Prepare data source
+     */
+    fun prepare() {
+        if (nativeVideoDecoderProxy != null) {
+            PlayerThreadPool.getInstance().submit {
+                nativeVideoDecoderProxy?.prepare()
+            }
+        }
     }
 
     /**
      * Start play video.
      */
     fun playVideo() {
-        nativeVideoDecoderProxy.start()
+        if (nativeVideoDecoderProxy != null) {
+            nativeVideoDecoderProxy?.start()
+        }
     }
 
     /**
      * Pause video.
      */
     fun pauseVideo() {
-        nativeVideoDecoderProxy.pause()
+        if (nativeVideoDecoderProxy != null) {
+            nativeVideoDecoderProxy?.pause()
+        }
     }
 
     /**
      * Resume video.
      */
     fun resumeVideo() {
-        nativeVideoDecoderProxy.resume()
+        if (nativeVideoDecoderProxy != null) {
+            nativeVideoDecoderProxy?.resume()
+        }
     }
 
     /**
      * Seek Video.
      */
     fun seekVideo(position: Int) {
-        nativeVideoDecoderProxy.seek(position)
+        if (nativeVideoDecoderProxy != null) {
+            nativeVideoDecoderProxy?.seek(position)
+        }
     }
 
     /**
      * Stop video.
      */
     fun stopVideo() {
-        nativeVideoDecoderProxy.stop()
+        if (nativeVideoDecoderProxy != null) {
+            nativeVideoDecoderProxy?.stop()
+        }
     }
 
     /**
@@ -122,7 +163,9 @@ class NativeVideoPreviewer : SurfaceView, SurfaceHolder.Callback {
      * @see RenderMode#RENDERMODE_WHEN_DIRTY
      */
     fun setRenderMode(@NonNull renderMode: RenderMode) {
-        nativeGLRenderProxy.setNativeRenderMode(renderMode)
+        if (nativeGLRenderProxy != null) {
+            nativeGLRenderProxy?.setNativeRenderMode(renderMode)
+        }
     }
 
     /**
@@ -131,15 +174,35 @@ class NativeVideoPreviewer : SurfaceView, SurfaceHolder.Callback {
      */
     fun setFilter(@NonNull filter: NativeFilterProxy) {
         nativeFilterProxy = filter
-        nativeGLRenderProxy.setNativeFilter(filter.getNativeFilterHandle())
-        nativeVideoDecoderProxy.setNativeRender(nativeGLRenderProxy.getNativeGLRenderHandle())
+        if (nativeGLRenderProxy != null) {
+            nativeGLRenderProxy?.setNativeFilter(filter.getNativeFilterHandle())
+        }
+        if (nativeVideoDecoderProxy != null) {
+            val nativeGLRenderHandle = nativeGLRenderProxy?.getNativeGLRenderHandle()
+            if (nativeGLRenderHandle != null) {
+                nativeVideoDecoderProxy?.setNativeRender(nativeGLRenderHandle)
+            }
+        }
     }
 
     /**
      *  Request render.
      */
     fun requestRender() {
-        nativeGLRenderProxy.requestRender()
+        if (nativeGLRenderProxy != null) {
+            nativeGLRenderProxy?.requestRender()
+        }
+    }
+
+    /**
+     * Set player status listener.
+     * @param playStatusListener player status listener
+     */
+    fun setPlayStatusListener(@Nullable playStatusListener: PlayStatusListener) {
+        this.playStatusListener = playStatusListener
+        if (nativeVideoDecoderProxy != null) {
+            nativeVideoDecoderProxy?.setPlayStatusCallback(this)
+        }
     }
 
     /**
@@ -152,7 +215,9 @@ class NativeVideoPreviewer : SurfaceView, SurfaceHolder.Callback {
      * @param holder The SurfaceHolder whose surface is being created.
      */
     override fun surfaceCreated(holder: SurfaceHolder) {
-        nativeGLRenderProxy.onSurfaceCreated(holder.surface)
+        if (nativeGLRenderProxy != null) {
+            nativeGLRenderProxy?.onSurfaceCreated(holder.surface)
+        }
     }
 
     /**
@@ -167,8 +232,12 @@ class NativeVideoPreviewer : SurfaceView, SurfaceHolder.Callback {
      * @param height The new height of the surface.
      */
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-        nativeVideoDecoderProxy.setSurface(holder.surface, width, height)
-        nativeGLRenderProxy.onSurfaceChanged(holder.surface, format, width, height)
+        if (nativeGLRenderProxy != null) {
+            nativeGLRenderProxy?.onSurfaceChanged(holder.surface, format, width, height)
+        }
+        if (nativeVideoDecoderProxy != null) {
+            nativeVideoDecoderProxy?.setSurface(holder.surface, width, height)
+        }
     }
 
     /**
@@ -181,6 +250,47 @@ class NativeVideoPreviewer : SurfaceView, SurfaceHolder.Callback {
      * @param holder The SurfaceHolder whose surface is being destroyed.
      */
     override fun surfaceDestroyed(holder: SurfaceHolder) {
-        nativeGLRenderProxy.onSurfaceDestroyed(holder.surface)
+        if (nativeGLRenderProxy != null) {
+            nativeGLRenderProxy?.onSurfaceDestroyed(holder.surface)
+        }
+    }
+
+    /**
+     * @param duration
+     */
+    override fun onPrepared(duration: Long) {
+        if (playStatusListener != null) {
+            PlayerThreadPool.getInstance().submit {
+                if (playStatusListener != null) {
+                    playStatusListener?.onPrepared(duration)
+                }
+            }
+        }
+    }
+
+    /**
+     * @param presentationTime
+     */
+    override fun onProgress(presentationTime: Long) {
+        if (playStatusListener != null) {
+            PlayerThreadPool.getInstance().submit {
+                if (playStatusListener != null) {
+                    playStatusListener?.onProgress(presentationTime)
+                }
+            }
+        }
+    }
+
+    /**
+     * @param errorCode
+     */
+    override fun onError(errorCode: Int) {
+        if (playStatusListener != null) {
+            PlayerThreadPool.getInstance().submit {
+                if (playStatusListener != null) {
+                    playStatusListener?.onError(PlayError.getError(errorCode))
+                }
+            }
+        }
     }
 }
