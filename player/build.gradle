@@ -2,6 +2,9 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 
+def abiFiltersForWrapScript = []
+def SupportedABIs = ["arm64-v8a", "armeabi-v7a", "x86", "x86_64"]
+
 android {
     compileSdkVersion rootProject.ext.android["compileSdkVersion"]
     buildToolsVersion rootProject.ext.android["buildToolsVersion"]
@@ -24,7 +27,37 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags "-std=c++11 -frtti -fexceptions"
-                abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'
+                abiFilters.addAll(SupportedABIs)
+                if (rootProject.ext.useASAN) {
+                    //CMake 一共有2种编译工具链 - clang 和 gcc
+                    arguments "-DUSEASAN=ON", "-DANDROID_TOOLCHAIN=clang"
+                }
+            }
+        }
+        packagingOptions {
+            doNotStrip "**.so"
+            if (rootProject.ext.useASAN && abiFiltersForWrapScript) {
+                def exclude_abis = ["armeabi", "armeabi-v7a", "arm64-v8a", "x86", "x86_64", "mips", "mips64"]
+                        .findAll { !(it in abiFiltersForWrapScript) }
+                        .collect { "**/" + it + "/wrap.sh" }
+                excludes += exclude_abis
+            }
+        }
+
+        if (rootProject.ext.useASAN) {
+            sourceSets {
+                main {
+                    jniLibs {
+                        srcDir {
+                            "asan/libs"
+                        }
+                    }
+                    resources {
+                        srcDir {
+                                "asan/res"
+                        }
+                    }
+                }
             }
         }
     }
@@ -53,4 +86,49 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+}
+
+
+task copyAsanLibs(type: Copy) {
+    def libDir = file("$rootProject.ext.ndkDir").absolutePath + "/toolchains/llvm/prebuilt/"
+    for (String abi : SupportedABIs) {
+        def dir = new File("player/asan/libs/" + abi)
+        dir.mkdirs()
+        if(abi == 'armeabi-v7a' || abi == 'armeabi')
+            abi = "arm"
+        if(abi == "arm64-v8a")
+            abi = "aarch64"
+        FileTree tree = fileTree(dir: libDir).include("**/*asan*${abi}*.so")
+        tree.each { File file ->
+            from file
+            into dir.absolutePath
+        }
+    }
+}
+
+static def generateHelpUtil(file, abi) {
+    if(abi == "armeabi" || abi == "armeabi-v7a")
+        abi = "arm"
+    if(abi == "arm64-v8a")
+        abi = "aarch64"
+    file.withWriter { writer ->
+        writer.write('#!/system/bin/sh\n')
+        writer.write('HERE="$(cd "$(dirname "$0")" && pwd)"\n')
+        writer.write('export ASAN_OPTIONS=log_to_syslog=false,allow_user_segv_handler=1\n')
+        writer.write('export ASAN_ACTIVATION_OPTIONS=include_if_exists=/data/local/tmp/asan.options.b\n')
+        //LD_PRELOAD的本意是，允许程序优先加载指定的动态库
+        writer.write("export LD_PRELOAD=\$HERE/libclang_rt.asan-${abi}-android.so\n")
+        writer.write('\$@\n')
+    }
+}
+
+//这个task将会被generate所依赖
+task createAsanHelpUtilScript(dependsOn: copyAsanLibs) {
+    for (String abi : SupportedABIs) {
+        def dir = new File("app/asan/res/lib/" + abi)
+        dir.mkdirs()
+        def helpFile = new File(dir, "wrap.sh")
+        generateHelpUtil(helpFile, abi)
+        println "helpFile file path " + helpFile.path
+    }
 }
