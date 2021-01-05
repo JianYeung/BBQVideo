@@ -163,7 +163,14 @@ bool VideoHardDecoder::initCodec() {
         if (playStatusCallback != nullptr) {
             playStatusCallback->onError(PLAYER_CAN_NOT_OPEN_URL);
         }
+        return false;
     }
+
+    if (extractor == nullptr) {
+        //防止其他线程把extractor析构，而AMediaExtractor_setDataSource回调回来很慢
+        return false;
+    }
+
     int numTracks = AMediaExtractor_getTrackCount(extractor);
     codec = nullptr;
     for (int i = 0; i < numTracks; i++) {
