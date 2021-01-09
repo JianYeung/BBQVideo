@@ -125,7 +125,7 @@ static def generateHelpUtil(file, abi) {
 //这个task将会被generate所依赖
 task createAsanHelpUtilScript(dependsOn: copyAsanLibs) {
     for (String abi : SupportedABIs) {
-        def dir = new File("app/asan/res/lib/" + abi)
+        def dir = new File("player/asan/res/lib/" + abi)
         dir.mkdirs()
         def helpFile = new File(dir, "wrap.sh")
         generateHelpUtil(helpFile, abi)
