@@ -1,6 +1,7 @@
 package com.yj.player.render
 
 import android.view.Surface
+import com.yj.player.filter.NativeFilterProxy
 import com.yj.player.jni.GLRenderHelper
 
 class NativeGLRenderProxy {
@@ -27,20 +28,6 @@ class NativeGLRenderProxy {
         GLRenderHelper.destroyGLRenderHandle(nativeGLRenderHandle)
     }
 
-    fun init() {
-        if (INIT_HANDLE == nativeGLRenderHandle) {
-            throw RuntimeException("Native GLRender handle is InValid")
-        }
-        GLRenderHelper.init(nativeGLRenderHandle)
-    }
-
-    fun unInit() {
-        if (INIT_HANDLE == nativeGLRenderHandle) {
-            throw RuntimeException("Native GLRender handle is InValid")
-        }
-        GLRenderHelper.unInit(nativeGLRenderHandle)
-    }
-
     fun onPause() {
         if (INIT_HANDLE == nativeGLRenderHandle) {
             throw RuntimeException("Native GLRender handle is InValid")
@@ -53,20 +40,6 @@ class NativeGLRenderProxy {
             throw RuntimeException("Native GLRender handle is InValid")
         }
         GLRenderHelper.onResume(nativeGLRenderHandle)
-    }
-
-    fun onAttachedToWindow() {
-        if (INIT_HANDLE == nativeGLRenderHandle) {
-            return
-        }
-        GLRenderHelper.onAttachedToWindow(nativeGLRenderHandle)
-    }
-
-    fun onDetachedFromWindow() {
-        if (INIT_HANDLE == nativeGLRenderHandle) {
-            throw RuntimeException("Native GLRender handle is InValid")
-        }
-        GLRenderHelper.onDetachedFromWindow(nativeGLRenderHandle)
     }
 
     fun setNativeRenderMode(renderMode: RenderMode) {

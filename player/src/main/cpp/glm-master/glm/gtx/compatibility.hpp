@@ -25,9 +25,9 @@
 #endif
 
 #if GLM_COMPILER & GLM_COMPILER_VC
-#	include <cfloat>
+#	ffmpeg.include <cfloat>
 #elif GLM_COMPILER & GLM_COMPILER_GCC
-#	include <cmath>
+#	ffmpeg.include <cmath>
 #	if(GLM_PLATFORM & GLM_PLATFORM_ANDROID)
 #		undef isfinite
 #	endif

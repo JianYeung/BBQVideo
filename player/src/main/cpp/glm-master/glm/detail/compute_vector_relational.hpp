@@ -1,6 +1,6 @@
 #pragma once
 
-//#include "compute_common.hpp"
+//#ffmpeg.include "compute_common.hpp"
 #include "setup.hpp"
 #include <limits>
 

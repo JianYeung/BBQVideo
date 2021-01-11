@@ -1,14 +1,14 @@
 package com.yj.player
 
-import com.yj.player.decode.NativeVideoDecoderProxy
-import com.yj.player.encode.NativeVideoEncoderProxy
-import com.yj.player.render.NativeGLRenderProxy
-import com.yj.player.jni.DecodeHelper
-import com.yj.player.jni.EncodeHelper
 import com.yj.player.jni.FilterHelper
 import com.yj.player.jni.GLRenderHelper
-import com.yj.player.render.FilterType
-import com.yj.player.render.NativeFilterProxy
+import com.yj.player.jni.VideoPlayerHelper
+import com.yj.player.jni.EncodeHelper
+import com.yj.player.filter.FilterType
+import com.yj.player.filter.NativeFilterProxy
+import com.yj.player.render.NativeGLRenderProxy
+import com.yj.player.videoPlayer.NativeVideoPlayerProxy
+import com.yj.player.encode.NativeVideoEncoderProxy
 import com.yj.player.rtmp.RtmpManagerImpl
 import java.lang.System.loadLibrary
 
@@ -29,8 +29,8 @@ object PlayerManager {
         return GLRenderHelper.createGLRenderHandle()
     }
 
-    fun createNativeVideoDecoderProxy(): NativeVideoDecoderProxy {
-        return DecodeHelper.createVideoDecoderHandle(softwareDecodeEnable)
+    fun createNativePlayerProxy(): NativeVideoPlayerProxy {
+        return VideoPlayerHelper.createVideoPlayerHandle(softwareDecodeEnable)
     }
 
     fun createNativeVideoEncoderProxy(): NativeVideoEncoderProxy {

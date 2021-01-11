@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".opengl.CameraPreviewActivity">
 
-    <com.yj.player.view.NativeGLSurfaceView
+    <com.yj.player.view.CustomGLSurfaceView
         android:id="@+id/camera_preview_surfaceView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

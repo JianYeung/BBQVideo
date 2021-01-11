@@ -5,10 +5,10 @@
 #include <jni.h>
 #include <cassert>
 #include "onLoad.h"
-#include "decode_jni.h"
-#include "encode_jni.h"
 #include "filter_jni.h"
 #include "gl_render_jni.h"
+#include "video_player_jni.h"
+#include "encode_jni.h"
 #include "rtmp_jni.h"
 
 #ifdef __cplusplus
@@ -36,19 +36,17 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
     assert(env != nullptr);
     jniEnv = env;
     //动态注册，自定义函数
-    if (registerNativeDecodeMethods(env) != JNI_OK) {
+    if (registerNativeFilterMethods(env) != JNI_OK) {
         return result;
     }
 
-#ifdef RENDER_SUPPORTED
     if (registerNativeGLRenderMethods(env) != JNI_OK) {
         return result;
     }
 
-    if (registerNativeFilterMethods(env) != JNI_OK) {
+    if (registerNativeVideoPlayerMethods(env) != JNI_OK) {
         return result;
     }
-#endif
 
 #ifdef ENCODER_SUPPORTED
     if (registerNativeEncodeMethods(env) != JNI_OK) {

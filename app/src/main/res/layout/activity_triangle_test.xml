@@ -7,11 +7,11 @@
     android:orientation="vertical"
     tools:context=".opengl.TriangleTestActivity">
 
-    <com.yj.player.view.NativeGLSurfaceView
+    <com.yj.player.view.CustomGLSurfaceView
         android:id="@+id/triangle_surfaceView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </com.yj.player.view.NativeGLSurfaceView>
+    </com.yj.player.view.CustomGLSurfaceView>
 
 </LinearLayout>

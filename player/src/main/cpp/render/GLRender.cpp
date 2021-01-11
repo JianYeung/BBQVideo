@@ -1,12 +1,11 @@
 //
 // Created by jian.yeung on 2020/10/15.
 //
+
+#include "GLRender.h"
 #include <pthread.h>
 #include <stdexcept>
 #include <DLog.h>
-#include <TriangleFilter.h>
-#include <CameraFilter.h>
-#include "GLRender.h"
 
 GLRender::GLRender() {
     if (DebugEnable && GL_RENDER_DEBUG) {
@@ -21,24 +20,6 @@ GLRender::~GLRender() {
     if (DebugEnable && GL_RENDER_DEBUG) {
         DLOGI(GL_RENDER_TAG, "~~~~GLRender::~GLRender()~~~~");
     }
-}
-
-void GLRender::init() {
-    if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "~~~~GLRender::init()~~~~");
-    }
-}
-
-void GLRender::unInit() {
-    if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "~~~~GLRender::unInit()~~~~");
-    }
-}
-
-void *guardedRun(void *data) {
-    auto glRender = (GLRender *) data;
-    glRender->prepareRenderThread();
-    pthread_exit(&glRender->render_thread);
 }
 
 void GLRender::onPause() {
@@ -56,28 +37,24 @@ void GLRender::onResume() {
     this->mRequestRender = true;
 }
 
-void GLRender::onAttachedToWindow() {
+void GLRender::onDestroy() {
     if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "~~~~GLRender::onAttachedToWindow()~~~~");
-        DFLOGD(GL_RENDER_TAG, "onAttachedToWindow mDetached = %d, mFilter = %d, isRunning = %d", mDetached, (mFilter != nullptr), isRunning);
-    }
-    if (mDetached && (mFilter != nullptr)) {
-        if (!isRunning) {
-            pthread_create(&render_thread, nullptr, guardedRun, this);
-        }
-    }
-    mDetached = false;
-}
-
-void GLRender::onDetachedFromWindow() {
-    if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "~~~~GLRender::onDetachedFromWindow()~~~~");
-        DFLOGD(GL_RENDER_TAG, "onDetachedFromWindow isRunning = %d", isRunning);
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::onDestroy() Start~~~~");
+        DFLOGD(GL_RENDER_TAG, "onDestroy isRunning = %d", isRunning);
     }
     if (isRunning) {
         requestExitAndWait();
     }
-    mDetached = true;
+
+    if (DebugEnable && GL_RENDER_DEBUG) {
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::onDestroy() End~~~~");
+    }
+}
+
+void *guardedRun(void *data) {
+    auto glRender = (GLRender *) data;
+    glRender->prepareRenderThread();
+    pthread_exit(&glRender->render_thread);
 }
 
 void GLRender::setRenderMode(RenderMode mode) {
@@ -349,13 +326,6 @@ void GLRender::onSurfaceDestroyed(ANativeWindow *window) {
     this->mHasSurface = false;
 }
 
-void GLRender::requestExitAndWait() {
-    if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "~~~~GLRender::requestExitAndWait()~~~~");
-    }
-    this->mShouldExit = true;
-}
-
 void GLRender::stopEglSurfaceLocked() {
     if (DebugEnable && GL_RENDER_DEBUG) {
         DLOGI(GL_RENDER_TAG, "~~~~GLRender::stopEglSurfaceLocked()~~~~");
@@ -376,16 +346,9 @@ void GLRender::stopEglContextLocked() {
     }
 }
 
-void GLRender::onDestroy() {
+void GLRender::requestExitAndWait() {
     if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "~~~~GLRender::onDestroy() Start~~~~");
-        DFLOGD(GL_RENDER_TAG, "onDestroy isRunning = %d", isRunning);
+        DLOGI(GL_RENDER_TAG, "~~~~GLRender::requestExitAndWait()~~~~");
     }
-    if (isRunning) {
-        requestExitAndWait();
-    }
-
-    if (DebugEnable && GL_RENDER_DEBUG) {
-        DLOGI(GL_RENDER_TAG, "~~~~GLRender::onDestroy() End~~~~");
-    }
+    this->mShouldExit = true;
 }

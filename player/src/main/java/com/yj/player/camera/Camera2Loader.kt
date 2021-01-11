@@ -6,7 +6,6 @@ import android.content.Context
 import android.graphics.ImageFormat
 import android.hardware.camera2.*
 import android.media.ImageReader
-import android.util.Log
 import android.util.Size
 import android.view.Surface
 import com.yj.player.util.PlayerLog

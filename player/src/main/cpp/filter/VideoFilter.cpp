@@ -241,6 +241,13 @@ void VideoFilter::updatePreviewFrame(VideoFrame *videoFrame) {
     this->yuvHeight = videoFrame->getHeight();
 }
 
+void VideoFilter::clearPreviewFrame() {
+    if (DebugEnable && FILTER_DEBUG) {
+        DLOGI(VIDEO_FILTER_TAG, "~~~VideoFilter::clearPreviewFrame()~~~\n");
+    }
+    this->yuvData = nullptr;
+}
+
 void VideoFilter::updateYUVType() {
     if (DebugEnable && FILTER_DEBUG) {
         DFLOGI(VIDEO_FILTER_TAG, "~~~VideoFilter::updateYUVType() yuvType: %d ~~~\n", yuvType);

@@ -25,8 +25,8 @@
         <activity android:name=".opengl.CameraPreviewActivity" />
         <activity android:name=".opengl.TriangleTestActivity" />
         <activity android:name=".video.VideoDecodeTestActivity" />
-        <activity android:name=".video.CodecDecodePreviewActivity" />
-        <activity android:name=".video.FFMpegDecodePreviewActivity" />
+        <activity android:name=".video.MediaCodecPreviewActivity" />
+        <activity android:name=".video.FFMpegPreviewActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

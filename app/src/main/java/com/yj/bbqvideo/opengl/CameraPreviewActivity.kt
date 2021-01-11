@@ -11,13 +11,13 @@ import com.yj.player.camera.Camera2Loader
 import com.yj.player.camera.CameraLoader
 import com.yj.player.camera.Rotation
 import com.yj.player.camera.doOnLayout
-import com.yj.player.render.FilterType
-import com.yj.player.render.NativeFilterProxy
-import com.yj.player.view.NativeGLSurfaceView
+import com.yj.player.filter.FilterType
+import com.yj.player.filter.NativeFilterProxy
+import com.yj.player.view.CustomGLSurfaceView
 import com.yj.player.render.RenderMode
 
 class CameraPreviewActivity : AppCompatActivity() {
-    private val nativeSurfaceView: NativeGLSurfaceView by lazy {
+    private val customGLSurfaceView: CustomGLSurfaceView by lazy {
         findViewById(R.id.camera_preview_surfaceView)
     }
 
@@ -42,9 +42,9 @@ class CameraPreviewActivity : AppCompatActivity() {
         }
         cameraLoader.setOnPreviewFrameListener { data, format, width, height ->
             filter.updatePreviewFrame(data, format, width, height)
-            nativeSurfaceView.requestRender()
+            customGLSurfaceView.requestRender()
         }
-        nativeSurfaceView.run {
+        customGLSurfaceView.run {
             setRenderMode(RenderMode.RENDERMODE_WHEN_DIRTY)
             setFilter(filter)
         }
@@ -53,8 +53,8 @@ class CameraPreviewActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         DLog.d(TAG, "onResume")
-        nativeSurfaceView.onResume()
-        nativeSurfaceView.doOnLayout {
+        customGLSurfaceView.onResume()
+        customGLSurfaceView.doOnLayout {
             cameraLoader.onResume(it.width, it.height)
         }
     }
@@ -63,13 +63,13 @@ class CameraPreviewActivity : AppCompatActivity() {
         super.onPause()
         DLog.d(TAG, "onPause")
         cameraLoader.onPause()
-        nativeSurfaceView.onPause()
+        customGLSurfaceView.onPause()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         DLog.d(TAG, "onDestroy")
-        nativeSurfaceView.onDestroy()
+        customGLSurfaceView.onDestroy()
     }
 
     private fun getRotation(orientation: Int): Rotation {

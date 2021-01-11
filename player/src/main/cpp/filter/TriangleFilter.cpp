@@ -148,6 +148,18 @@ TriangleFilter::onSurfaceChanged(ANativeWindow *nativeWindow, int format, int wi
     glViewport(0, 0, width, height);
 }
 
+void TriangleFilter::updatePreviewFrame(VideoFrame *videoFrame) {
+    if (DebugEnable && FILTER_DEBUG) {
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~TriangleFilter::updatePreviewFrame()~~~\n");
+    }
+}
+
+void TriangleFilter::clearPreviewFrame() {
+    if (DebugEnable && FILTER_DEBUG) {
+        DLOGI(TRIANGLE_FILTER_TAG, "~~~TriangleFilter::clearPreviewFrame()~~~\n");
+    }
+}
+
 void TriangleFilter::draw() {
     if (DebugEnable && FILTER_DEBUG) {
         DLOGI(TRIANGLE_FILTER_TAG, "~~~TriangleFilter::draw() Start~~~\n");

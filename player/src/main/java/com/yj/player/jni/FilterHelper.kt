@@ -1,7 +1,7 @@
 package com.yj.player.jni
 
-import com.yj.player.render.FilterType
-import com.yj.player.render.NativeFilterProxy
+import com.yj.player.filter.FilterType
+import com.yj.player.filter.NativeFilterProxy
 
 object FilterHelper {
 

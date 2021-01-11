@@ -5,9 +5,9 @@
 #ifndef BBQVIDEO_ENCODE_JNI_H
 #define BBQVIDEO_ENCODE_JNI_H
 
-#include <VideoEncoder.h>
-#include <VideoH264Encoder.h>
-#include <VideoHardEncoder.h>
+#include <video/VideoEncoder.h>
+#include <video/VideoH264Encoder.h>
+#include <video/VideoHardEncoder.h>
 
 jlong CreateVideoEncoder(JNIEnv *env, jobject thiz, jboolean software_encode_enable) {
     VideoEncoder *videoEncoder = nullptr;
