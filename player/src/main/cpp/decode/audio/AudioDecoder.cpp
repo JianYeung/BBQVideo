@@ -5,8 +5,8 @@
 #include <DLog.h>
 #include "AudioDecoder.h"
 
-AudioDecoder::AudioDecoder() : playerStatusCallback(nullptr), preparedStatusListener(nullptr),
-                               errorStatusListener(nullptr) {
+AudioDecoder::AudioDecoder() : stateMachine(nullptr), playerStatusCallback(nullptr),
+                                onPreparedListener(nullptr), onErrorListener(nullptr) {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_DECODER_TAG, "~~~AudioDecoder::AudioDecoder()~~~\n");
     }
@@ -22,11 +22,11 @@ void AudioDecoder::setPlayerStatusCallback(VideoPlayerStatusCallback *playerStat
 
 }
 
-void AudioDecoder::setPreparedStatusListener(PreparedStatusListener *preparedStatusListener) {
+void AudioDecoder::setOnPreparedListener(OnPreparedListener *onPreparedListener) {
 
 }
 
-void AudioDecoder::setErrorStatusListener(ErrorStatusListener *errorStatusListener) {
+void AudioDecoder::setOnErrorListener(OnErrorListener *onErrorListener) {
 
 }
 
@@ -62,5 +62,6 @@ void AudioDecoder::release() {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_DECODER_TAG, "~~~AudioDecoder::release()~~~\n");
     }
+
 }
 

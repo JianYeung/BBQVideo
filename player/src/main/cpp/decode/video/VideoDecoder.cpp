@@ -6,8 +6,8 @@
 #include "VideoDecoder.h"
 
 VideoDecoder::VideoDecoder() : surfaceWindow(nullptr), playerStatusCallback(nullptr),
-                               preparedStatusListener(nullptr), errorStatusListener(nullptr),
-                               glRender(nullptr), filter(nullptr) {
+                               onPreparedListener(nullptr), onErrorListener(nullptr),
+                               render(nullptr), filter(nullptr) {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
         DLOGI(VIDEO_DECODER_TAG, "~~~VideoDecoder::VideoDecoder()~~~\n");
     }
@@ -31,11 +31,11 @@ void VideoDecoder::setPlayerStatusCallback(VideoPlayerStatusCallback *playerStat
 
 }
 
-void VideoDecoder::setPreparedStatusListener(PreparedStatusListener *preparedStatusListener) {
+void VideoDecoder::setOnPreparedListener(OnPreparedListener *onPreparedListener) {
 
 }
 
-void VideoDecoder::setErrorStatusListener(ErrorStatusListener *errorStatusListener) {
+void VideoDecoder::setOnErrorListener(OnErrorListener *onErrorListener) {
 
 }
 

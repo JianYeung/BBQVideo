@@ -21,8 +21,13 @@ VideoPlayer::VideoPlayer(bool softwareDecode) : playerStatusCallback(nullptr) {
         videoDecoder = new VideoHardDecoder();
         audioDecoder = new AudioHardDecoder();
     }
-    videoDecoder->setPreparedStatusListener(this);
-    audioDecoder->setPreparedStatusListener(this);
+    if (videoDecoder != nullptr) {
+        videoDecoder->setOnPreparedListener(this);
+    }
+
+    if (audioDecoder != nullptr) {
+        audioDecoder->setOnPreparedListener(this);
+    }
 }
 
 VideoPlayer::~VideoPlayer() {
@@ -85,11 +90,11 @@ void VideoPlayer::prepare() {
     }
     videoDecoderPrepared = false;
     audioDecoderPrepared = false;
-    if (audioDecoder != nullptr) {
-        audioDecoder->prepare();
-    }
     if (videoDecoder != nullptr) {
         videoDecoder->prepare();
+    }
+    if (audioDecoder != nullptr) {
+        audioDecoder->prepare();
     }
 }
 

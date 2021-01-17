@@ -17,8 +17,8 @@ public:
     ~AudioSoftDecoder();
 
     void setPlayerStatusCallback(VideoPlayerStatusCallback *playerStatusCallback) override;
-    void setPreparedStatusListener(PreparedStatusListener *preparedStatusListener) override;
-    void setErrorStatusListener(ErrorStatusListener *errorStatusListener) override;
+    void setOnPreparedListener(OnPreparedListener *onPreparedListener) override;
+    void setOnErrorListener(OnErrorListener *onErrorListener) override;
     void setDataSource(std::string url) override;
     void prepare() override;
     void start() override;

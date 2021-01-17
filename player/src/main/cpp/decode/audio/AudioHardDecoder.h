@@ -37,19 +37,21 @@ private:
     AMediaExtractor *extractor;
     AMediaCodec *codec;
     AMediaFormat *format;
+    std::mutex codec_mutex_;
     int audioTrackIndex = -1;
     bool sawInputEOS = false;
     bool sawOutputEOS = false;
     long outDuration = -1;
-    int64_t renderStart;
+    int64_t renderStart = -1;
+    bool playCompleted = false;
 
 public:
     AudioHardDecoder();
     ~AudioHardDecoder();
 
     void setPlayerStatusCallback(VideoPlayerStatusCallback *playerStatusCallback) override;
-    void setPreparedStatusListener(PreparedStatusListener *preparedStatusListener) override;
-    void setErrorStatusListener(ErrorStatusListener *errorStatusListener) override;
+    void setOnPreparedListener(OnPreparedListener *onPreparedListener) override;
+    void setOnErrorListener(OnErrorListener *onErrorListener) override;
     void setDataSource(std::string url) override;
     void prepare() override;
     void start() override;
@@ -62,11 +64,12 @@ public:
     bool initCodec();
     void releaseCodec();
     void restartCodec();
+    void resetCodec();
     void doDecodeWork();
     void doPauseWork();
     void doResumeWork();
     void doSeekWork(int position);
-    void forceTransformState(AudioDecodeState targetState);
+    void doResetWork();
 
     void sendMessage(int what, bool flush = false);
     void sendMessage(Message &msg, bool flush = false);

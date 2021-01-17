@@ -17,6 +17,7 @@ enum {
     kMsgPauseAck,    // 3
     kMsgSeek,        // 4
     kMsgCodecDone,   // 5
+    kMsgReset,       // 6
 };
 
 class BaseHardDecoder {

@@ -35,15 +35,15 @@ void VideoSoftDecoder::setPlayerStatusCallback(VideoPlayerStatusCallback *player
     }
 }
 
-void VideoSoftDecoder::setPreparedStatusListener(PreparedStatusListener *preparedStatusListener) {
+void VideoSoftDecoder::setOnPreparedListener(OnPreparedListener *preparedStatusListener) {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(VIDEO_SOFT_DECODER_TAG, "~~~VideoSoftDecoder::setPreparedStatusListener()~~~\n");
+        DLOGI(VIDEO_SOFT_DECODER_TAG, "~~~VideoSoftDecoder::setOnPreparedListener()~~~\n");
     }
 }
 
-void VideoSoftDecoder::setErrorStatusListener(ErrorStatusListener *errorStatusListener) {
+void VideoSoftDecoder::setOnErrorListener(OnErrorListener *onErrorListener) {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(VIDEO_SOFT_DECODER_TAG, "~~~VideoSoftDecoder::setErrorStatusListener()~~~\n");
+        DLOGI(VIDEO_SOFT_DECODER_TAG, "~~~VideoSoftDecoder::setOnErrorListener()~~~\n");
     }
 }
 

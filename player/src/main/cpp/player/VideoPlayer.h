@@ -9,11 +9,12 @@
 #include <video/VideoDecoder.h>
 #include <audio/AudioDecoder.h>
 #include <VideoPlayerStatusCallback.h>
-#include <PreparedStatusListener.h>
+#include <OnPreparedListener.h>
+#include <OnErrorListener.h>
 
 #define VIDEO_PLAYER_DEBUG true
 
-class VideoPlayer : public PreparedStatusListener, public ErrorStatusListener {
+class VideoPlayer : public OnPreparedListener, public OnErrorListener {
 private:
     const char *VIDEO_PLAYER_TAG = "VideoPlayer";
 

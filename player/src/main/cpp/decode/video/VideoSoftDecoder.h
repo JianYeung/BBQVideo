@@ -18,8 +18,8 @@ public:
     void setSurface(ANativeWindow *nativeWindow, int width, int height) override;
     void setRender(GLRender *render) override;
     void setPlayerStatusCallback(VideoPlayerStatusCallback *playerStatusCallback) override;
-    void setPreparedStatusListener(PreparedStatusListener *preparedStatusListener) override;
-    void setErrorStatusListener(ErrorStatusListener *errorStatusListener) override;
+    void setOnPreparedListener(OnPreparedListener *onPreparedListener) override;
+    void setOnErrorListener(OnErrorListener *onErrorListener) override;
     void setDataSource(std::string url) override;
     void prepare() override;
     void start() override;

@@ -10,6 +10,7 @@ AudioHardDecoder::AudioHardDecoder() : AudioDecoder(), extractor(nullptr),
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::AudioHardDecoder()~~~\n");
     }
+    stateMachine = new DecodeStateMachine();
     decodeHandler = new AudioDecodeHandler();
 }
 
@@ -17,52 +18,51 @@ AudioHardDecoder::~AudioHardDecoder() {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::~AudioHardDecoder()~~~\n");
     }
+    if (stateMachine != nullptr) {
+        delete stateMachine;
+        stateMachine = nullptr;
+    }
 }
 
 void AudioHardDecoder::setPlayerStatusCallback(VideoPlayerStatusCallback *playerStatusCallback) {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::setPlayerStatusCallback()~~~\n");
-        DFLOGD(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::setPlayerStatusCallback() decodeState = %d", decodeState);
     }
     this->playerStatusCallback = playerStatusCallback;
 }
 
-void AudioHardDecoder::setPreparedStatusListener(PreparedStatusListener *preparedStatusListener) {
+void AudioHardDecoder::setOnPreparedListener(OnPreparedListener *onPreparedListener) {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
-        DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::setPreparedStatusListener()~~~\n");
-        DFLOGD(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::setPreparedStatusListener() decodeState = %d", decodeState);
+        DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::setOnPreparedListener()~~~\n");
     }
-    this->preparedStatusListener = preparedStatusListener;
+    this->onPreparedListener = onPreparedListener;
 }
 
-void AudioHardDecoder::setErrorStatusListener(ErrorStatusListener *errorStatusListener) {
+void AudioHardDecoder::setOnErrorListener(OnErrorListener *onErrorListener) {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
-        DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::setErrorStatusListener()~~~\n");
-        DFLOGD(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::setErrorStatusListener() decodeState = %d", decodeState);
+        DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::setOnErrorListener()~~~\n");
     }
-    this->errorStatusListener = errorStatusListener;
+    this->onErrorListener = onErrorListener;
 }
 
 void AudioHardDecoder::setDataSource(std::string url) {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::setDataSource()~~~\n");
-        DFLOGD(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::setDataSource() decodeState = %d", decodeState);
     }
     if (url.empty()) {
         DLOGE(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::setDataSource() url is empty");
         return;
     }
 
-    if (decodeState == Idle && !url.empty()) {
-        forceTransformState(Initialized);
-    }
     this->audioUrl = std::move(url);
+    if (!audioUrl.empty()) {
+        stateMachine->tryTransitTo(DecodeState::INITIALIZED);
+    }
 }
 
 void AudioHardDecoder::prepare() {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::prepare()~~~\n");
-        DFLOGD(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::prepare() decodeState = %d", decodeState);
     }
     restartCodec();
 }
@@ -70,28 +70,17 @@ void AudioHardDecoder::prepare() {
 void AudioHardDecoder::start() {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::start()~~~\n");
-        DFLOGD(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::start() decodeState = %d", decodeState);
-    }
-
-    if (decodeState == Started) {
-        DLOGE(AUDIO_HARD_DECODER_TAG, "Video is in playing state, please stop to play first!!!");
-        return;
     }
 
     if (!audioUrl.empty()) {
-        if (decodeState == Prepared) {
-            forceTransformState(Starting);
+        if (stateMachine->tryTransitTo(DecodeState::STARTED)) {
             sendMessage(kMsgCodecBuffer);
-        } else if (decodeState == Initialized
-                   || decodeState == Stopped) {
-            forceTransformState(Preparing);
-            if (initCodec()) {
-                if (decodeState == Prepared) {
-                    forceTransformState(Starting);
-                    sendMessage(kMsgCodecBuffer);
-                }
+        } else if (stateMachine->tryTransitTo(DecodeState::PREPARING)) {
+            if (initCodec() && stateMachine->tryTransitTo(STARTED)) {
+                sendMessage(kMsgCodecBuffer);
             } else {
-                DLOGE(AUDIO_HARD_DECODER_TAG, "Init Audio Codec Failed!!!");
+                DLOGE(AUDIO_HARD_DECODER_TAG, "Audio Codec init failed");
+                sendMessage(kMsgReset);
             }
         } else {
             DLOGE(AUDIO_HARD_DECODER_TAG, "Audio Codec cannot be initialized in this state!!!");
@@ -104,7 +93,6 @@ void AudioHardDecoder::start() {
 void AudioHardDecoder::pause() {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::pause()~~~\n");
-        DFLOGD(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::pause() decodeState = %d", decodeState);
     }
     sendMessage(kMsgPause);
 }
@@ -112,7 +100,6 @@ void AudioHardDecoder::pause() {
 void AudioHardDecoder::resume() {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::resume()~~~\n");
-        DFLOGD(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::resume() decodeState = %d", decodeState);
     }
     sendMessage(kMsgResume);
 }
@@ -120,7 +107,6 @@ void AudioHardDecoder::resume() {
 void AudioHardDecoder::seek(int position) {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::seek()~~~\n");
-        DFLOGD(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::seek() decodeState = %d", decodeState);
         DFLOGD(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::seek() position = %d", position);
     }
     if (position < 0 || position > 100) {
@@ -131,49 +117,50 @@ void AudioHardDecoder::seek(int position) {
     Message msg = Message();
     msg.what = kMsgSeek;
     msg.arg1 = position;
-    sendMessage(msg, true);
+    sendMessage(msg);
 }
 
 void AudioHardDecoder::stop() {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::stop()~~~\n");
-        DFLOGD(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::stop() decodeState = %d", decodeState);
     }
-    forceTransformState(Stopping);
-    releaseCodec();
     sendMessage(kMsgCodecDone, true);
+    stateMachine->forceTransitTo(DecodeState::STOPPED);
+    releaseCodec();
 }
 
 void AudioHardDecoder::release() {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::release()~~~\n");
-        DFLOGD(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::release() decodeState = %d", decodeState);
     }
     if (decodeHandler != nullptr) {
         decodeHandler->quit();
         delete decodeHandler;
         decodeHandler = nullptr;
     }
-    forceTransformState(Stopping);
     releaseCodec();
-    forceTransformState(End);
 }
 
 bool AudioHardDecoder::initCodec() {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::initCodec() Start~~~\n");
-        DFLOGD(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::initCodec() decodeState = %d", decodeState);
     }
 
+    bool result = true;
+    std::unique_lock<std::mutex> lock(codec_mutex_);
     if (extractor == nullptr) {
         extractor = AMediaExtractor_new();
     }
 
-    int result = AMediaExtractor_setDataSource(extractor, audioUrl.data());
-    DFLOGE(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::initCodec() AMediaExtractor_setDataSource result = %d", result);
-    if (result != AMEDIA_OK) {
+    int ret = AMediaExtractor_setDataSource(extractor, audioUrl.data());
+    DFLOGE(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::initCodec() AMediaExtractor_setDataSource ret = %d", ret);
+    if (ret != AMEDIA_OK) {
         DLOGE(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::initCodec() setDataSource failed!!!");
-        forceTransformState(Error);
+        stateMachine->forceTransitTo(DecodeState::ERROR);
+        if (extractor != nullptr) {
+            AMediaExtractor_delete(extractor);
+            extractor = nullptr;
+        }
         return false;
     }
 
@@ -217,22 +204,22 @@ bool AudioHardDecoder::initCodec() {
     AMediaExtractor_selectTrack(extractor, audioTrackIndex);
     codec = AMediaCodec_createDecoderByType(mime);
     AMediaCodec_configure(codec, format, nullptr, nullptr, 0);
-    result = AMediaCodec_start(codec);
-    if (result == AMEDIA_OK) {
-        forceTransformState(Prepared);
+    ret = AMediaCodec_start(codec);
+    if (ret == AMEDIA_OK) {
+        stateMachine->forceTransitTo(DecodeState::PREPARED);
         renderStart = -1;
         sawInputEOS = false;
         sawOutputEOS = false;
-        if (preparedStatusListener != nullptr) {
-            preparedStatusListener->onPrepared(MediaType::Audio);
+        if (onPreparedListener != nullptr) {
+            onPreparedListener->onPrepared(MediaType::Audio);
         }
     } else {
         DLOGE(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::initCodec() start codec failed!!!");
-        if (format != nullptr) {
-            AMediaFormat_delete(format);
-            format = nullptr;
+        if (codec != nullptr) {
+            AMediaCodec_delete(codec);
+            codec = nullptr;
         }
-        return false;
+        result = false;
     }
 
     if (format != nullptr) {
@@ -242,30 +229,31 @@ bool AudioHardDecoder::initCodec() {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::initCodec() End~~~\n");
     }
-    return true;
+    return result;
 }
 
 void AudioHardDecoder::releaseCodec() {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::releaseCodec() Start~~~\n");
-        DFLOGD(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::releaseCodec() decodeState = %d", decodeState);
     }
     sawInputEOS = true;
     sawOutputEOS = true;
-    if (format != nullptr) {
-        AMediaFormat_delete(format);
-        format = nullptr;
+    {
+        std::unique_lock<std::mutex> lock(codec_mutex_);
+        if (format != nullptr) {
+            AMediaFormat_delete(format);
+            format = nullptr;
+        }
+        if (codec != nullptr) {
+            AMediaCodec_stop(codec);
+            AMediaCodec_delete(codec);
+            codec = nullptr;
+        }
+        if (extractor != nullptr) {
+            AMediaExtractor_delete(extractor);
+            extractor = nullptr;
+        }
     }
-    if (codec != nullptr) {
-        AMediaCodec_stop(codec);
-        AMediaCodec_delete(codec);
-        codec = nullptr;
-    }
-    if (extractor != nullptr) {
-        AMediaExtractor_delete(extractor);
-        extractor = nullptr;
-    }
-    forceTransformState(Stopped);
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~VideoHardDecoder::releaseCodec() End~~~\n");
     }
@@ -274,122 +262,123 @@ void AudioHardDecoder::releaseCodec() {
 void AudioHardDecoder::restartCodec() {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::restartCodec()~~~\n");
-        DFLOGD(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::restartCodec() decodeState = %d", decodeState);
     }
     if (!audioUrl.empty()) {
-        switch (decodeState) {
-            case Prepared:
-            case Started:
-            case Paused:
-            case Stopped:
-            case Completed:
-            case Error:
-                forceTransformState(Stopping);
-                releaseCodec();
-                break;
-            case Preparing:
-            case Starting:
-            case Stopping:
-                DLOGE(AUDIO_HARD_DECODER_TAG, "Audio decoder is in transition state");
-                return;
-            default:
-                break;
-
+        if (stateMachine->tryTransitTo(DecodeState::STOPPED)) {
+            releaseCodec();
         }
-        forceTransformState(Preparing);
-        if (!initCodec()) {
-            DLOGE(AUDIO_HARD_DECODER_TAG, "Audio Codec init failed");
+        if (stateMachine->tryTransitTo(DecodeState::PREPARING)) {
+            if (!initCodec()) {
+                DLOGE(AUDIO_HARD_DECODER_TAG, "Audio Codec init failed");
+                sendMessage(kMsgReset);
+            }
+        } else {
+            DLOGE(AUDIO_HARD_DECODER_TAG, "Audio Codec cannot be initialized in this state!!!");
         }
     } else {
         DLOGE(AUDIO_HARD_DECODER_TAG, "Has not audio url!!!");
     }
 }
 
+void AudioHardDecoder::resetCodec() {
+    if (DebugEnable && AUDIO_DECODER_DEBUG) {
+        DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::resetCodec()~~~\n");
+    }
+    if (codec != nullptr && extractor != nullptr) {
+        std::unique_lock<std::mutex> lock(codec_mutex_);
+        AMediaExtractor_seekTo(extractor, 0, AMEDIAEXTRACTOR_SEEK_NEXT_SYNC);
+        AMediaCodec_flush(codec);
+    }
+}
+
 void AudioHardDecoder::doDecodeWork() {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::doDecodeWork() Start~~~\n");
-        DFLOGD(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::doDecodeWork() Start decodeState = %d", decodeState);
     }
 
-    if (decodeState != Starting && decodeState != Started) {
-        DLOGE(AUDIO_HARD_DECODER_TAG, "doDecodeWork() cannot be executed in this state!!!");
-        return;
-    }
-
-    if (!sawInputEOS) {
-        ssize_t bufIdx = AMediaCodec_dequeueInputBuffer(codec, 2000);
-        if (DebugEnable && AUDIO_DECODER_DEBUG) {
-            DFLOGD(AUDIO_HARD_DECODER_TAG, "input buffer index: %zd", bufIdx);
+    {
+        std::unique_lock<std::mutex> lock(codec_mutex_);
+        if (codec == nullptr || extractor == nullptr) {
+            DLOGE(AUDIO_HARD_DECODER_TAG, "Audio Codec cannot be initialized!!!");
+            return;
         }
-        if (bufIdx >= 0) {
-            size_t bufSize;
-            auto buf = AMediaCodec_getInputBuffer(codec, bufIdx, &bufSize);
-            auto sampleSize = AMediaExtractor_readSampleData(extractor, buf, bufSize);
-            if (sampleSize < 0) {
-                sampleSize = 0;
-                sawInputEOS = true;
-                DLOGE(AUDIO_HARD_DECODER_TAG, "input EOS");
+
+        if (!sawInputEOS) {
+            ssize_t bufIdx = AMediaCodec_dequeueInputBuffer(codec, 2000);
+            if (DebugEnable && AUDIO_DECODER_DEBUG) {
+                DFLOGD(AUDIO_HARD_DECODER_TAG, "input buffer index: %zd", bufIdx);
             }
-            auto presentationTimeUs = AMediaExtractor_getSampleTime(extractor);
-            AMediaCodec_queueInputBuffer(codec, bufIdx, 0, sampleSize, presentationTimeUs,
-                                         sawInputEOS ? AMEDIACODEC_BUFFER_FLAG_END_OF_STREAM : 0);
-            AMediaExtractor_advance(extractor);
+            if (bufIdx >= 0) {
+                size_t bufSize;
+                auto buf = AMediaCodec_getInputBuffer(codec, bufIdx, &bufSize);
+                auto sampleSize = AMediaExtractor_readSampleData(extractor, buf, bufSize);
+                if (sampleSize < 0) {
+                    sampleSize = 0;
+                    sawInputEOS = true;
+                    DLOGE(AUDIO_HARD_DECODER_TAG, "input EOS");
+                }
+                auto presentationTimeUs = AMediaExtractor_getSampleTime(extractor);
+                AMediaCodec_queueInputBuffer(codec, bufIdx, 0, sampleSize, presentationTimeUs,
+                                             sawInputEOS ? AMEDIACODEC_BUFFER_FLAG_END_OF_STREAM : 0);
+                AMediaExtractor_advance(extractor);
+            }
         }
-    }
 
-    if (!sawOutputEOS) {
-        AMediaCodecBufferInfo info;
-        auto status = AMediaCodec_dequeueOutputBuffer(codec, &info, 0);
-        if (status >= 0) {
-            if (DebugEnable && AUDIO_DECODER_DEBUG) {
-                DFLOGD(AUDIO_HARD_DECODER_TAG, "output buffer index: %zd", status);
-            }
-
-            if (info.flags & AMEDIACODEC_BUFFER_FLAG_END_OF_STREAM) {
-                DLOGE(AUDIO_HARD_DECODER_TAG, "output EOS");
-                sawOutputEOS = true;
-            }
-
-            uint8_t *outputBuf = AMediaCodec_getOutputBuffer(codec, status, nullptr/* out_size */);
-            size_t dataSize = info.size;
-            if (outputBuf != nullptr && dataSize != 0) {
-                forceTransformState(Started);
-                long pts = info.presentationTimeUs;
+        if (!sawOutputEOS) {
+            AMediaCodecBufferInfo info;
+            auto status = AMediaCodec_dequeueOutputBuffer(codec, &info, 0);
+            if (status >= 0) {
                 if (DebugEnable && AUDIO_DECODER_DEBUG) {
-                    DFLOGD(AUDIO_HARD_DECODER_TAG, "output buffer pts: %ld", pts);
+                    DFLOGD(AUDIO_HARD_DECODER_TAG, "output buffer index: %zd", status);
                 }
-                int64_t presentationNano = pts * 1000;
-                if (renderStart < 0) {
-                    renderStart = systemNanoTime() - presentationNano;
+
+                if (info.flags & AMEDIACODEC_BUFFER_FLAG_END_OF_STREAM) {
+                    DLOGE(AUDIO_HARD_DECODER_TAG, "output EOS");
+                    sawOutputEOS = true;
+                    playCompleted = true;
+                    stateMachine->forceTransitTo(DecodeState::COMPLETED);
                 }
-                AMediaCodec_releaseOutputBuffer(codec, status, info.size != 0);
-                int64_t delay = (renderStart + presentationNano) - systemNanoTime();
+
+                uint8_t *outputBuf = AMediaCodec_getOutputBuffer(codec, status, nullptr/* out_size */);
+                size_t dataSize = info.size;
+                if (outputBuf != nullptr && dataSize != 0) {
+                    long pts = info.presentationTimeUs;
+                    if (DebugEnable && AUDIO_DECODER_DEBUG) {
+                        DFLOGD(AUDIO_HARD_DECODER_TAG, "output buffer pts: %ld", pts);
+                    }
+                    int64_t presentationNano = pts * 1000;
+                    if (renderStart < 0) {
+                        renderStart = systemNanoTime() - presentationNano;
+                    }
+                    AMediaCodec_releaseOutputBuffer(codec, status, info.size != 0);
+                    int64_t delay = (renderStart + presentationNano) - systemNanoTime();
+                    if (DebugEnable && AUDIO_DECODER_DEBUG) {
+                        int time = delay > 0 ? (int) delay : 0;
+                        DFLOGD(AUDIO_HARD_DECODER_TAG, "After play audio, decoder sleep %d us", time);
+                    }
+                    if (delay > 0) {
+                        usleep(delay / 1000);
+                    }
+                }
+            } else if (status == AMEDIACODEC_INFO_OUTPUT_BUFFERS_CHANGED) {
                 if (DebugEnable && AUDIO_DECODER_DEBUG) {
-                    int time = delay > 0 ? (int) delay : 0;
-                    DFLOGD(AUDIO_HARD_DECODER_TAG, "After play audio, decoder sleep %d us", time);
+                    DLOGD(AUDIO_HARD_DECODER_TAG, "output buffers changed");
                 }
-                if (delay > 0) {
-                    usleep(delay / 1000);
+            } else if (status == AMEDIACODEC_INFO_OUTPUT_FORMAT_CHANGED) {
+                format = AMediaCodec_getOutputFormat(codec);
+                if (DebugEnable && AUDIO_DECODER_DEBUG) {
+                    DFLOGD(AUDIO_HARD_DECODER_TAG, "format changed to: %s", AMediaFormat_toString(format));
                 }
+                AMediaFormat_delete(format);
+                format = nullptr;
+            } else if (status == AMEDIACODEC_INFO_TRY_AGAIN_LATER) {
+                if (DebugEnable && AUDIO_DECODER_DEBUG) {
+                    DLOGD(AUDIO_HARD_DECODER_TAG, "no output buffer right now");
+                }
+            } else {
+                stateMachine->forceTransitTo(DecodeState::ERROR);
+                DFLOGE(AUDIO_HARD_DECODER_TAG, "unexpected info code: %zd", status);
             }
-        } else if (status == AMEDIACODEC_INFO_OUTPUT_BUFFERS_CHANGED) {
-            if (DebugEnable && AUDIO_DECODER_DEBUG) {
-                DLOGD(AUDIO_HARD_DECODER_TAG, "output buffers changed");
-            }
-        } else if (status == AMEDIACODEC_INFO_OUTPUT_FORMAT_CHANGED) {
-            format = AMediaCodec_getOutputFormat(codec);
-            if (DebugEnable && AUDIO_DECODER_DEBUG) {
-                DFLOGD(AUDIO_HARD_DECODER_TAG, "format changed to: %s", AMediaFormat_toString(format));
-            }
-            AMediaFormat_delete(format);
-            format = nullptr;
-        } else if (status == AMEDIACODEC_INFO_TRY_AGAIN_LATER) {
-            if (DebugEnable && AUDIO_DECODER_DEBUG) {
-                DLOGD(AUDIO_HARD_DECODER_TAG, "no output buffer right now");
-            }
-        } else {
-            forceTransformState(Error);
-            DFLOGE(AUDIO_HARD_DECODER_TAG, "unexpected info code: %zd", status);
         }
     }
 
@@ -401,38 +390,24 @@ void AudioHardDecoder::doDecodeWork() {
         sendMessage(kMsgCodecBuffer);
     }
 
-    if (sawInputEOS && sawOutputEOS) {
-        if (decodeState != Completed)  {
-            forceTransformState(Completed);
-        } else {
-            if (extractor != nullptr && codec != nullptr) {
-                AMediaExtractor_seekTo(extractor, 0, AMEDIAEXTRACTOR_SEEK_NEXT_SYNC);
-                AMediaCodec_flush(codec);
-            }
-            renderStart = -1;
-            sawInputEOS = false;
-            sawOutputEOS = false;
-        }
+    if (sawInputEOS && sawOutputEOS && playCompleted) {
+        sendMessage(kMsgReset);
     }
 
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::doDecodeWork() End~~~\n");
-        DFLOGD(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::doDecodeWork() End decodeState = %d", decodeState);
     }
 }
 
 void AudioHardDecoder::doPauseWork() {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
-        DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::doPauseWork()~~~\n");
-        DFLOGD(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::doPauseWork() decodeState = %d", decodeState);
-    }
-    if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::doPauseWork() Start~~~\n");
     }
-    if (decodeState == Started) {
-        forceTransformState(Paused);
+    if (stateMachine->tryTransitTo(DecodeState::PAUSED)) {
         // flush all outstanding codecbuffer messages with a no-op message
         sendMessage(kMsgPauseAck, true);
+    } else {
+        DLOGE(AUDIO_HARD_DECODER_TAG, "doPauseWork() cannot be executed in this state!!!");
     }
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::doPauseWork() End~~~\n");
@@ -442,24 +417,22 @@ void AudioHardDecoder::doPauseWork() {
 void AudioHardDecoder::doResumeWork() {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::doResumeWork()~~~\n");
-        DFLOGD(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::doResumeWork() decodeState = %d", decodeState);
     }
 
-    if (decodeState == Paused) {
-        forceTransformState(Starting);
+    if (stateMachine->tryTransitTo(DecodeState::STARTED)) {
         renderStart = -1;
         sendMessage(kMsgCodecBuffer);
+    } else {
+        DLOGE(AUDIO_HARD_DECODER_TAG, "doResumeWork() cannot be executed in this state!!!");
     }
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~VideoHardDecoder::doResumeWork() End~~~\n");
     }
-
 }
 
 void AudioHardDecoder::doSeekWork(int position) {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::doSeekWork()~~~\n");
-        DFLOGD(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::doSeekWork() decodeState = %d", decodeState);
     }
     if (outDuration < 0) {
         DLOGE(AUDIO_HARD_DECODER_TAG, "doSeekWork() please getDuration first!!!");
@@ -468,14 +441,13 @@ void AudioHardDecoder::doSeekWork(int position) {
     int64_t seekPosition = (outDuration * position * 1000000 / 100);
     DFLOGD(AUDIO_HARD_DECODER_TAG, "seek position to %ld us\n", (long) seekPosition);
 
-    if (decodeState == Prepared
-        || decodeState == Started
-        || decodeState == Paused
-        || decodeState == Completed) {
-        forceTransformState(Starting);
+    if (stateMachine->tryTransitTo(DecodeState::STARTED)) {
+        {
+            std::unique_lock<std::mutex> lock(codec_mutex_);
+            AMediaExtractor_seekTo(extractor, seekPosition, AMEDIAEXTRACTOR_SEEK_CLOSEST_SYNC);
+            AMediaCodec_flush(codec);
+        }
         renderStart = -1;
-        AMediaExtractor_seekTo(extractor, seekPosition, AMEDIAEXTRACTOR_SEEK_CLOSEST_SYNC);
-        AMediaCodec_flush(codec);
         sendMessage(kMsgCodecBuffer, true);
     } else {
         DLOGE(AUDIO_HARD_DECODER_TAG, "doSeekWork() cannot be executed in this state!!!");
@@ -485,12 +457,25 @@ void AudioHardDecoder::doSeekWork(int position) {
     }
 }
 
-void AudioHardDecoder::forceTransformState(AudioDecodeState targetState) {
-    if (decodeState != targetState) {
-        if (DebugEnable && AUDIO_DECODER_DEBUG) {
-            DFLOGD(AUDIO_HARD_DECODER_TAG, "AudioHardDecoder::forceTransformState() source: %d to target: %d", decodeState, targetState);
-        }
-        decodeState = targetState;
+void AudioHardDecoder::doResetWork() {
+    if (DebugEnable && AUDIO_DECODER_DEBUG) {
+        DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::doResetWork() Start~~~\n");
+    }
+    if (audioUrl.empty()) {
+        stateMachine->forceTransitTo(DecodeState::IDLE);
+    } else {
+        stateMachine->forceTransitTo(DecodeState::INITIALIZED);
+    }
+    renderStart = -1;
+    sawInputEOS = false;
+    sawOutputEOS = false;
+    if (playCompleted) {
+        stateMachine->forceTransitTo(DecodeState::PREPARED);
+        playCompleted = false;
+    }
+    resetCodec();
+    if (DebugEnable && AUDIO_DECODER_DEBUG) {
+        DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::doResetWork() End~~~\n");
     }
 }
 
@@ -499,6 +484,9 @@ void AudioHardDecoder::sendMessage(int what, bool flush) {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::sendMessage() what~~~\n");
     }
     if (decodeHandler != nullptr) {
+        if (what == kMsgReset) {
+            decodeHandler->removeMessage(kMsgReset);
+        }
         Message msg = Message();
         msg.what = what;
         msg.obj = this;
@@ -570,6 +558,13 @@ void AudioDecodeHandler::handleMessage(Message &msg) {
             }
         }
             break;
+        case kMsgReset: {
+            if (DebugEnable && AUDIO_DECODER_DEBUG) {
+                DLOGD(AUDIO_HARD_DECODER_TAG, "handleMessage kMsgReset");
+            }
+            auto decoder = (AudioHardDecoder *) msg.obj;
+            decoder->doResetWork();
+        }
         default:
             break;
     }

@@ -23,15 +23,15 @@ void AudioSoftDecoder::setPlayerStatusCallback(VideoPlayerStatusCallback *player
     }
 }
 
-void AudioSoftDecoder::setPreparedStatusListener(PreparedStatusListener *preparedStatusListener) {
+void AudioSoftDecoder::setOnPreparedListener(OnPreparedListener *onPreparedListener) {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
-        DLOGI(AUDIO_SOFT_DECODER_TAG, "~~~AudioSoftDecoder::setPreparedStatusListener()~~~\n");
+        DLOGI(AUDIO_SOFT_DECODER_TAG, "~~~AudioSoftDecoder::setOnPreparedListener()~~~\n");
     }
 }
 
-void AudioSoftDecoder::setErrorStatusListener(ErrorStatusListener *errorStatusListener) {
+void AudioSoftDecoder::setOnErrorListener(OnErrorListener *onErrorListener) {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
-        DLOGI(AUDIO_SOFT_DECODER_TAG, "~~~AudioSoftDecoder::setErrorStatusListener()~~~\n");
+        DLOGI(AUDIO_SOFT_DECODER_TAG, "~~~AudioSoftDecoder::setOnErrorListener()~~~\n");
     }
 }
 

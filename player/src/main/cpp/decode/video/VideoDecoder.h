@@ -9,8 +9,8 @@
 #include <android/native_window.h>
 #include <GLRender.h>
 #include <VideoPlayerStatusCallback.h>
-#include <PreparedStatusListener.h>
-#include <ErrorStatusListener.h>
+#include <OnPreparedListener.h>
+#include <OnErrorListener.h>
 
 #define VIDEO_DECODER_DEBUG true
 #define VIDEO_DECODER_TAG "VideoDecoder"
@@ -22,10 +22,10 @@ protected:
     int surfaceWidth;
     int surfaceHeight;
     VideoPlayerStatusCallback *playerStatusCallback;
-    PreparedStatusListener *preparedStatusListener;
-    ErrorStatusListener *errorStatusListener;
+    OnPreparedListener *onPreparedListener;
+    OnErrorListener *onErrorListener;
 
-    GLRender *glRender;
+    GLRender *render;
     BaseFilter *filter;
 
 public:
@@ -35,8 +35,8 @@ public:
     virtual void setSurface(ANativeWindow *window, int width, int height) = 0;
     virtual void setRender(GLRender *render) = 0;
     virtual void setPlayerStatusCallback(VideoPlayerStatusCallback *playerStatusCallback) = 0;
-    virtual void setPreparedStatusListener(PreparedStatusListener *preparedStatusListener) = 0;
-    virtual void setErrorStatusListener(ErrorStatusListener *errorStatusListener) = 0;
+    virtual void setOnPreparedListener(OnPreparedListener *onPreparedListener) = 0;
+    virtual void setOnErrorListener(OnErrorListener *onErrorListener) = 0;
     virtual void setDataSource(std::string url) = 0;
     virtual void prepare() = 0;
     virtual void start() = 0;

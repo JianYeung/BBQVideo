@@ -40,7 +40,7 @@ void VideoHardDecoder::setRender(GLRender *render) {
         DLOGE(VIDEO_HARD_DECODER_TAG, "Invalid GLRender");
         return;
     }
-    this->glRender = render;
+    this->render = render;
     this->filter = render->getFilter();
 }
 
@@ -51,18 +51,18 @@ void VideoHardDecoder::setPlayerStatusCallback(VideoPlayerStatusCallback *player
     this->playerStatusCallback = playerStatusCallback;
 }
 
-void VideoHardDecoder::setPreparedStatusListener(PreparedStatusListener *preparedStatusListener) {
+void VideoHardDecoder::setOnPreparedListener(OnPreparedListener *onPreparedListener) {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(VIDEO_HARD_DECODER_TAG, "~~~VideoHardDecoder::setPreparedStatusListener()~~~\n");
+        DLOGI(VIDEO_HARD_DECODER_TAG, "~~~VideoHardDecoder::setOnPreparedListener()~~~\n");
     }
-    this->preparedStatusListener = preparedStatusListener;
+    this->onPreparedListener = onPreparedListener;
 }
 
-void VideoHardDecoder::setErrorStatusListener(ErrorStatusListener *errorStatusListener) {
+void VideoHardDecoder::setOnErrorListener(OnErrorListener *onErrorListener) {
     if (DebugEnable && VIDEO_DECODER_DEBUG) {
-        DLOGI(VIDEO_HARD_DECODER_TAG, "~~~VideoHardDecoder::setErrorStatusListener()~~~\n");
+        DLOGI(VIDEO_HARD_DECODER_TAG, "~~~VideoHardDecoder::setOnErrorListener()~~~\n");
     }
-    this->errorStatusListener = errorStatusListener;
+    this->onErrorListener = onErrorListener;
 }
 
 void VideoHardDecoder::setDataSource(std::string url) {
@@ -213,8 +213,8 @@ bool VideoHardDecoder::initCodec() {
             sawOutputEOS = false;
             result = AMediaCodec_start(codec);
             if (result == AMEDIA_OK) {
-                if (preparedStatusListener != nullptr) {
-                    preparedStatusListener->onPrepared(MediaType::Video);
+                if (onPreparedListener != nullptr) {
+                    onPreparedListener->onPrepared(MediaType::Video);
                 }
             }
             break;
@@ -293,8 +293,8 @@ void VideoHardDecoder::doDecodeWork() {
                     VideoFrame frame = VideoFrame();
                     frame.updateFrameInfo(outputBuf, outFormat, outWidth, outHeight);
                     filter->updatePreviewFrame(&frame);
-                    if (glRender != nullptr && glRender->getRenderMode() == RenderMode::RENDERMODE_WHEN_DIRTY) {
-                        glRender->requestRender();
+                    if (render != nullptr && render->getRenderMode() == RenderMode::RENDERMODE_WHEN_DIRTY) {
+                        render->requestRender();
                     }
                 }
                 AMediaCodec_releaseOutputBuffer(codec, status, info.size != 0);
