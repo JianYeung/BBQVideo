@@ -33,16 +33,14 @@ public:
 
 class AudioHardDecoder : public AudioDecoder, public BaseHardDecoder {
 private:
+    AudioDecodeHandler *decodeHandler;
     AMediaExtractor *extractor;
     AMediaCodec *codec;
     AMediaFormat *format;
-    AudioDecodeHandler *decodeHandler;
+    int audioTrackIndex = -1;
     bool sawInputEOS = false;
     bool sawOutputEOS = false;
-    int outFormat;
-    int outWidth;
-    int outHeight;
-    long outDuration;
+    long outDuration = -1;
     int64_t renderStart;
 
 public:
@@ -68,6 +66,7 @@ public:
     void doPauseWork();
     void doResumeWork();
     void doSeekWork(int position);
+    void forceTransformState(AudioDecodeState targetState);
 
     void sendMessage(int what, bool flush = false);
     void sendMessage(Message &msg, bool flush = false);

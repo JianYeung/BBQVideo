@@ -20,13 +20,12 @@ enum AudioDecodeState {
     Prepared,     // 3
     Starting,     // 4
     Started,      // 5
-    Pausing,      // 6
-    Paused,       // 7
+    Paused,       // 6
+    Completed,    // 7
     Stopping,     // 8
     Stopped,      // 9
-    Completed,    // 10
-    End,          // 11
-    Error,        // 12
+    End,          // 10
+    Error,        // 11
 };
 
 class AudioDecoder {

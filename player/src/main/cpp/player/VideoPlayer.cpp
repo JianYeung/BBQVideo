@@ -85,11 +85,11 @@ void VideoPlayer::prepare() {
     }
     videoDecoderPrepared = false;
     audioDecoderPrepared = false;
-    if (videoDecoder != nullptr) {
-        videoDecoder->prepare();
-    }
     if (audioDecoder != nullptr) {
         audioDecoder->prepare();
+    }
+    if (videoDecoder != nullptr) {
+        videoDecoder->prepare();
     }
 }
 

@@ -169,6 +169,7 @@ bool VideoHardDecoder::initCodec() {
     int result = AMediaExtractor_setDataSource(extractor, videoUrl.data());
     DFLOGE(VIDEO_HARD_DECODER_TAG, "VideoHardDecoder::initCodec() AMediaExtractor_setDataSource result = %d", result);
     if (result != AMEDIA_OK) {
+        isCodecIniting = false;
         if (playerStatusCallback != nullptr) {
             playerStatusCallback->onError(PLAYER_CAN_NOT_OPEN_URL);
         }
@@ -292,8 +293,7 @@ void VideoHardDecoder::doDecodeWork() {
                     VideoFrame frame = VideoFrame();
                     frame.updateFrameInfo(outputBuf, outFormat, outWidth, outHeight);
                     filter->updatePreviewFrame(&frame);
-                    if (glRender != nullptr &&
-                        glRender->getRenderMode() == RenderMode::RENDERMODE_WHEN_DIRTY) {
+                    if (glRender != nullptr && glRender->getRenderMode() == RenderMode::RENDERMODE_WHEN_DIRTY) {
                         glRender->requestRender();
                     }
                 }
