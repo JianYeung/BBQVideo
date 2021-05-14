@@ -50,11 +50,12 @@ protected:
 
 public:
     BaseFilter();
-    ~BaseFilter();
+    virtual ~BaseFilter();
 
     virtual void setUp();
     virtual void tearDown();
     virtual void updatePreviewFrame(VideoFrame *videoFrame);
+    virtual void clearPreviewFrame();
     virtual void onSurfaceCreated(ANativeWindow *nativeWindow);
     virtual void onSurfaceChanged(ANativeWindow *nativeWindow, int format, int width, int height);
     virtual void draw();

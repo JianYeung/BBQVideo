@@ -30,11 +30,11 @@ class VideoDecodeTestActivity : AppCompatActivity(), View.OnClickListener{
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btn_codec_decode_preview -> {
-                intent = Intent(this, CodecDecodePreviewActivity::class.java)
+                intent = Intent(this, MediaCodecPreviewActivity::class.java)
                 startActivity(intent)
             }
             R.id.btn_ffmpeg_decode_preview -> {
-                intent = Intent(this, FFMpegDecodePreviewActivity::class.java)
+                intent = Intent(this, FFMpegPreviewActivity::class.java)
                 startActivity(intent)
             }
         }

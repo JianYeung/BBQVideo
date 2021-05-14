@@ -7,7 +7,6 @@
 
 #include "EglHelper.h"
 #include "BaseFilter.h"
-#include <android/native_window.h>
 #include <sys/types.h>
 
 enum class RenderMode {
@@ -35,7 +34,6 @@ private:
     RenderMode mRenderMode = RenderMode::RENDERMODE_WHEN_DIRTY;
 
     bool isRunning = false;
-    bool mDetached = false;
     bool mPaused = false;
     bool mRequestPaused = false;
     bool mShouldExit = false;
@@ -56,43 +54,21 @@ public:
 
     ~GLRender();
 
-    void init();
-
-    void unInit();
-
     void onPause();
-
     void onResume();
-
-    void onAttachedToWindow();
-
-    void onDetachedFromWindow();
-
-    void setRenderMode(RenderMode mode);
-
-    RenderMode getRenderMode();
-
-    void setFilter(BaseFilter *filter);
-
-    BaseFilter* getFilter();
-
-    void requestRender();
-
-    void prepareRenderThread();
-
-    void onSurfaceCreated(ANativeWindow *window);
-
-    void onSurfaceChanged(ANativeWindow *window, int format, int width, int height);
-
-    void onSurfaceDestroyed(ANativeWindow *window);
-
-    void requestExitAndWait();
-
-    void stopEglSurfaceLocked();
-
-    void stopEglContextLocked();
-
     void onDestroy();
+    void setRenderMode(RenderMode mode);
+    RenderMode getRenderMode();
+    void setFilter(BaseFilter *filter);
+    BaseFilter* getFilter();
+    void requestRender();
+    void prepareRenderThread();
+    void onSurfaceCreated(ANativeWindow *window);
+    void onSurfaceChanged(ANativeWindow *window, int format, int width, int height);
+    void onSurfaceDestroyed(ANativeWindow *window);
+    void stopEglSurfaceLocked();
+    void stopEglContextLocked();
+    void requestExitAndWait();
 };
 
 

@@ -7,7 +7,7 @@
     <string name="codec_decode_preview">Codec硬解码视频</string>
     <string name="ffmpeg_decode_preview">FFMpeg软解码视频</string>
     <string name="input_url">请输入播放视频的URL</string>
-    <string name="default_url">https://v-cdn.zjol.com.cn/280443.mp4</string>
+    <string name="default_url">https://stream7.iqilu.com/10339/upload_transcode/202002/09/20200209104902N3v5Vpxuvb.mp4</string>
     <string name="confirm">confirm</string>
     <string name="prepare">prepare</string>
     <string name="play">play</string>
@@ -15,4 +15,5 @@
     <string name="stop">stop</string>
     <string name="resume">resume</string>
     <string name="seek">seek</string>
+    <string name="zero">00:00</string>
 </resources>

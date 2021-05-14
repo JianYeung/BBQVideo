@@ -23,6 +23,8 @@ public:
 
     void setUp() override;
     void tearDown() override;
+    void updatePreviewFrame(VideoFrame *videoFrame) override;
+    void clearPreviewFrame() override;
     void onSurfaceCreated(ANativeWindow *nativeWindow) override;
     void onSurfaceChanged(ANativeWindow *nativeWindow, int format, int width, int height) override;
     void draw() override;

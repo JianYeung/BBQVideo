@@ -17,28 +17,12 @@ object GLRenderHelper {
         nativeDestroyGLRenderHandle(glRenderHandle)
     }
 
-    fun init(glRenderHandle: Long) {
-        nativeInit(glRenderHandle)
-    }
-
-    fun unInit(glRenderHandle: Long) {
-        nativeUnInit(glRenderHandle)
-    }
-
     fun onPause(glRenderHandle: Long) {
         nativePause(glRenderHandle)
     }
 
     fun onResume(glRenderHandle: Long) {
         nativeResume(glRenderHandle)
-    }
-
-    fun onAttachedToWindow(glRenderHandle: Long) {
-        nativeAttachedToWindow(glRenderHandle)
-    }
-
-    fun onDetachedFromWindow(glRenderHandle: Long) {
-        nativeDetachedFromWindow(glRenderHandle)
     }
 
     fun setRenderMode(glRenderHandle: Long, renderMode: RenderMode) {
@@ -69,17 +53,9 @@ object GLRenderHelper {
 
     private external fun nativeDestroyGLRenderHandle(glRenderHandle: Long)
 
-    private external fun nativeInit(glRenderHandle: Long)
-
-    private external fun nativeUnInit(glRenderHandle: Long)
-
     private external fun nativePause(glRenderHandle: Long)
 
     private external fun nativeResume(glRenderHandle: Long)
-
-    private external fun nativeAttachedToWindow(glRenderHandle: Long)
-
-    private external fun nativeDetachedFromWindow(glRenderHandle: Long)
 
     private external fun nativeSetRenderMode(glRenderHandle: Long, renderMode: Int)
 

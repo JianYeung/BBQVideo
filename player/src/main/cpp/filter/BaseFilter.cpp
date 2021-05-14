@@ -38,6 +38,10 @@ void BaseFilter::updatePreviewFrame(VideoFrame *videoFrame) {
 
 }
 
+void BaseFilter::clearPreviewFrame() {
+
+}
+
 void BaseFilter::draw() {
 
 }

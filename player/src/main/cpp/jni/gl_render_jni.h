@@ -6,8 +6,8 @@
 #define BBQVIDEO_GL_RENDER_JNI_H
 
 #include <GLRender.h>
-#include <android/native_window.h>
 #include <DLog.h>
+#include <android/native_window_jni.h>
 
 const bool GL_RENDER_JNI_DEBUG = false;
 const char *GL_RENDER_JNI_TAG = "GLRenderJni";
@@ -34,22 +34,6 @@ void DestroyGLRenderHandle(JNIEnv *env, jobject thiz, jlong gl_render_handle) {
     }
 }
 
-void Initialize(JNIEnv *env, jobject thiz, jlong gl_render_handle) {
-    if (GL_RENDER_JNI_DEBUG) {
-        DFLOGI(GL_RENDER_JNI_TAG, "Initialize() handle = %ld", (long) gl_render_handle);
-    }
-    GLRender *glRender = reinterpret_cast<GLRender *>(gl_render_handle);
-    glRender->init();
-}
-
-void UnInitialize(JNIEnv *env, jobject thiz, jlong gl_render_handle) {
-    if (GL_RENDER_JNI_DEBUG) {
-        DFLOGI(GL_RENDER_JNI_TAG, "UnInitialize() handle = %ld", (long) gl_render_handle);
-    }
-    GLRender *glRender = reinterpret_cast<GLRender *>(gl_render_handle);
-    glRender->unInit();
-}
-
 void OnPause(JNIEnv *env, jobject thiz, jlong gl_render_handle) {
     if (GL_RENDER_JNI_DEBUG) {
         DFLOGI(GL_RENDER_JNI_TAG, "OnPause() handle = %ld", (long) gl_render_handle);
@@ -64,22 +48,6 @@ void OnResume(JNIEnv *env, jobject thiz, jlong gl_render_handle) {
     }
     GLRender *glRender = reinterpret_cast<GLRender *>(gl_render_handle);
     glRender->onResume();
-}
-
-void OnAttachedToWindow(JNIEnv *env, jobject thiz, jlong gl_render_handle) {
-    if (GL_RENDER_JNI_DEBUG) {
-        DFLOGI(GL_RENDER_JNI_TAG, "OnAttachedToWindow() handle = %ld", (long) gl_render_handle);
-    }
-    GLRender *glRender = reinterpret_cast<GLRender *>(gl_render_handle);
-    glRender->onAttachedToWindow();
-}
-
-void OnDetachedFromWindow(JNIEnv *env, jobject thiz, jlong gl_render_handle) {
-    if (GL_RENDER_JNI_DEBUG) {
-        DFLOGI(GL_RENDER_JNI_TAG, "OnDetachedFromWindow() handle = %ld", (long) gl_render_handle);
-    }
-    GLRender *glRender = reinterpret_cast<GLRender *>(gl_render_handle);
-    glRender->onDetachedFromWindow();
 }
 
 void SetRenderMode(JNIEnv *env, jobject thiz, jlong gl_render_handle, jint render_mode) {
@@ -139,12 +107,8 @@ void OnSurfaceDestroyed(JNIEnv *env, jobject thiz, jlong gl_render_handle, jobje
 static JNINativeMethod gGLRenderMethods[] = {
         {"nativeCreateGLRenderHandle",  "()J",                           (void *) CreateGLRenderHandle},
         {"nativeDestroyGLRenderHandle", "(J)V",                          (void *) DestroyGLRenderHandle},
-        {"nativeInit",                  "(J)V",                          (void *) Initialize},
-        {"nativeUnInit",                "(J)V",                          (void *) UnInitialize},
         {"nativePause",                 "(J)V",                          (void *) OnPause},
         {"nativeResume",                "(J)V",                          (void *) OnResume},
-        {"nativeAttachedToWindow",      "(J)V",                          (void *) OnAttachedToWindow},
-        {"nativeDetachedFromWindow",    "(J)V",                          (void *) OnDetachedFromWindow},
         {"nativeSetRenderMode",         "(JI)V",                         (void *) SetRenderMode},
         {"nativeSetFilter",             "(JJ)V",                         (void *) SetFilter},
         {"nativeRequestRender",         "(J)V",                          (void *) RequestRender},

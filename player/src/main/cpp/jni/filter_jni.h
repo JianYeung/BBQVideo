@@ -11,7 +11,7 @@
 #include <CameraFilter.h>
 #include <VideoFilter.h>
 
-const bool FILTER_JNI_DEBUG = false;
+const bool FILTER_JNI_DEBUG = true;
 const char *FILTER_JNI_TAG = "FilterJni";
 FilterType filterType = FilterType::NORMAL;
 

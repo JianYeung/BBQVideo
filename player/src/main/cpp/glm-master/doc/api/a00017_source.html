@@ -92,8 +92,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">// Dependency:</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;../glm.hpp&quot;</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;../gtc/quaternion.hpp&quot;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#ffmpeg.include &quot;../glm.hpp&quot;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#ffmpeg.include &quot;../gtc/quaternion.hpp&quot;</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#if GLM_MESSAGES == GLM_ENABLE &amp;&amp; !defined(GLM_EXT_INCLUDED)</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#       ifndef GLM_ENABLE_EXPERIMENTAL</span></div>
@@ -104,9 +104,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#if GLM_COMPILER &amp; GLM_COMPILER_VC</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#       include &lt;cfloat&gt;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#       ffmpeg.include &lt;cfloat&gt;</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#elif GLM_COMPILER &amp; GLM_COMPILER_GCC</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#       include &lt;cmath&gt;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#       ffmpeg.include &lt;cmath&gt;</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#       if(GLM_PLATFORM &amp; GLM_PLATFORM_ANDROID)</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#               undef isfinite</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#       endif</span></div>
@@ -206,7 +206,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;}<span class="comment">//namespace glm</span></div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="preprocessor">#include &quot;compatibility.inl&quot;</span></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="preprocessor">#ffmpeg.include &quot;compatibility.inl&quot;</span></div>
 <div class="ttc" id="a00315_html_gaab541bed2e788e4537852a2492860806"><div class="ttname"><a href="a00315.html#gaab541bed2e788e4537852a2492860806">glm::double4x4</a></div><div class="ttdeci">mat&lt; 4, 4, double, highp &gt; double4x4</div><div class="ttdoc">double-qualifier floating-point matrix with 4 x 4 components. (From GLM_GTX_compatibility extension) ...</div><div class="ttdef"><b>Definition:</b> <a href="a00017_source.html#l00128">compatibility.hpp:128</a></div></div>
 <div class="ttc" id="a00315_html_gaacac46ddc7d15d0f9529d05c92946a0f"><div class="ttname"><a href="a00315.html#gaacac46ddc7d15d0f9529d05c92946a0f">glm::int3x4</a></div><div class="ttdeci">mat&lt; 3, 4, int, highp &gt; int3x4</div><div class="ttdoc">integer matrix with 3 x 4 components. (From GLM_GTX_compatibility extension) </div><div class="ttdef"><b>Definition:</b> <a href="a00017_source.html#l00093">compatibility.hpp:93</a></div></div>
 <div class="ttc" id="a00373_html_gac61629f3a4aa14057e7a8cae002291db"><div class="ttname"><a href="a00373.html#gac61629f3a4aa14057e7a8cae002291db">glm::atan</a></div><div class="ttdeci">GLM_FUNC_DECL vec&lt; L, T, Q &gt; atan(vec&lt; L, T, Q &gt; const &amp;y, vec&lt; L, T, Q &gt; const &amp;x)</div><div class="ttdoc">Arc tangent. </div></div>

@@ -220,6 +220,12 @@ void CameraFilter::updatePreviewFrame(VideoFrame *videoFrame) {
     }
 }
 
+void CameraFilter::clearPreviewFrame() {
+    if (DebugEnable && FILTER_DEBUG) {
+        DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::clearPreviewFrame()~~~\n");
+    }
+}
+
 void CameraFilter::updateTextureData() {
     if (DebugEnable && FILTER_DEBUG) {
         DLOGI(CAMERA_FILTER_TAG, "~~~CameraFilter::updateTextureData() Start~~~\n");
