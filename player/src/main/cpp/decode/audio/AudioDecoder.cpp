@@ -6,7 +6,8 @@
 #include "AudioDecoder.h"
 
 AudioDecoder::AudioDecoder() : stateMachine(nullptr), playerStatusCallback(nullptr),
-                                onPreparedListener(nullptr), onErrorListener(nullptr) {
+                                onPreparedListener(nullptr), onErrorListener(nullptr),
+                                audioEngine(nullptr) {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_DECODER_TAG, "~~~AudioDecoder::AudioDecoder()~~~\n");
     }
@@ -31,6 +32,10 @@ void AudioDecoder::setOnErrorListener(OnErrorListener *onErrorListener) {
 }
 
 void AudioDecoder::setDataSource(std::string url) {
+
+}
+
+void AudioDecoder::setCpuIds(std::vector<int> cpuIds) {
 
 }
 

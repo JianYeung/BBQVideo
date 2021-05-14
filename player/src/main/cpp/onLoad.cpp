@@ -5,6 +5,7 @@
 #include <jni.h>
 #include <cassert>
 #include "onLoad.h"
+#include "ByteUtils.h"
 #include "filter_jni.h"
 #include "gl_render_jni.h"
 #include "video_player_jni.h"

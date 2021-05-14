@@ -50,7 +50,7 @@ protected:
 
 public:
     BaseFilter();
-    ~BaseFilter();
+    virtual ~BaseFilter();
 
     virtual void setUp();
     virtual void tearDown();

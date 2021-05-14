@@ -95,6 +95,17 @@ void SetDataSource(JNIEnv *env, jobject thiz, jlong native_player_handle, jstrin
     }
 }
 
+void SetCpuIds(JNIEnv *env, jobject thiz, jlong native_player_handle, jintArray jCpuIds) {
+    if (VIDEO_PLAYER_JNI_DEBUG) {
+        DFLOGI(VIDEO_PLAYER_JNI_TAG, "SetDataSource() handle = %ld", (long) native_player_handle);
+    }
+    if (native_player_handle != 0) {
+        VideoPlayer *videoPlayer = reinterpret_cast<VideoPlayer *>(native_player_handle);
+        std::vector<int> cpuIds = convertJavaArrayToVector(env, jCpuIds);
+        videoPlayer->setCpuIds(std::move(cpuIds));
+    }
+}
+
 void Prepare(JNIEnv *env, jobject thiz, jlong native_player_handle) {
     if (VIDEO_PLAYER_JNI_DEBUG) {
         DFLOGI(VIDEO_PLAYER_JNI_TAG, "Prepare() handle = %ld", (long) native_player_handle);
@@ -163,6 +174,7 @@ static JNINativeMethod gVideoPlayerMethods[] = {
         {"nativeSetRender",                "(JJ)V",                                                             (void *) SetRender},
         {"nativeSetPlayerStatusCallback",  "(JLcom/yj/player/videoPlayer/NativeVideoPlayerStatusCallback;)V",   (void *) SetPlayerStatusCallback},
         {"nativeSetDataSource",            "(JLjava/lang/String;)V",                                            (void *) SetDataSource},
+        {"nativeSetCpuIds",                "(J[I)V",                                                            (void *) SetCpuIds},
         {"nativePrepare",                  "(J)V",                                                              (void *) Prepare},
         {"nativeStart",                    "(J)V",                                                              (void *) Start},
         {"nativeResume",                   "(J)V",                                                              (void *) Resume},

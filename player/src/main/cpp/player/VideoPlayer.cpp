@@ -6,6 +6,8 @@
 #include <video/VideoHardDecoder.h>
 #include <audio/AudioSoftDecoder.h>
 #include <audio/AudioHardDecoder.h>
+
+#include <utility>
 #include "VideoPlayer.h"
 
 VideoPlayer::VideoPlayer(bool softwareDecode) : playerStatusCallback(nullptr) {
@@ -81,6 +83,15 @@ void VideoPlayer::setDataSource(const std::string &url) {
     }
     if (audioDecoder != nullptr) {
         audioDecoder->setDataSource(url);
+    }
+}
+
+void VideoPlayer::setCpuIds(std::vector<int> cpuIds) {
+    if (DebugEnable && VIDEO_PLAYER_DEBUG) {
+        DLOGI(VIDEO_PLAYER_TAG, "~~~VideoPlayer::setDataSource()~~~\n");
+    }
+    if (audioDecoder != nullptr) {
+        audioDecoder->setCpuIds(std::move(cpuIds));
     }
 }
 

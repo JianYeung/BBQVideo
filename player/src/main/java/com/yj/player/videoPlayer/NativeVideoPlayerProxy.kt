@@ -48,6 +48,13 @@ class NativeVideoPlayerProxy {
         VideoPlayerHelper.setDataSource(nativeVideoPlayerHandle, url)
     }
 
+    fun setCpuIds(cpuIds: IntArray) {
+        if (INIT_HANDLE == nativeVideoPlayerHandle) {
+            throw RuntimeException("Native Video Player handle is InValid")
+        }
+        VideoPlayerHelper.setCpuIds(nativeVideoPlayerHandle, cpuIds)
+    }
+
     fun prepare() {
         if (INIT_HANDLE == nativeVideoPlayerHandle) {
             throw RuntimeException("Native Video Player handle is InValid")

@@ -28,6 +28,7 @@ set(OBOE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/oboe-master)
 
 set(NATIVE_LIBS_DIR ${PROJECT_SOURCE_DIR}/src/main/nativeLibs/${ANDROID_ABI})
 
+add_definitions(-DAUDIO_ENGINE_SUPPORTED)
 #add_definitions(-DENCODER_SUPPORTED)
 #add_definitions(-DRTMP_SUPPORTED)
 

@@ -55,8 +55,22 @@ void AudioHardDecoder::setDataSource(std::string url) {
     }
 
     this->audioUrl = std::move(url);
+    if (audioEngine != nullptr) {
+        audioEngine->release();
+    } else {
+        audioEngine = new AudioEngine();
+    }
     if (!audioUrl.empty()) {
         stateMachine->tryTransitTo(DecodeState::INITIALIZED);
+    }
+}
+
+void AudioHardDecoder::setCpuIds(std::vector<int> cpuIds) {
+    if (DebugEnable && AUDIO_DECODER_DEBUG) {
+        DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::setCpuIds()~~~\n");
+    }
+    if (audioEngine != nullptr) {
+        audioEngine->createCallback(cpuIds);
     }
 }
 
@@ -74,6 +88,10 @@ void AudioHardDecoder::start() {
 
     if (!audioUrl.empty()) {
         if (stateMachine->tryTransitTo(DecodeState::STARTED)) {
+            if (audioEngine != nullptr && audioEngine->start()) {
+                audioDataSource = audioEngine->getAudioSource();
+                audioDataSource->setLooping(true);
+            }
             sendMessage(kMsgCodecBuffer);
         } else if (stateMachine->tryTransitTo(DecodeState::PREPARING)) {
             if (initCodec() && stateMachine->tryTransitTo(STARTED)) {
@@ -95,6 +113,9 @@ void AudioHardDecoder::pause() {
         DLOGI(AUDIO_HARD_DECODER_TAG, "~~~AudioHardDecoder::pause()~~~\n");
     }
     sendMessage(kMsgPause);
+    if (audioEngine != nullptr) {
+        audioEngine->pause();
+    }
 }
 
 void AudioHardDecoder::resume() {
@@ -126,6 +147,9 @@ void AudioHardDecoder::stop() {
     }
     sendMessage(kMsgCodecDone, true);
     stateMachine->forceTransitTo(DecodeState::STOPPED);
+    if (audioEngine != nullptr) {
+        audioEngine->stop();
+    }
     releaseCodec();
 }
 
@@ -137,6 +161,16 @@ void AudioHardDecoder::release() {
         decodeHandler->quit();
         delete decodeHandler;
         decodeHandler = nullptr;
+    }
+    if (audioDataSource != nullptr) {
+        audioDataSource->release();
+        delete audioDataSource;
+        audioDataSource = nullptr;
+    }
+    if (audioEngine != nullptr) {
+        audioEngine->release();
+        delete audioEngine;
+        audioEngine = nullptr;
     }
     releaseCodec();
 }
@@ -349,6 +383,15 @@ void AudioHardDecoder::doDecodeWork() {
                     int64_t presentationNano = pts * 1000;
                     if (renderStart < 0) {
                         renderStart = systemNanoTime() - presentationNano;
+                    }
+                    if (audioDataSource != nullptr) {
+                        auto numSamples = dataSize / sizeof(int16_t);
+                        auto audioBuffer = std::make_unique<float[]>(numSamples);
+                        oboe::convertPcm16ToFloat(
+                                reinterpret_cast<int16_t*>(outputBuf),
+                                audioBuffer.get(),
+                                dataSize / sizeof(int16_t));
+                        audioDataSource->updateData(std::move(audioBuffer), numSamples);
                     }
                     AMediaCodec_releaseOutputBuffer(codec, status, info.size != 0);
                     int64_t delay = (renderStart + presentationNano) - systemNanoTime();

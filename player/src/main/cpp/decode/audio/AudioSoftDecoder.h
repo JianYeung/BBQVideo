@@ -20,6 +20,7 @@ public:
     void setOnPreparedListener(OnPreparedListener *onPreparedListener) override;
     void setOnErrorListener(OnErrorListener *onErrorListener) override;
     void setDataSource(std::string url) override;
+    void setCpuIds(std::vector<int> cpuIds) override;
     void prepare() override;
     void start() override;
     void pause() override;

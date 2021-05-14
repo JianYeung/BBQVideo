@@ -10,6 +10,7 @@
 #include <VideoPlayerStatusCallback.h>
 #include <OnPreparedListener.h>
 #include <OnErrorListener.h>
+#include <AudioEngine.h>
 
 #define AUDIO_DECODER_DEBUG true
 #define AUDIO_DECODER_TAG "AudioDecoder"
@@ -21,6 +22,8 @@ protected:
     VideoPlayerStatusCallback *playerStatusCallback;
     OnPreparedListener *onPreparedListener;
     OnErrorListener *onErrorListener;
+    AudioEngine *audioEngine;
+    AudioDataSource* audioDataSource;
 
 public:
     AudioDecoder();
@@ -30,6 +33,7 @@ public:
     virtual void setOnPreparedListener(OnPreparedListener *onPreparedListener) = 0;
     virtual void setOnErrorListener(OnErrorListener *onErrorListener) = 0;
     virtual void setDataSource(std::string url) = 0;
+    virtual void setCpuIds(std::vector<int> cpuIds) = 0;
     virtual void prepare() = 0;
     virtual void start() = 0;
     virtual void pause() = 0;

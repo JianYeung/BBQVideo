@@ -1,7 +1,10 @@
 package com.yj.bbqvideo.video
 
+import android.os.Build
 import android.os.Bundle
+import android.os.Process
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
@@ -10,10 +13,10 @@ import androidx.appcompat.widget.AppCompatSeekBar
 import com.yj.bbqvideo.R
 import com.yj.bbqvideo.util.DLog
 import com.yj.bbqvideo.util.DTextUtil
-import com.yj.player.videoPlayer.VideoPlayerError
-import com.yj.player.videoPlayer.VideoPlayerStatusListener
 import com.yj.player.filter.FilterType
 import com.yj.player.render.RenderMode
+import com.yj.player.videoPlayer.VideoPlayerError
+import com.yj.player.videoPlayer.VideoPlayerStatusListener
 import com.yj.player.view.CustomVideoPreviewer
 
 class MediaCodecPreviewActivity : AppCompatActivity(), View.OnClickListener, VideoPlayerStatusListener {
@@ -107,6 +110,7 @@ class MediaCodecPreviewActivity : AppCompatActivity(), View.OnClickListener, Vid
                 } else {
                     customVideoPreviewer.run {
                         setDataSource(url)
+                        getExclusiveCores()?.let { setCpuIds(it) }
                         prepare()
                     }
                     showLoading("正在解析视频URL中", false)
@@ -129,6 +133,26 @@ class MediaCodecPreviewActivity : AppCompatActivity(), View.OnClickListener, Vid
                 customVideoPreviewer.stopVideo()
             }
         }
+    }
+
+    // Obtain CPU cores which are reserved for the foreground app. The audio thread can be
+    // bound to these cores to avoids the risk of it being migrated to slower or more contended
+    // core(s).
+    private fun getExclusiveCores(): IntArray? {
+        var exclusiveCores: IntArray? = intArrayOf()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            Log.w(
+                TAG, "getExclusiveCores() not supported. Only available on API " +
+                        Build.VERSION_CODES.N + "+"
+            )
+        } else {
+            try {
+                exclusiveCores = Process.getExclusiveCores()
+            } catch (e: RuntimeException) {
+                Log.w(TAG, "getExclusiveCores() is not supported on this device.")
+            }
+        }
+        return exclusiveCores
     }
 
     private fun showLoading(msg: String, touch: Boolean) {

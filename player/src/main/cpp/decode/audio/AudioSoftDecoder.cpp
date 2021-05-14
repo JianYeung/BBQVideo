@@ -41,6 +41,12 @@ void AudioSoftDecoder::setDataSource(std::string url) {
     }
 }
 
+void AudioSoftDecoder::setCpuIds(std::vector<int> cpuIds) {
+    if (DebugEnable && AUDIO_DECODER_DEBUG) {
+        DLOGI(AUDIO_SOFT_DECODER_TAG, "~~~AudioSoftDecoder::setCpuIds()~~~\n");
+    }
+}
+
 void AudioSoftDecoder::prepare() {
     if (DebugEnable && AUDIO_DECODER_DEBUG) {
         DLOGI(AUDIO_SOFT_DECODER_TAG, "~~~AudioSoftDecoder::prepare()~~~\n");

@@ -33,6 +33,7 @@ public:
     void setRender(GLRender *render);
     void setPlayerStatusCallback(VideoPlayerStatusCallback *playerStatusCallback);
     void setDataSource(const std::string &url);
+    void setCpuIds(std::vector<int> cpuIds);
     void prepare();
     void start();
     void resume();

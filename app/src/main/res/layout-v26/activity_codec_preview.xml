@@ -63,6 +63,11 @@
         android:orientation="horizontal"
         android:padding="5dp">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/zero"/>
+
         <androidx.appcompat.widget.AppCompatSeekBar
             android:id="@+id/progress_seek_bar"
             android:layout_width="0dp"

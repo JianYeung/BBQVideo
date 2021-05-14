@@ -13,7 +13,7 @@
 class VideoSoftDecoder : public VideoDecoder {
 public:
     VideoSoftDecoder();
-    virtual ~VideoSoftDecoder();
+    ~VideoSoftDecoder();
 
     void setSurface(ANativeWindow *nativeWindow, int width, int height) override;
     void setRender(GLRender *render) override;

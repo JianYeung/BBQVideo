@@ -29,6 +29,10 @@ object VideoPlayerHelper {
         nativeSetDataSource(nativePlayerHandle, url)
     }
 
+    fun setCpuIds(nativePlayerHandle: Long, cpuIds: IntArray) {
+        nativeSetCpuIds(nativePlayerHandle, cpuIds)
+    }
+
     fun setPlayerStatusCallback(nativePlayerHandle: Long, nativeVideoPlayerStatusCallback: NativeVideoPlayerStatusCallback) {
         nativeSetPlayerStatusCallback(nativePlayerHandle, nativeVideoPlayerStatusCallback)
     }
@@ -68,6 +72,8 @@ object VideoPlayerHelper {
     private external fun nativeSetPlayerStatusCallback(nativePlayerHandle: Long, nativeVideoPlayerStatusCallback: NativeVideoPlayerStatusCallback)
 
     private external fun nativeSetDataSource(nativePlayerHandle: Long, url: String)
+
+    private external fun nativeSetCpuIds(nativePlayerHandle: Long, cpuIds: IntArray)
 
     private external fun nativePrepare(nativePlayerHandle: Long)
 

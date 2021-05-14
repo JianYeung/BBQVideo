@@ -297,7 +297,7 @@ void VideoHardDecoder::doDecodeWork() {
                         render->requestRender();
                     }
                 }
-                AMediaCodec_releaseOutputBuffer(codec, status, info.size != 0);
+                AMediaCodec_releaseOutputBuffer(codec, status, false);
                 int64_t delay = (renderStart + presentationNano) - systemNanoTime();
                 if (DebugEnable && VIDEO_DECODER_DEBUG) {
                     int time = delay > 0 ? (int) delay : 0;

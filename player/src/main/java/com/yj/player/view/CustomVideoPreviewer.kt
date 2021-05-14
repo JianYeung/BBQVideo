@@ -1,6 +1,7 @@
 package com.yj.player.view
 
 import android.content.Context
+import android.os.Build
 import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
@@ -43,6 +44,7 @@ class CustomVideoPreviewer : SurfaceView, SurfaceHolder.Callback, NativeVideoPla
         initNativePlayerProxy()
     }
 
+    @androidx.annotation.RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
         context,
         attrs,
@@ -90,6 +92,13 @@ class CustomVideoPreviewer : SurfaceView, SurfaceHolder.Callback, NativeVideoPla
      */
     fun setDataSource(url: String) {
         nativeVideoPlayerProxy?.setDataSource(url)
+    }
+
+    /**
+     * 
+     */
+    fun setCpuIds(cpuIds: IntArray) {
+        nativeVideoPlayerProxy?.setCpuIds(cpuIds)
     }
 
     /**
