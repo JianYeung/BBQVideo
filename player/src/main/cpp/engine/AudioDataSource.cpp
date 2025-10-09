@@ -23,7 +23,7 @@ void AudioDataSource::renderAudio(float *audioData, int32_t numFrames) {
         int64_t framesToRenderFromData = numFrames;
         int64_t totalSourceFrames = mBufferSize / mChannelCount;
 
-        LOGD("AudioDataSource::renderAudio mReadFrameIndex = %d, numFrames = %d, totalSourceFrames = %d", mReadFrameIndex, numFrames, totalSourceFrames);
+        LOGD("AudioDataSource::renderAudio mReadFrameIndex = %d, numFrames = %d, totalSourceFrames = %lld", mReadFrameIndex, numFrames, totalSourceFrames);
 
         // Check whether we're about to reach the end of the recording
         if (mReadFrameIndex + numFrames >= totalSourceFrames) {
